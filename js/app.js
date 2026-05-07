@@ -1,7 +1,6 @@
 (function () {
   "use strict";
 
-  const DEFAULT_REPO = "meowdule/Content";
   const TAB_KEY = "ax-hub-space";
 
   /** @typedef {{ id: string, emoji: string, title: string, subtitle: string, items: CatalogItem[] }} Section */
@@ -29,8 +28,8 @@
   /** @type {SubmissionEntry[]} */
   let lastSubmissionEntries = [];
 
-  /** @type {{ githubRepo: string, apiBase: string }} */
-  let hubConfig = { githubRepo: DEFAULT_REPO, apiBase: "" };
+  /** @type {{ apiBase: string }} */
+  let hubConfig = { apiBase: "" };
 
   const catalogEl = document.getElementById("catalog");
   const searchEl = document.getElementById("search");
@@ -40,10 +39,9 @@
   const expandBtn = document.getElementById("expand-all");
   const collapseBtn = document.getElementById("collapse-all");
   const themeBtn = document.getElementById("theme-toggle");
-  const contribStrip = document.getElementById("contrib-strip");
   const tabOverseas = document.getElementById("tab-overseas");
   const tabCommunity = document.getElementById("tab-community");
-  const fabRegister = document.getElementById("fab-register");
+  const btnRegisterTab = document.getElementById("btn-register-tab");
 
   const dlgRegister = document.getElementById("dlg-register");
   const dlgRegisterForm = /** @type {HTMLFormElement | null} */ (
@@ -104,9 +102,6 @@
 
   const THEME_KEY = "ax-hub-theme";
 
-  /** @type {string} */
-  let repoSlug = DEFAULT_REPO;
-
   /** @returns {SubmissionEntry[]} */
   async function fetchSubmissionsEntries() {
     try {
@@ -153,76 +148,6 @@
     return activeSpace === "overseas"
       ? datasets.overseas
       : datasets.community;
-  }
-
-  /** @returns {{ owner: string, name: string } | null} */
-  function parseRepo(slug) {
-    const p = slug.split("/").map((s) => s.trim()).filter(Boolean);
-    if (p.length >= 2) return { owner: p[0], name: p[1] };
-    return null;
-  }
-
-  /**
-   * @param {string} slug
-   */
-  function buildContribSection(slug) {
-    const parsed = parseRepo(slug) || parseRepo(DEFAULT_REPO);
-    if (!parsed) {
-      const parts = DEFAULT_REPO.split("/");
-      const readmeMain =
-        parts.length >= 2
-          ? `https://github.com/${parts[0]}/${parts[1]}/blob/main/README.md`
-          : "https://github.com/";
-      return {
-        id: "contrib",
-        emoji: "📂",
-        title: "저장소 안내",
-        subtitle:
-          "data/config.json 의 githubRepo 를 올바른 owner/name 으로 설정하세요",
-        items: [
-          {
-            title: "README — 설정 방법",
-            desc: "Pages·등록 API·초안·해외 JSON 구조",
-            url: readmeMain,
-          },
-        ],
-      };
-    }
-    const { owner, name } = parsed;
-    const base = `https://github.com/${owner}/${name}`;
-    return {
-      id: "contrib",
-      emoji: "📂",
-      title: "GitHub · 원본 JSON",
-      subtitle: `${owner}/${name} — 베이스 목록은 여기서 직접 고칠 수 있습니다`,
-      items: [
-        {
-          title: "저장소 (설정·히스토리)",
-          desc: "코드·Pages·커밋 기록.",
-          url: base,
-        },
-        {
-          title: "게시글 초안 베이스 — community.json",
-          desc: "초안 탭에 깔리는 고정 카테고리·예시 링크.",
-          url: `${base}/edit/main/data/community.json`,
-        },
-        {
-          title: "해외 참고 링크 베이스 — overseas.json",
-          desc: "해외 탭에 깔리는 고정 레퍼런스.",
-          url: `${base}/edit/main/data/overseas.json`,
-        },
-        {
-          title: "웹 등록 결과물 — public-submissions.json",
-          desc: "「+ 등록」으로 API 가 쌓은 항목(있을 때).",
-          url: `${base}/blob/main/data/public-submissions.json`,
-        },
-        {
-          title: "요청 이슈 (템플릿)",
-          desc: "저장소 권한 없을 때 제목·URL 남기기.",
-          url: `${base}/issues/new?template=content-submission.md`,
-        },
-      ],
-    };
   }
 
   function openModal(dialog) {
@@ -339,14 +264,9 @@
 
   async function applyMergedFromEntries(entries) {
     lastSubmissionEntries = normalizeEntries(entries);
-    const communityBase = [buildContribSection(repoSlug), ...communityRowsRaw];
     datasets = {
       overseas: mergeSections(baselineOverseasArr, lastSubmissionEntries, "overseas"),
-      community: mergeSections(
-        communityBase,
-        lastSubmissionEntries,
-        "community"
-      ),
+      community: mergeSections(communityRowsRaw, lastSubmissionEntries, "community"),
     };
   }
 
@@ -375,10 +295,6 @@
   }
 
   async function loadDatasets() {
-    const meta = document
-      .querySelector('meta[name="github-repo"]')
-      ?.getAttribute("content")
-      ?.trim();
     const [overseasRes, communityRes, configRes] = await Promise.all([
       fetch("data/overseas.json", { cache: "no-cache" }),
       fetch("data/community.json", { cache: "no-cache" }),
@@ -392,79 +308,38 @@
     baselineOverseasArr = /** @type {Section[]} */ (await overseasRes.json());
     communityRowsRaw = /** @type {Section[]} */ (await communityRes.json());
 
-    hubConfig.githubRepo = DEFAULT_REPO;
     hubConfig.apiBase = "";
-
-    let slug = meta || "";
-
     if (configRes.ok) {
       try {
-        /** @type {{ githubRepo?: string; apiBase?: string }} */
+        /** @type {{ apiBase?: string }} */
         const c = await configRes.json();
-        if (c.githubRepo) slug = slug || String(c.githubRepo).trim();
-        hubConfig.githubRepo =
-          slug || String(c.githubRepo || "").trim() || DEFAULT_REPO;
         hubConfig.apiBase = (c.apiBase || "").trim();
       } catch {
-        hubConfig.githubRepo = slug || DEFAULT_REPO;
+        /* ignore */
       }
-    } else {
-      hubConfig.githubRepo = slug || DEFAULT_REPO;
     }
-
-    repoSlug = slug || hubConfig.githubRepo || DEFAULT_REPO;
 
     const submissions = await fetchSubmissionsEntries();
     await applyMergedFromEntries(submissions);
   }
 
-  function renderContribStrip() {
-    const parsed = parseRepo(repoSlug) || parseRepo(DEFAULT_REPO);
-    const headerRepo =
-      /** @type {HTMLAnchorElement | null} */ (
-        document.getElementById("link-repo-root")
+  function updateToolbarForTab() {
+    if (btnRegisterTab) {
+      btnRegisterTab.textContent = "등록";
+      btnRegisterTab.setAttribute(
+        "aria-label",
+        activeSpace === "overseas"
+          ? "해외 참고 링크 탭에 등록"
+          : "게시글 초안 탭에 등록"
       );
-    const footerRepoMid =
-      /** @type {HTMLAnchorElement | null} */ (
-        document.getElementById("link-repo-mid-footer")
-      );
-    const footerReadme =
-      /** @type {HTMLAnchorElement | null} */ (
-        document.getElementById("link-repo-readme-footer")
-      );
-
-    if (!parsed) {
-      if (contribStrip) contribStrip.innerHTML = "";
-      return;
     }
-    const { owner, name } = parsed;
-    const base = `https://github.com/${owner}/${name}`;
-    const readmeUrl = `${base}/blob/main/README.md`;
-    if (headerRepo) headerRepo.href = base;
-    if (footerRepoMid) footerRepoMid.href = base;
-    if (footerReadme) footerReadme.href = readmeUrl;
-
-    if (!contribStrip) return;
-
-    contribStrip.innerHTML =
-      `<div class="contrib-inner">
-        <span class="contrib-label">GitHub</span>
-        <a class="contrib-chip" href="${escapeHtml(
-          base
-        )}" target="_blank" rel="noopener noreferrer">저장소</a>
-        <a class="contrib-chip" href="${escapeHtml(
-          `${base}/edit/main/data/community.json`
-        )}" target="_blank" rel="noopener noreferrer">초안 베이스</a>
-        <a class="contrib-chip" href="${escapeHtml(
-          `${base}/edit/main/data/overseas.json`
-        )}" target="_blank" rel="noopener noreferrer">해외 베이스</a>
-        <a class="contrib-chip" href="${escapeHtml(
-          `${base}/blob/main/data/public-submissions.json`
-        )}" target="_blank" rel="noopener noreferrer">웹 등록분</a>
-        <a class="contrib-chip" href="${escapeHtml(
-          `${base}/issues/new?template=content-submission.md`
-        )}" target="_blank" rel="noopener noreferrer">이슈로 요청</a>
-      </div>`;
+    const hint = document.getElementById("toolbar-hint");
+    if (hint) {
+      hint.textContent =
+        activeSpace === "overseas"
+          ? "해외 참고 링크 탭 · 카테고리 줄을 눌러 접기/펼치기"
+          : "게시글 초안 탭 · 카테고리 줄을 눌러 접기/펼치기";
+    }
   }
 
   /* --- 테마 등 (기존) --- */
@@ -534,10 +409,10 @@
   function updateSidebarNote() {
     const note = document.getElementById("data-src-note");
     if (note) {
-      note.innerHTML =
+      note.textContent =
         activeSpace === "overseas"
-          ? `베이스: <code>data/overseas.json</code>. 웹 등록분은 <code>public-submissions.json</code> 에서 이 탭으로 합쳐집니다.`
-          : `베이스: <code>data/community.json</code> + 아래 「GitHub · 원본 JSON」. 웹 등록분은 <code>public-submissions.json</code> 에서 이 탭으로 합쳐집니다.`;
+          ? "해외 참고 링크 탭입니다. 위 「등록」으로 항목을 추가할 수 있습니다."
+          : "게시글 초안 탭입니다. 위 「등록」으로 항목을 추가할 수 있습니다.";
     }
   }
 
@@ -550,6 +425,7 @@
     buildSections();
     filterResources();
     updateSidebarNote();
+    updateToolbarForTab();
     if (writeHash)
       history.replaceState(
         null,
@@ -837,8 +713,8 @@
       updateTabUI();
       buildNav();
       buildSections();
-      renderContribStrip();
       updateSidebarNote();
+      updateToolbarForTab();
     }
 
     document.querySelectorAll(".nav-link").forEach((a) => {
@@ -870,11 +746,10 @@
       }));
     }
 
-    const base = [buildContribSection(repoSlug), ...communityRowsRaw];
-
-    return base
-      .filter((s) => s.id !== "contrib")
-      .map((s) => ({ id: s.id, label: `${s.emoji} ${s.title}` }));
+    return communityRowsRaw.map((s) => ({
+      id: s.id,
+      label: `${s.emoji} ${s.title}`,
+    }));
   }
 
   /**
@@ -917,7 +792,7 @@
     const base = apiOrigin();
     if (!base) {
       regApiHint.innerHTML =
-        `<strong>등록 API 가 없습니다.</strong> <code>data/config.json</code> 의 <code>apiBase</code>에 배포한 API 주소(HTTPS 권장)를 넣고, 저장소의 <code>server/</code> 를 README 대로 실행하세요. 이 사이트(<code>github.io</code>)에서 저장하려면 CORS 에 이 출처를 허용해야 합니다.`;
+        `<strong>등록 API 가 설정되지 않았습니다.</strong> <code>data/config.json</code> 의 <code>apiBase</code>에 등록 API 서버 주소를 넣으세요. 브라우저에서 호출하려면 해당 서버의 CORS 설정에 <strong>이 사이트의 주소(출처)</strong>를 허용해야 합니다.`;
       regApiHint.hidden = false;
     } else {
       regApiHint.innerHTML = `등록 API: <code>${escapeHtml(base)}</code>`;
@@ -980,7 +855,7 @@
   function initRegisterEditDeleteUi() {
     wireModals();
 
-    fabRegister?.addEventListener("click", () => openRegisterDialog());
+    btnRegisterTab?.addEventListener("click", () => openRegisterDialog());
 
     regSpaceOverseas?.addEventListener("change", () => {
       if (regSpaceOverseas?.checked) syncRegisterSpaceRadios("overseas");
@@ -1119,7 +994,7 @@
         catalogEl.innerHTML =
           `<div class="load-error"><strong>데이터 로드 실패</strong><p>${escapeHtml(
             String(/** @type {Error} */ (e)?.message || e)
-          )}</p><p>로컬에서 파일을 더블 클릭으로 연 경우 브라우저가 요청을 막을 수 있습니다. 저장소 폴더에서 <code>py -m http.server 8765</code> 등으로 접속해 보세요.</p></div>`;
+          )}</p><p>로컬에서 파일만 직접 연 경우 브라우저가 데이터 요청을 막을 수 있습니다. 간단한 로컬 웹 서버로 같은 폴더를 연 뒤 다시 시도해 보세요.</p></div>`;
       return;
     }
 
@@ -1131,8 +1006,8 @@
     initSearchOnce();
     buildNav();
     buildSections();
-    renderContribStrip();
     updateSidebarNote();
+    updateToolbarForTab();
     applyHashFromLocation(false);
   }
 

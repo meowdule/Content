@@ -5,9 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta
       name="description"
-      content="AX·GenAI 허브 — 해외 참고 링크 수집과 게시글 초안. GitHub Pages·등록 API."
+      content="해외 참고 링크 탭과 게시글 초안 탭 — 링크 등록·검색"
     />
-    <meta name="github-repo" content="meowdule/Content" />
     <title>AX 리소스 허브</title>
     <link
       rel="stylesheet"
@@ -27,19 +26,12 @@
             <div>
               <h1 class="brand-title">AX 리소스 허브</h1>
               <p class="brand-sub">
-                해외 참고 링크 + 게시글 초안 · 같은 방식으로 등록·검색 · GitHub 에 기록
+                해외 참고 링크 탭과 게시글 초안 탭이 있습니다. 각 탭에서 등록할 수
+                있습니다.
               </p>
             </div>
           </div>
           <div class="header-actions">
-            <a
-              class="btn btn--ghost github-link"
-              id="link-repo-root"
-              href="https://github.com/meowdule/Content"
-              target="_blank"
-              rel="noopener noreferrer"
-              >저장소</a
-            >
             <button
               type="button"
               class="btn btn--ghost"
@@ -53,29 +45,18 @@
 
         <div class="hero-card layout" style="grid-column: 1 / -1">
           <div class="hero-badges">
-            <span class="badge badge--accent">GitHub 연동·Pages</span>
-            <span class="badge badge--violet">JSON 으로 기록 유지</span>
+            <span class="badge badge--accent">해외 참고 링크</span>
+            <span class="badge badge--violet">게시글 초안</span>
           </div>
           <p class="hero-lead">
-            <strong>해외 참고 링크</strong> 베이스는 <code>data/overseas.json</code>,
-            <strong>게시글 초안·내부 글 링크</strong> 베이스는
-            <code>data/community.json</code> 입니다. 아래
-            <strong>「+ 등록」</strong>은 <em>해외 탭이든 초안 탭이든 동일한 폼</em>으로
-            링크를 올리며, 저장소에는
-            <code>data/public-submissions.json</code> 에 합쳐져 보입니다 (배포된
-            등록 API·<code>apiBase</code> 설정 필요). <strong>수정·삭제</strong>만
-            서버에 설정한 <strong>관리 비밀번호</strong>가 있어야 합니다.
+            위 두 탭 중 하나를 선택한 뒤, 아래 목록 위의
+            <strong>「등록」</strong> 버튼으로 링크를 추가하세요. 수정·삭제는
+            등록된 항목에만 표시되며 관리 비밀번호가 필요합니다.
           </p>
 
           <div
-            class="contrib-strip"
-            id="contrib-strip"
-            aria-label="저장소에서 JSON 편집"
-          ></div>
-
-          <div
             role="tablist"
-            aria-label="해외 링크와 게시글 초안"
+            aria-label="탭 선택"
             class="space-tabs"
           >
             <button
@@ -138,19 +119,22 @@
             <p class="sidebar-title">Jump to</p>
             <ul class="nav-list" id="nav-desktop"></ul>
             <p class="sidebar-footer" id="data-src-note"></p>
-            <p class="sidebar-footer muted">
-              다른 저장소로 옮기면 <code>data/config.json</code> 과
-              <code>index.html</code> 의 <code>github-repo</code> 메타를 함께
-              수정하세요.
-            </p>
           </div>
         </aside>
 
         <main class="main" id="main">
           <div class="expand-toolbar">
-            <span class="toolbar-hint">
-              카테고리 줄 클릭으로 접기/펼치기 · 링크는 새 탭
+            <span class="toolbar-hint" id="toolbar-hint">
+              카테고리 줄을 눌러 접기/펼치기
             </span>
+            <button
+              type="button"
+              class="btn btn-register-tab"
+              id="btn-register-tab"
+              aria-label="현재 탭에 링크 등록"
+            >
+              등록
+            </button>
             <button type="button" class="btn btn--ghost" id="expand-all">
               모두 펼치기
             </button>
@@ -162,38 +146,7 @@
           <div id="catalog"></div>
         </main>
       </div>
-
-      <footer class="site-footer">
-        GitHub Pages:
-        <a
-          id="link-repo-mid-footer"
-          href="https://github.com/meowdule/Content"
-          target="_blank"
-          rel="noopener noreferrer"
-          >github.com/meowdule/Content</a
-        >
-        — <strong>main</strong> 브랜치 루트 배포. 웹에서 등록·수정하려면
-        <code>apiBase</code>+등록 API를 켜 두거나, 저장소에서 JSON 을 직접
-        편집·커밋하면 됩니다 (자세한 절차:
-        <a
-          id="link-repo-readme-footer"
-          href="https://github.com/meowdule/Content/blob/main/README.md"
-          target="_blank"
-          rel="noopener noreferrer"
-          >README</a
-        >).
-      </footer>
     </div>
-
-    <button
-      type="button"
-      id="fab-register"
-      class="fab-register"
-      title="등록하기"
-      aria-label="등록 폼 열기"
-    >
-      + 등록
-    </button>
 
     <div id="toast-mini" class="toast-mini" hidden role="status"></div>
 
@@ -281,13 +234,13 @@
         <div class="modal-body">
           <form id="form-delete" class="stack-form">
             <input type="hidden" id="delete-id" />
-            <p class="delete-warn">이 항목을 삭제하면 Git 에서도 제거됩니다.</p>
+            <p class="delete-warn">이 항목은 목록에서 삭제됩니다.</p>
             <label class="lbl">관리 비밀번호
               <input id="delete-password" type="password" class="fld" autocomplete="current-password" required data-modal-initial-focus />
             </label>
             <footer class="modal-actions">
               <button type="button" class="btn btn--ghost" data-modal-close>취소</button>
-              <button type="submit" class="btn btn-mini--danger-flat">영구 삭제</button>
+              <button type="submit" class="btn btn-mini--danger-flat">삭제</button>
             </footer>
           </form>
         </div>
