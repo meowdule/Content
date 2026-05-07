@@ -1,0 +1,15 @@
+[
+  {
+    "id": "drafts",
+    "emoji": "📌",
+    "title": "내부 노트 · 초안",
+    "subtitle": "팀 회의 요약, 브리핑 초안, 사내 페이지 링크 등을 같은 형식으로 항목을 추가하면 됩니다",
+    "items": [
+      {
+        "title": "예시 항목 (제목만 바꿔 보세요)",
+        "desc": "Notion/Google Docs 등 내부 링크로 교체하세요.",
+        "url": "https://github.com/meowdule/Content/blob/main/README.md"
+      }
+    ]
+  }
+]
