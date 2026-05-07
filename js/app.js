@@ -175,14 +175,14 @@
           : "https://github.com/";
       return {
         id: "contrib",
-        emoji: "✍️",
-        title: "기여 & Git",
+        emoji: "📂",
+        title: "저장소 안내",
         subtitle:
           "data/config.json 의 githubRepo 를 올바른 owner/name 으로 설정하세요",
         items: [
           {
             title: "README — 설정 방법",
-            desc: "Pages·데이터 구조·기여 흐름",
+            desc: "Pages·등록 API·초안·해외 JSON 구조",
             url: readmeMain,
           },
         ],
@@ -192,34 +192,34 @@
     const base = `https://github.com/${owner}/${name}`;
     return {
       id: "contrib",
-      emoji: "✍️",
-      title: "기여 & GitHub 연동",
-      subtitle: `${owner}/${name} 저장소 JSON·이슈로 목록이 유지됩니다`,
+      emoji: "📂",
+      title: "GitHub · 원본 JSON",
+      subtitle: `${owner}/${name} — 베이스 목록은 여기서 직접 고칠 수 있습니다`,
       items: [
         {
-          title: "저장소 (코드·이슈·설정)",
-          desc: "소스와 GitHub Pages 설정.",
+          title: "저장소 (설정·히스토리)",
+          desc: "코드·Pages·커밋 기록.",
           url: base,
         },
         {
-          title: "우리 컨텐츠 편집 — data/community.json",
-          desc: "쓰기 권한이 있으면 웹에서 바로 수정·커밋.",
+          title: "게시글 초안 베이스 — community.json",
+          desc: "초안 탭에 깔리는 고정 카테고리·예시 링크.",
           url: `${base}/edit/main/data/community.json`,
         },
         {
-          title: "해외 수집 편집 — data/overseas.json",
-          desc: "해외 레퍼런스 항목 추가.",
+          title: "해외 참고 링크 베이스 — overseas.json",
+          desc: "해외 탭에 깔리는 고정 레퍼런스.",
           url: `${base}/edit/main/data/overseas.json`,
         },
         {
-          title: "등록 요청 이슈",
-          desc: "권한 없는 동료는 템플릿으로 제안.",
-          url: `${base}/issues/new?template=content-submission.md`,
+          title: "웹 등록 결과물 — public-submissions.json",
+          desc: "「+ 등록」으로 API 가 쌓은 항목(있을 때).",
+          url: `${base}/blob/main/data/public-submissions.json`,
         },
         {
-          title: "포크 후 Pull Request",
-          desc: "외부 기여자용 일반적인 흐름.",
-          url: `${base}/fork`,
+          title: "요청 이슈 (템플릿)",
+          desc: "저장소 권한 없을 때 제목·URL 남기기.",
+          url: `${base}/issues/new?template=content-submission.md`,
         },
       ],
     };
@@ -454,16 +454,16 @@
         )}" target="_blank" rel="noopener noreferrer">저장소</a>
         <a class="contrib-chip" href="${escapeHtml(
           `${base}/edit/main/data/community.json`
-        )}" target="_blank" rel="noopener noreferrer">community.json</a>
+        )}" target="_blank" rel="noopener noreferrer">초안 베이스</a>
         <a class="contrib-chip" href="${escapeHtml(
           `${base}/edit/main/data/overseas.json`
-        )}" target="_blank" rel="noopener noreferrer">overseas.json</a>
+        )}" target="_blank" rel="noopener noreferrer">해외 베이스</a>
         <a class="contrib-chip" href="${escapeHtml(
           `${base}/blob/main/data/public-submissions.json`
-        )}" target="_blank" rel="noopener noreferrer">public-submissions.json</a>
+        )}" target="_blank" rel="noopener noreferrer">웹 등록분</a>
         <a class="contrib-chip" href="${escapeHtml(
           `${base}/issues/new?template=content-submission.md`
-        )}" target="_blank" rel="noopener noreferrer">등록 요청</a>
+        )}" target="_blank" rel="noopener noreferrer">이슈로 요청</a>
       </div>`;
   }
 
@@ -536,8 +536,8 @@
     if (note) {
       note.innerHTML =
         activeSpace === "overseas"
-          ? `기준 데이터 <code>data/overseas.json</code>. 사용자 글은 <code>public-submissions.json</code> 에 합쳐져 보입니다.`
-          : `<code>data/community.json</code> · 자동 카테고리(기여) · <code>public-submissions.json</code> 사용자 등록.`;
+          ? `베이스: <code>data/overseas.json</code>. 웹 등록분은 <code>public-submissions.json</code> 에서 이 탭으로 합쳐집니다.`
+          : `베이스: <code>data/community.json</code> + 아래 「GitHub · 원본 JSON」. 웹 등록분은 <code>public-submissions.json</code> 에서 이 탭으로 합쳐집니다.`;
     }
   }
 
@@ -917,7 +917,7 @@
     const base = apiOrigin();
     if (!base) {
       regApiHint.innerHTML =
-        `<strong>API 미설정.</strong> <code>data/config.json</code> 의 <code>apiBase</code>에 서버 주소(예: <code>http://127.0.0.1:3847</code>)를 넣고, <code>server</code> 폴더의 API를 실행하세요.`;
+        `<strong>등록 API 가 없습니다.</strong> <code>data/config.json</code> 의 <code>apiBase</code>에 배포한 API 주소(HTTPS 권장)를 넣고, 저장소의 <code>server/</code> 를 README 대로 실행하세요. 이 사이트(<code>github.io</code>)에서 저장하려면 CORS 에 이 출처를 허용해야 합니다.`;
       regApiHint.hidden = false;
     } else {
       regApiHint.innerHTML = `등록 API: <code>${escapeHtml(base)}</code>`;

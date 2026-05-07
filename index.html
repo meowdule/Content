@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta
       name="description"
-      content="AX·GenAI 참고 허브 — 해외 레퍼런스 수집과 팀 컨텐츠. GitHub Pages·JSON 관리."
+      content="AX·GenAI 허브 — 해외 참고 링크 수집과 게시글 초안. GitHub Pages·등록 API."
     />
     <meta name="github-repo" content="meowdule/Content" />
     <title>AX 리소스 허브</title>
@@ -27,7 +27,7 @@
             <div>
               <h1 class="brand-title">AX 리소스 허브</h1>
               <p class="brand-sub">
-                해외 수집 + 우리 컨텐츠 · 카테고리 토글 · GitHub 에서 데이터 영구 보관
+                해외 참고 링크 + 게시글 초안 · 같은 방식으로 등록·검색 · GitHub 에 기록
               </p>
             </div>
           </div>
@@ -57,25 +57,25 @@
             <span class="badge badge--violet">JSON 으로 기록 유지</span>
           </div>
           <p class="hero-lead">
-            <strong>해외 레퍼런스</strong>는 <code>data/overseas.json</code>,
-            <strong>팀이 올릴 글·링크</strong>는 <code
-              >data/community.json</code
-            >
-            에 반영되어 모두에게 보입니다. 사용자가 웹에서 올린 글은
-            <strong>등록(API)</strong>으로 <code>data/public-submissions.json</code> 에
-            쌓이며 (서버 필요), <strong>수정·삭제는 관리 비밀번호</strong>가 있을 때만
-            가능합니다.
+            <strong>해외 참고 링크</strong> 베이스는 <code>data/overseas.json</code>,
+            <strong>게시글 초안·내부 글 링크</strong> 베이스는
+            <code>data/community.json</code> 입니다. 아래
+            <strong>「+ 등록」</strong>은 <em>해외 탭이든 초안 탭이든 동일한 폼</em>으로
+            링크를 올리며, 저장소에는
+            <code>data/public-submissions.json</code> 에 합쳐져 보입니다 (배포된
+            등록 API·<code>apiBase</code> 설정 필요). <strong>수정·삭제</strong>만
+            서버에 설정한 <strong>관리 비밀번호</strong>가 있어야 합니다.
           </p>
 
           <div
             class="contrib-strip"
             id="contrib-strip"
-            aria-label="GitHub 에서 수정·이슈"
+            aria-label="저장소에서 JSON 편집"
           ></div>
 
           <div
             role="tablist"
-            aria-label="콘텐츠 영역"
+            aria-label="해외 링크와 게시글 초안"
             class="space-tabs"
           >
             <button
@@ -85,7 +85,7 @@
               aria-selected="true"
               class="space-tab"
             >
-              해외 게시글 수집
+              해외 참고 링크
             </button>
             <button
               type="button"
@@ -94,7 +94,7 @@
               aria-selected="false"
               class="space-tab"
             >
-              우리 컨텐츠 · 기여
+              게시글 초안
             </button>
           </div>
 
@@ -172,8 +172,9 @@
           rel="noopener noreferrer"
           >github.com/meowdule/Content</a
         >
-        — <strong>main</strong> 브랜치 루트 배포. 게시글을 남기려면 JSON 커밋 또는
-        이슈·PR 로 반영해야 합니다 (자세한 절차:
+        — <strong>main</strong> 브랜치 루트 배포. 웹에서 등록·수정하려면
+        <code>apiBase</code>+등록 API를 켜 두거나, 저장소에서 JSON 을 직접
+        편집·커밋하면 됩니다 (자세한 절차:
         <a
           id="link-repo-readme-footer"
           href="https://github.com/meowdule/Content/blob/main/README.md"
@@ -200,19 +201,19 @@
       <div class="modal-backdrop" data-modal-backdrop aria-hidden="true"></div>
       <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="dlg-reg-title">
         <header class="modal-head">
-          <h2 class="modal-title" id="dlg-reg-title">링크 등록</h2>
+          <h2 class="modal-title" id="dlg-reg-title">게시글·링크 등록</h2>
           <button type="button" class="btn-icon-x" data-modal-close aria-label="닫기">×</button>
         </header>
         <div class="modal-body">
           <p id="reg-api-hint" class="reg-api-hint" role="status"></p>
           <form id="form-register" class="stack-form">
             <fieldset class="fieldset-row">
-              <legend class="fieldset-legend">영역</legend>
+              <legend class="fieldset-legend">넣을 탭</legend>
               <label class="choice"
-                ><input type="radio" name="space" id="reg-space-overseas" checked /> 해외 수집</label
+                ><input type="radio" name="space" id="reg-space-overseas" checked /> 해외 참고 링크</label
               >
               <label class="choice"
-                ><input type="radio" name="space" id="reg-space-community" /> 우리 컨텐츠</label
+                ><input type="radio" name="space" id="reg-space-community" /> 게시글 초안</label
               >
             </fieldset>
             <label class="lbl">카테고리
