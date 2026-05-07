@@ -61,8 +61,10 @@
             <strong>팀이 올릴 글·링크</strong>는 <code
               >data/community.json</code
             >
-            에 쌓입니다. Pages 는 정적이라 <em>등록 정보는 깃허브에 저장·커밋</em>해야
-            모든 사용자에게 동일하게 보입니다.
+            에 반영되어 모두에게 보입니다. 사용자가 웹에서 올린 글은
+            <strong>등록(API)</strong>으로 <code>data/public-submissions.json</code> 에
+            쌓이며 (서버 필요), <strong>수정·삭제는 관리 비밀번호</strong>가 있을 때만
+            가능합니다.
           </p>
 
           <div
@@ -180,6 +182,115 @@
           >README</a
         >).
       </footer>
+    </div>
+
+    <button
+      type="button"
+      id="fab-register"
+      class="fab-register"
+      title="등록하기"
+      aria-label="등록 폼 열기"
+    >
+      + 등록
+    </button>
+
+    <div id="toast-mini" class="toast-mini" hidden role="status"></div>
+
+    <div id="dlg-register" class="modal" hidden aria-hidden="true">
+      <div class="modal-backdrop" data-modal-backdrop aria-hidden="true"></div>
+      <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="dlg-reg-title">
+        <header class="modal-head">
+          <h2 class="modal-title" id="dlg-reg-title">링크 등록</h2>
+          <button type="button" class="btn-icon-x" data-modal-close aria-label="닫기">×</button>
+        </header>
+        <div class="modal-body">
+          <p id="reg-api-hint" class="reg-api-hint" role="status"></p>
+          <form id="form-register" class="stack-form">
+            <fieldset class="fieldset-row">
+              <legend class="fieldset-legend">영역</legend>
+              <label class="choice"
+                ><input type="radio" name="space" id="reg-space-overseas" checked /> 해외 수집</label
+              >
+              <label class="choice"
+                ><input type="radio" name="space" id="reg-space-community" /> 우리 컨텐츠</label
+              >
+            </fieldset>
+            <label class="lbl">카테고리
+              <select id="reg-category" name="category" required class="fld"></select>
+            </label>
+            <label class="lbl">제목
+              <input id="reg-title" name="title" type="text" required class="fld" maxlength="280" autocomplete="off" data-modal-initial-focus />
+            </label>
+            <label class="lbl">설명 (선택)
+              <textarea id="reg-desc" name="desc" class="fld fld-ta" rows="2"></textarea>
+            </label>
+            <label class="lbl">URL
+              <input id="reg-url" name="url" type="url" required class="fld" placeholder="https:// …" autocomplete="off" />
+            </label>
+            <footer class="modal-actions">
+              <button type="button" class="btn btn--ghost" data-modal-close>취소</button>
+              <button type="submit" class="btn btn-submit">등록 / 저장</button>
+            </footer>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div id="dlg-edit" class="modal" hidden aria-hidden="true">
+      <div class="modal-backdrop" data-modal-backdrop aria-hidden="true"></div>
+      <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="dlg-edit-title">
+        <header class="modal-head">
+          <h2 class="modal-title" id="dlg-edit-title">등록글 수정</h2>
+          <button type="button" class="btn-icon-x" data-modal-close aria-label="닫기">×</button>
+        </header>
+        <div class="modal-body">
+          <form id="form-edit" class="stack-form">
+            <input type="hidden" id="edit-id" />
+            <label class="lbl">카테고리
+              <select id="edit-category" class="fld"></select>
+            </label>
+            <label class="lbl">제목
+              <input id="edit-title" type="text" required class="fld" maxlength="280" autocomplete="off" data-modal-initial-focus />
+            </label>
+            <label class="lbl">설명
+              <textarea id="edit-desc" class="fld fld-ta" rows="2"></textarea>
+            </label>
+            <label class="lbl">URL
+              <input id="edit-url" type="url" required class="fld" placeholder="https://" />
+            </label>
+            <label class="lbl">관리 비밀번호 <span class="req-star">*</span>
+              <input id="edit-password" type="password" class="fld" autocomplete="current-password" required />
+            </label>
+            <footer class="modal-actions">
+              <button type="button" class="btn btn--ghost" data-modal-close>취소</button>
+              <button type="submit" class="btn btn-submit">수정 적용</button>
+            </footer>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div id="dlg-delete" class="modal" hidden aria-hidden="true">
+      <div class="modal-backdrop" data-modal-backdrop aria-hidden="true"></div>
+      <div class="modal-panel" role="dialog" aria-modal="true">
+        <header class="modal-head">
+          <h2 class="modal-title">등록글 삭제</h2>
+          <button type="button" class="btn-icon-x" data-modal-close aria-label="닫기">×</button>
+        </header>
+        <div class="modal-body">
+          <form id="form-delete" class="stack-form">
+            <input type="hidden" id="delete-id" />
+            <p class="delete-warn">이 항목을 삭제하면 Git 에서도 제거됩니다.</p>
+            <label class="lbl">관리 비밀번호
+              <input id="delete-password" type="password" class="fld" autocomplete="current-password" required data-modal-initial-focus />
+            </label>
+            <footer class="modal-actions">
+              <button type="button" class="btn btn--ghost" data-modal-close>취소</button>
+              <button type="submit" class="btn btn-mini--danger-flat">영구 삭제</button>
+            </footer>
+          </form>
+        </div>
+      </div>
     </div>
 
     <script src="js/app.js"></script>
