@@ -323,8 +323,21 @@
               <label class="lbl lbl-tight" for="reg-publish-location">게시 위치 <span class="lbl-optional">선택</span></label>
               <input id="reg-publish-location" name="publishLocation" type="text" class="fld" placeholder="예: 브런치, 사내 위키" autocomplete="off" />
               <label class="lbl lbl-tight" for="reg-related-overseas">연관 해외 레퍼런스 <span class="lbl-optional">등록된 링크만</span></label>
+              <div class="related-picker-tools">
+                <select id="reg-related-category" class="fld fld-select fld-select--compact" aria-label="연관 레퍼런스 카테고리로 필터">
+                  <option value="">전체 카테고리</option>
+                </select>
+                <input
+                  id="reg-related-search"
+                  type="search"
+                  class="fld"
+                  placeholder="레퍼런스 제목 검색"
+                  autocomplete="off"
+                  aria-label="연관 레퍼런스 제목 검색"
+                />
+              </div>
               <select id="reg-related-overseas" name="relatedOverseas" class="fld fld-select fld-multi" multiple size="5" aria-describedby="reg-related-hint"></select>
-              <p id="reg-related-hint" class="fld-hint">Ctrl·Shift로 여러 개 선택 · 해외 레퍼런스에 <strong>등록글</strong>로 올린 항목만 목록에 나옵니다.</p>
+              <p id="reg-related-hint" class="fld-hint">카테고리/검색으로 목록을 좁혀 여러 개 선택할 수 있습니다.</p>
             </div>
             <div class="form-section form-section--inline">
               <label class="lbl-check">
@@ -378,6 +391,19 @@
               <label class="lbl lbl-tight" for="edit-publish-location">게시 위치</label>
               <input id="edit-publish-location" type="text" class="fld" autocomplete="off" />
               <label class="lbl lbl-tight" for="edit-related-overseas">연관 해외 레퍼런스</label>
+              <div class="related-picker-tools">
+                <select id="edit-related-category" class="fld fld-select fld-select--compact" aria-label="연관 레퍼런스 카테고리로 필터">
+                  <option value="">전체 카테고리</option>
+                </select>
+                <input
+                  id="edit-related-search"
+                  type="search"
+                  class="fld"
+                  placeholder="레퍼런스 제목 검색"
+                  autocomplete="off"
+                  aria-label="연관 레퍼런스 제목 검색"
+                />
+              </div>
               <select id="edit-related-overseas" class="fld fld-select fld-multi" multiple size="5"></select>
             </div>
             <div class="form-section form-section--inline" id="edit-enabled-row">

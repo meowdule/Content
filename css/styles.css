@@ -1107,29 +1107,6 @@ body {
   line-height: 1.45;
 }
 
-.external-cta {
-  flex-shrink: 0;
-  align-self: center;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-  border-radius: 12px;
-  background: linear-gradient(
-    135deg,
-    rgba(255, 107, 44, 0.12),
-    rgba(99, 102, 241, 0.1)
-  );
-  border: 1px solid var(--border);
-}
-
-.external-cta svg {
-  width: 18px;
-  height: 18px;
-  color: var(--violet);
-}
-
 .resource-item.hidden {
   display: none;
 }
@@ -1750,17 +1727,6 @@ body {
   background: rgba(220, 53, 69, 0.1);
 }
 
-.pill-sub {
-  font-size: 0.625rem;
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  padding: 2px 7px;
-  border-radius: 999px;
-  background: var(--violet-soft);
-  color: var(--violet);
-}
-
 .pill-inactive {
   font-size: 0.625rem;
   font-weight: 800;
@@ -2090,13 +2056,20 @@ body {
   word-break: break-all;
 }
 
+.related-picker-tools {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 8px;
+}
+
 .filter-deck.control-deck {
   margin-bottom: 20px;
 }
 
 .overseas-registered-wrap {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  align-items: center;
   gap: 10px;
   width: 100%;
 }
@@ -2104,20 +2077,45 @@ body {
 .resource-link-card--full {
   width: 100%;
   min-width: 0;
+  flex: 1 1 auto;
 }
 
 .overseas-link-toolbar {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
+  flex-shrink: 0;
   align-items: center;
   justify-content: flex-end;
-  gap: 8px;
-  padding: 2px 0;
+  gap: 6px;
+  padding: 0;
 }
 
 .resource-item--overseas-registered .btn-mini--icon {
-  min-width: 40px;
-  min-height: 36px;
+  min-width: 30px;
+  min-height: 30px;
+  padding: 4px;
+  border: 0;
+  background: transparent;
+  border-radius: 6px;
+}
+
+.resource-item--overseas-registered .btn-mini--icon:hover {
+  background: var(--accent-soft);
+  border: 0;
+}
+
+.resource-item--overseas-registered .btn-mini--icon.btn-mini--danger:hover {
+  background: rgba(220, 53, 69, 0.12);
+}
+
+@media (max-width: 700px) {
+  .related-picker-tools {
+    grid-template-columns: 1fr;
+  }
+
+  .overseas-registered-wrap {
+    align-items: flex-start;
+  }
 }
 
 .section-hierarchy-hint {

@@ -106,6 +106,8 @@
 
   /** @type {{ apiBase: string }} */
   let hubConfig = { apiBase: "" };
+  /** @type {WeakMap<HTMLSelectElement, Set<string>>} */
+  const relatedPickState = new WeakMap();
 
   const catalogEl = document.getElementById("catalog");
   const searchEl = document.getElementById("search");
@@ -173,6 +175,12 @@
   const regRelatedOverseas = /** @type {HTMLSelectElement | null} */ (
     document.getElementById("reg-related-overseas")
   );
+  const regRelatedCategory = /** @type {HTMLSelectElement | null} */ (
+    document.getElementById("reg-related-category")
+  );
+  const regRelatedSearch = /** @type {HTMLInputElement | null} */ (
+    document.getElementById("reg-related-search")
+  );
   const regEnabled = /** @type {HTMLInputElement | null} */ (
     document.getElementById("reg-enabled")
   );
@@ -214,6 +222,12 @@
   );
   const editRelatedOverseas = /** @type {HTMLSelectElement | null} */ (
     document.getElementById("edit-related-overseas")
+  );
+  const editRelatedCategory = /** @type {HTMLSelectElement | null} */ (
+    document.getElementById("edit-related-category")
+  );
+  const editRelatedSearch = /** @type {HTMLInputElement | null} */ (
+    document.getElementById("edit-related-search")
   );
   const editEnabled = /** @type {HTMLInputElement | null} */ (
     document.getElementById("edit-enabled")
@@ -1102,7 +1116,7 @@
       (!!(it.bodyMd && String(it.bodyMd).trim()) ||
         !!(it.url && isHttpUrl(it.url)));
 
-    const subPill = hasSub ? `<span class="pill-sub">등록</span>` : "";
+    const subPill = "";
 
     const btnEdit = `<button type="button" class="btn-mini btn-mini--icon" data-sub-action="edit" data-submission-id="${escapeAttr(
       it.submissionId || ""
@@ -1215,9 +1229,7 @@
         </div>
         <p class="resource-desc">${escapeHtml(it.desc || "")}</p>
       </div>
-      <span class="external-cta" aria-hidden="true">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
-      </span>`;
+      `;
 
     const href =
       it.url && isHttpUrl(it.url) ? it.url : "";
@@ -1626,21 +1638,92 @@
     }));
   }
 
-  function fillRelatedOverseasSelect(
-    /** @type {HTMLSelectElement | null} */ sel,
-    /** @type {string[] | undefined} */ selectedIds
-  ) {
+  /**
+   * @param {HTMLSelectElement | null} sel
+   * @param {string[] | undefined} selectedIds
+   * @param {string} [categoryId]
+   * @param {string} [query]
+   */
+  function fillRelatedOverseasSelect(sel, selectedIds, categoryId, query) {
     if (!sel) return;
-    const set = new Set(selectedIds || []);
-    const picks = lastSubmissionEntries.filter((x) => x.space === "overseas");
-    sel.innerHTML = picks
-      .map((x) => {
-        const selAttr = set.has(x.id) ? " selected" : "";
-        return `<option value="${escapeAttr(x.id)}"${selAttr}>${escapeHtml(
-          x.title || x.id
-        )}</option>`;
-      })
-      .join("");
+    const prev = relatedPickState.get(sel) || new Set();
+    const set = new Set([...(selectedIds || []), ...prev]);
+    relatedPickState.set(sel, set);
+    const catMap = new Map(
+      baselineOverseasArr
+        .filter((s) => s.id !== "user-orphan")
+        .map((s) => [s.id, `${s.emoji} ${s.title}`])
+    );
+    const q = (query || "").trim().toLowerCase();
+    const picks = lastSubmissionEntries
+      .filter((x) => x.space === "overseas")
+      .sort((a, b) =>
+        String(a.title || a.id).localeCompare(String(b.title || b.id), "ko")
+      );
+    const filtered = picks.filter((x) => {
+      if (categoryId && x.categoryId !== categoryId) return false;
+      if (!q) return true;
+      const hay = `${x.title || ""} ${x.desc || ""}`.toLowerCase();
+      return hay.includes(q);
+    });
+    const byId = new Map(picks.map((x) => [x.id, x]));
+    const selectedOutOfFilter = [...set]
+      .filter((id) => !filtered.some((x) => x.id === id))
+      .map((id) => byId.get(id))
+      .filter(Boolean);
+    const selectedChunk = selectedOutOfFilter.length
+      ? `<optgroup label="선택됨 (현재 필터 밖)">${selectedOutOfFilter
+          .map((x) => {
+            const v = /** @type {SubmissionEntry} */ (x);
+            const cat = catMap.get(v.categoryId) || "기타";
+            return `<option value="${escapeAttr(v.id)}" selected>${escapeHtml(
+              `${v.title || v.id} · ${cat}`
+            )}</option>`;
+          })
+          .join("")}</optgroup>`
+      : "";
+    const filterChunk = filtered.length
+      ? filtered
+          .map((x) => {
+            const cat = catMap.get(x.categoryId) || "기타";
+            const selAttr = set.has(x.id) ? " selected" : "";
+            return `<option value="${escapeAttr(x.id)}"${selAttr}>${escapeHtml(
+              `${x.title || x.id} · ${cat}`
+            )}</option>`;
+          })
+          .join("")
+      : `<option value="" disabled>(조건에 맞는 레퍼런스 없음)</option>`;
+    sel.innerHTML = `${selectedChunk}${filterChunk}`;
+  }
+
+  /**
+   * @param {HTMLSelectElement | null} sel
+   * @returns {string[]}
+   */
+  function getRelatedOverseasSelectedIds(sel) {
+    if (!sel) return [];
+    const st = relatedPickState.get(sel);
+    return st ? [...st] : [...sel.selectedOptions].map((o) => o.value);
+  }
+
+  /**
+   * @param {HTMLSelectElement | null} sel
+   * @param {HTMLSelectElement | null} catSel
+   */
+  function fillRelatedCategoryFilter(sel, catSel) {
+    if (!sel || !catSel) return;
+    const chosen = catSel.value || "";
+    const rows = baselineOverseasArr.filter((s) => s.id !== "user-orphan");
+    catSel.innerHTML =
+      `<option value="">전체 카테고리</option>` +
+      rows
+        .map((s) => {
+          const selAttr = chosen === s.id ? " selected" : "";
+          return `<option value="${escapeAttr(s.id)}"${selAttr}>${escapeHtml(
+            `${s.emoji} ${s.title}`
+          )}</option>`;
+        })
+        .join("");
   }
 
   function fillCatEditParentSelect(
@@ -1703,6 +1786,15 @@
     if (regBlockOverseas) regBlockOverseas.hidden = comm;
     if (regBlockCommunity) regBlockCommunity.hidden = !comm;
     if (regUrl) regUrl.required = !comm;
+    if (comm) {
+      fillRelatedCategoryFilter(regRelatedOverseas, regRelatedCategory);
+      fillRelatedOverseasSelect(
+        regRelatedOverseas,
+        getRelatedOverseasSelectedIds(regRelatedOverseas),
+        regRelatedCategory?.value || "",
+        regRelatedSearch?.value || ""
+      );
+    }
     const h = document.getElementById("dlg-reg-title");
     if (h) h.textContent = comm ? "게시글 초안 등록" : "해외 참고 링크 등록";
   }
@@ -1913,8 +2005,12 @@
     if (regBodyMd) regBodyMd.value = "";
     if (regReferenceUrls) regReferenceUrls.value = "";
     if (regPublishLocation) regPublishLocation.value = "";
+    if (regRelatedCategory) regRelatedCategory.value = "";
+    if (regRelatedSearch) regRelatedSearch.value = "";
+    if (regRelatedOverseas) relatedPickState.set(regRelatedOverseas, new Set());
     if (regEnabled) regEnabled.checked = true;
-    fillRelatedOverseasSelect(regRelatedOverseas, []);
+    fillRelatedCategoryFilter(regRelatedOverseas, regRelatedCategory);
+    fillRelatedOverseasSelect(regRelatedOverseas, [], "", "");
     openModal(dlgRegister);
   }
 
@@ -1955,11 +2051,16 @@
       if (editPublishLocation)
         editPublishLocation.value =
           typeof entry.publishLocation === "string" ? entry.publishLocation : "";
+      if (editRelatedCategory) editRelatedCategory.value = "";
+      if (editRelatedSearch) editRelatedSearch.value = "";
+      fillRelatedCategoryFilter(editRelatedOverseas, editRelatedCategory);
       fillRelatedOverseasSelect(
         editRelatedOverseas,
         Array.isArray(entry.relatedOverseasIds)
           ? entry.relatedOverseasIds
-          : []
+          : [],
+        "",
+        ""
       );
     }
 
@@ -1999,6 +2100,40 @@
 
   function initRegisterEditDeleteUi() {
     wireModals();
+
+    /**
+     * @param {HTMLSelectElement | null} listSel
+     * @param {HTMLSelectElement | null} catSel
+     * @param {HTMLInputElement | null} searchInp
+     */
+    function bindRelatedPicker(listSel, catSel, searchInp) {
+      if (!listSel) return;
+      listSel.addEventListener("change", () => {
+        const prev = relatedPickState.get(listSel) || new Set();
+        const next = new Set(prev);
+        const visible = [...listSel.options]
+          .map((o) => o.value)
+          .filter(Boolean);
+        visible.forEach((id) => next.delete(id));
+        [...listSel.selectedOptions]
+          .map((o) => o.value)
+          .filter(Boolean)
+          .forEach((id) => next.add(id));
+        relatedPickState.set(listSel, next);
+      });
+      const rerender = () =>
+        fillRelatedOverseasSelect(
+          listSel,
+          getRelatedOverseasSelectedIds(listSel),
+          catSel?.value || "",
+          searchInp?.value || ""
+        );
+      catSel?.addEventListener("change", rerender);
+      searchInp?.addEventListener("input", rerender);
+    }
+
+    bindRelatedPicker(regRelatedOverseas, regRelatedCategory, regRelatedSearch);
+    bindRelatedPicker(editRelatedOverseas, editRelatedCategory, editRelatedSearch);
 
     btnRegisterTab?.addEventListener("click", () => openRegisterDialog());
 
@@ -2055,9 +2190,7 @@
       const refRest =
         space === "community" && refLines.length > 1 ? refLines.slice(1) : [];
       const publishLocation = (regPublishLocation?.value || "").trim();
-      const relatedSel = regRelatedOverseas
-        ? [...regRelatedOverseas.selectedOptions].map((o) => o.value)
-        : [];
+      const relatedSel = getRelatedOverseasSelectedIds(regRelatedOverseas);
       const enabled = regEnabled?.checked !== false;
 
       if (!categoryId || !title) {
@@ -2146,9 +2279,7 @@
       const refRest =
         dlgSpace === "community" && refLines.length > 1 ? refLines.slice(1) : [];
       const publishLoc = (editPublishLocation?.value || "").trim();
-      const relatedSel = editRelatedOverseas
-        ? [...editRelatedOverseas.selectedOptions].map((o) => o.value)
-        : [];
+      const relatedSel = getRelatedOverseasSelectedIds(editRelatedOverseas);
       const enabled = editEnabled?.checked !== false;
       if (!id || !pw) {
         window.alert("공용 비밀번호를 입력하세요.");
