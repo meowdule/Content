@@ -1509,7 +1509,10 @@ body {
 }
 
 .stack-form--register .lbl-tight {
-  display: block;
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px 8px;
   margin-bottom: 6px;
   font-size: 0.78rem;
   font-weight: 800;
