@@ -54,9 +54,12 @@ async function readSubmissionsPayload() {
     throw new Error(`Unexpected blob for ${FILE_PATH}`);
   }
   const json = Buffer.from(data.content, "base64").toString("utf8");
-  /** @type {{ version?: number, entries?: unknown[] }} */
+  /** @type {{ version?: number, entries?: unknown[], categories?: { overseas?: unknown, community?: unknown } }} */
   const parsed = JSON.parse(json || "{}");
   if (!Array.isArray(parsed.entries)) parsed.entries = [];
+  if (!parsed.categories || typeof parsed.categories !== "object") {
+    parsed.categories = { overseas: null, community: null };
+  }
   return { blobSha: /** @type {string} */ (data.sha), body: parsed };
 }
 
@@ -134,7 +137,7 @@ app.use(
     maxAge: 86400,
   })
 );
-app.use(express.json({ limit: "32kb" }));
+app.use(express.json({ limit: "1mb" }));
 
 app.get("/health", (_req, res) => {
   res.json({
@@ -148,11 +151,12 @@ app.get("/health", (_req, res) => {
 app.post("/api/register", async (req, res) => {
   if (!requireTokenOr503(res)) return;
 
-  /** @type {{ space?: string, categoryId?: string, title?: string, desc?: string, url?: string }} */
+  /** @type {{ space?: string, categoryId?: string, title?: string, desc?: string, url?: string, bodyMd?: string }} */
   const b = req.body || {};
   const title = typeof b.title === "string" ? b.title.trim() : "";
   const desc = typeof b.desc === "string" ? b.desc.trim() : "";
   const url = typeof b.url === "string" ? b.url.trim() : "";
+  const bodyMd = typeof b.bodyMd === "string" ? b.bodyMd.trim() : "";
   const space =
     b.space === "community" || b.space === "overseas" ? b.space : "";
 
@@ -161,28 +165,49 @@ app.post("/api/register", async (req, res) => {
       ? b.categoryId.trim()
       : "";
 
-  if (!space || !title || !categoryId || !validUrl(url)) {
+  if (!space || !title || !categoryId) {
     res.status(400).json({
       ok: false,
-      error:
-        "필수: space(overseas|community), categoryId, title, url(https/http)",
+      error: "필수: space, categoryId, title",
     });
     return;
+  }
+
+  if (space === "overseas") {
+    if (!validUrl(url)) {
+      res.status(400).json({
+        ok: false,
+        error: "해외 링크 탭은 https/http URL 이 필요합니다.",
+      });
+      return;
+    }
+  } else {
+    if (!bodyMd && !validUrl(url)) {
+      res.status(400).json({
+        ok: false,
+        error:
+          "게시글 초안: 마크다운 본문(bodyMd) 또는 참고 URL 중 하나는 필요합니다.",
+      });
+      return;
+    }
   }
 
   try {
     const { blobSha, body } = await readSubmissionsPayload();
 
-    /** @typedef {{ id: string, space: string, categoryId: string, title: string, desc?: string, url: string, createdAt?: string }} Entry */
+    /** @typedef {{ id: string, space: string, categoryId: string, title: string, desc?: string, url: string, bodyMd?: string, createdAt?: string }} Entry */
+    /** @type {Entry} */
     const entry = {
       id: crypto.randomUUID(),
       space,
       categoryId,
       title,
       desc,
-      url,
+      url: space === "overseas" ? url : url && validUrl(url) ? url : "",
       createdAt: new Date().toISOString(),
     };
+    if (space === "community" && bodyMd) entry.bodyMd = bodyMd;
+
     body.version = typeof body.version === "number" ? body.version : 1;
     body.entries = Array.isArray(body.entries) ? body.entries : [];
     body.entries.push(entry);
@@ -220,7 +245,7 @@ app.post("/api/edit", async (req, res) => {
     res.status(401).json({ ok: false, error: "관리 비밀번호 필요" });
     return;
   }
-  /** @type {{ id?: string, title?: string, desc?: string, url?: string, categoryId?: string }} */
+  /** @type {{ id?: string, title?: string, desc?: string, url?: string, categoryId?: string, bodyMd?: string }} */
   const b = req.body || {};
   const id = typeof b.id === "string" ? b.id.trim() : "";
   if (!id) {
@@ -242,6 +267,7 @@ app.post("/api/edit", async (req, res) => {
 
     /** @type {Record<string, unknown>} */
     const cur = /** @type {Record<string, unknown>} */ (entries[idx]);
+    const curSpace = cur.space === "community" ? "community" : "overseas";
 
     const title =
       typeof b.title === "string" && b.title.trim()
@@ -250,29 +276,128 @@ app.post("/api/edit", async (req, res) => {
     const desc =
       typeof b.desc === "string" ? b.desc.trim() : String(cur.desc ?? "");
     const url =
-      typeof b.url === "string" && b.url.trim()
-        ? b.url.trim()
-        : String(cur.url || "");
-    if (!title || !validUrl(url)) {
-      res.status(400).json({ ok: false, error: "title·url 검증 실패" });
+      typeof b.url === "string" ? b.url.trim() : String(cur.url || "");
+    const bodyMd =
+      typeof b.bodyMd === "string" ? b.bodyMd.trim() : String(cur.bodyMd ?? "");
+
+    if (!title) {
+      res.status(400).json({ ok: false, error: "title 필요" });
       return;
     }
 
-    entries[idx] = {
+    /** @type {Record<string, unknown>} */
+    const next = {
       ...cur,
       title,
       desc,
-      url,
-      ...(typeof b.categoryId === "string" && b.categoryId.trim()
-        ? { categoryId: b.categoryId.trim() }
-        : {}),
       updatedAt: new Date().toISOString(),
     };
+    if (typeof b.categoryId === "string" && b.categoryId.trim()) {
+      next.categoryId = b.categoryId.trim();
+    }
+
+    if (curSpace === "overseas") {
+      const newUrl = validUrl(url) ? url : String(cur.url || "");
+      next.url = newUrl;
+      if (!validUrl(String(next.url))) {
+        res.status(400).json({ ok: false, error: "유효한 URL 필요" });
+        return;
+      }
+    } else {
+      const newUrl = validUrl(url)
+        ? url
+        : url === ""
+          ? ""
+          : String(cur.url || "");
+      next.url = newUrl;
+      if (bodyMd) next.bodyMd = bodyMd;
+      else delete next.bodyMd;
+      const hasMd = !!(next.bodyMd && String(next.bodyMd).trim());
+      const hasU = validUrl(String(next.url || ""));
+      if (!hasMd && !hasU) {
+        res.status(400).json({
+          ok: false,
+          error: "본문 또는 참고 URL 중 하나는 있어야 합니다.",
+        });
+        return;
+      }
+    }
+
+    entries[idx] = next;
     body.entries = entries;
 
     await writeSubmissionsPayload(blobSha, body, `hub: edit · ${id}`);
 
     res.json({ ok: true, entry: entries[idx] });
+  } catch (e) {
+    res.status(500).json({
+      ok: false,
+      error: /** @type {Error} */ (e).message,
+    });
+  }
+});
+
+app.post("/api/save-categories", async (req, res) => {
+  if (!requireTokenOr503(res)) return;
+  if (!ADMIN) {
+    res.status(503).json({
+      ok: false,
+      error:
+        "카테고리 저장 비활성: 서버 .env 에 ADMIN_PASSWORD 를 설정하세요.",
+    });
+    return;
+  }
+  const pw =
+    typeof req.headers["x-admin-password"] === "string"
+      ? req.headers["x-admin-password"]
+      : "";
+  if (!checkAdmin(pw)) {
+    res.status(401).json({ ok: false, error: "관리 비밀번호 필요" });
+    return;
+  }
+  /** @type {{ space?: string, categories?: unknown[] }} */
+  const b = req.body || {};
+  const space =
+    b.space === "community"
+      ? "community"
+      : b.space === "overseas"
+        ? "overseas"
+        : "";
+  const categories = b.categories;
+  if (!space || !Array.isArray(categories)) {
+    res.status(400).json({
+      ok: false,
+      error: "필수: space(overseas|community), categories(배열)",
+    });
+    return;
+  }
+
+  /** @type {{ id: string, emoji: string, title: string, subtitle: string }[]} */
+  const cleaned = [];
+  for (const c of categories) {
+    if (!c || typeof c !== "object") continue;
+    const raw = /** @type {Record<string, unknown>} */ (c);
+    const id = typeof raw.id === "string" ? raw.id.trim() : "";
+    const title = typeof raw.title === "string" ? raw.title.trim() : "";
+    if (!id || !title) continue;
+    cleaned.push({
+      id,
+      emoji:
+        typeof raw.emoji === "string" && raw.emoji.trim()
+          ? raw.emoji.trim()
+          : "📌",
+      title,
+      subtitle:
+        typeof raw.subtitle === "string" ? raw.subtitle : " ",
+    });
+  }
+
+  try {
+    const { blobSha, body } = await readSubmissionsPayload();
+    body.categories = body.categories || { overseas: null, community: null };
+    body.categories[space] = cleaned;
+    await writeSubmissionsPayload(blobSha, body, `hub: categories · ${space}`);
+    res.json({ ok: true, categories: cleaned });
   } catch (e) {
     res.status(500).json({
       ok: false,

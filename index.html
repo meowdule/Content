@@ -106,7 +106,7 @@
                     <input
                       type="date"
                       id="range-start"
-                      class="fld fld-date"
+                      class="fld fld-date fld-date--compact"
                       autocomplete="off"
                     />
                   </label>
@@ -116,7 +116,7 @@
                     <input
                       type="date"
                       id="range-end"
-                      class="fld fld-date"
+                      class="fld fld-date fld-date--compact"
                       autocomplete="off"
                     />
                   </label>
@@ -173,6 +173,9 @@
             >
               등록
             </button>
+            <button type="button" class="btn btn--ghost" id="btn-manage-categories" aria-label="카테고리 편집">
+              카테고리
+            </button>
             <button type="button" class="btn btn--ghost" id="expand-all">
               모두 펼치기
             </button>
@@ -219,13 +222,19 @@
               <label class="lbl lbl-tight" for="reg-title">제목</label>
               <input id="reg-title" name="title" type="text" required class="fld" maxlength="280" autocomplete="off" data-modal-initial-focus />
             </div>
-            <div class="form-section">
-              <label class="lbl lbl-tight" for="reg-desc">설명 <span class="lbl-optional">선택</span></label>
-              <textarea id="reg-desc" name="desc" class="fld fld-ta" rows="2" placeholder="한 줄 요약"></textarea>
+            <div class="form-section" id="reg-block-desc">
+              <label class="lbl lbl-tight" for="reg-desc">한 줄 요약 <span class="lbl-optional">선택</span></label>
+              <textarea id="reg-desc" name="desc" class="fld fld-ta" rows="2" placeholder="목록에 보이는 짧은 설명"></textarea>
             </div>
-            <div class="form-section">
-              <label class="lbl lbl-tight" for="reg-url">URL</label>
+            <div class="form-section" id="reg-block-overseas">
+              <label class="lbl lbl-tight" for="reg-url">URL <span class="req-star">*</span></label>
               <input id="reg-url" name="url" type="url" required class="fld" placeholder="https://…" autocomplete="off" />
+            </div>
+            <div class="form-section" id="reg-block-community" hidden>
+              <label class="lbl lbl-tight" for="reg-body-md">본문 <span class="req-star">*</span> <span class="lbl-hint">Markdown · 굵게, 목록, 코드 블록</span></label>
+              <textarea id="reg-body-md" name="bodyMd" class="fld fld-ta fld-mono" rows="12" placeholder="# 제목&#10;- 항목&#10;&#10;**굵게** 내용…"></textarea>
+              <label class="lbl lbl-tight" for="reg-url-optional">참고 URL <span class="lbl-optional">선택</span></label>
+              <input id="reg-url-optional" type="url" class="fld" placeholder="https://… (없어도 됨)" autocomplete="off" />
             </div>
             <footer class="modal-actions">
               <button type="button" class="btn btn--ghost" data-modal-close>취소</button>
@@ -255,12 +264,16 @@
               <input id="edit-title" type="text" required class="fld" maxlength="280" autocomplete="off" data-modal-initial-focus />
             </div>
             <div class="form-section">
-              <label class="lbl lbl-tight" for="edit-desc">설명</label>
+              <label class="lbl lbl-tight" for="edit-desc">한 줄 요약</label>
               <textarea id="edit-desc" class="fld fld-ta" rows="2"></textarea>
             </div>
-            <div class="form-section">
+            <div class="form-section" id="edit-block-body" hidden>
+              <label class="lbl lbl-tight" for="edit-body-md">본문 (Markdown)</label>
+              <textarea id="edit-body-md" class="fld fld-ta fld-mono" rows="12"></textarea>
+            </div>
+            <div class="form-section" id="edit-block-url">
               <label class="lbl lbl-tight" for="edit-url">URL</label>
-              <input id="edit-url" type="url" required class="fld" placeholder="https://" />
+              <input id="edit-url" type="url" class="fld" placeholder="https://" />
             </div>
             <div class="form-section">
               <label class="lbl lbl-tight" for="edit-password">관리 비밀번호 <span class="req-star">*</span></label>
@@ -298,6 +311,46 @@
       </div>
     </div>
 
+    <div id="dlg-cat-edit" class="modal" hidden aria-hidden="true">
+      <div class="modal-backdrop" data-modal-backdrop aria-hidden="true"></div>
+      <div class="modal-panel modal-panel--register" role="dialog" aria-modal="true" aria-labelledby="dlg-cat-title">
+        <header class="modal-head modal-head--accent">
+          <h2 class="modal-title" id="dlg-cat-title">카테고리 수정</h2>
+          <button type="button" class="btn-icon-x" data-modal-close aria-label="닫기">×</button>
+        </header>
+        <div class="modal-body">
+          <form id="form-cat-edit" class="stack-form stack-form--register">
+            <div class="form-section">
+              <label class="lbl lbl-tight" for="cat-edit-id">ID</label>
+              <input id="cat-edit-id" type="text" class="fld" readonly />
+            </div>
+            <div class="form-section">
+              <label class="lbl lbl-tight" for="cat-edit-emoji">이모지</label>
+              <input id="cat-edit-emoji" type="text" class="fld" maxlength="8" autocomplete="off" />
+            </div>
+            <div class="form-section">
+              <label class="lbl lbl-tight" for="cat-edit-title">제목</label>
+              <input id="cat-edit-title" type="text" class="fld" required maxlength="160" autocomplete="off" />
+            </div>
+            <div class="form-section">
+              <label class="lbl lbl-tight" for="cat-edit-subtitle">부제 / 설명</label>
+              <input id="cat-edit-subtitle" type="text" class="fld" maxlength="400" autocomplete="off" />
+            </div>
+            <div class="form-section">
+              <label class="lbl lbl-tight" for="cat-edit-pw">관리 비밀번호 <span class="req-star">*</span></label>
+              <input id="cat-edit-pw" type="password" class="fld" autocomplete="current-password" required data-modal-initial-focus />
+            </div>
+            <footer class="modal-actions">
+              <button type="button" class="btn btn--ghost" data-modal-close>취소</button>
+              <button type="submit" class="btn btn-submit">저장</button>
+            </footer>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dompurify@3.1.7/dist/purify.min.js" crossorigin="anonymous"></script>
     <script src="js/app.js"></script>
   </body>
 </html>

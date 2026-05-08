@@ -4,9 +4,16 @@
   const TAB_KEY = "ax-hub-space";
 
   /** @typedef {{ id: string, emoji: string, title: string, subtitle: string, items: CatalogItem[] }} Section */
-  /** @typedef {{ title: string, desc?: string, url: string, submissionId?: string, postedAt?: string }} CatalogItem */
+  /** @typedef {{ title: string, desc?: string, url: string, bodyMd?: string, submissionId?: string, postedAt?: string, isArticle?: boolean }} CatalogItem */
 
-  /** @typedef {{ id: string, space: string, categoryId: string, title: string, desc?: string, url: string, createdAt?: string, updatedAt?: string }} SubmissionEntry */
+  /** @typedef {{ id: string, space: string, categoryId: string, title: string, desc?: string, url?: string, bodyMd?: string, createdAt?: string, updatedAt?: string }} SubmissionEntry */
+
+  /** @type {{ version?: number, entries: SubmissionEntry[], categories: { overseas: unknown, community: unknown } }} */
+  let rawSubmissionsData = {
+    version: 2,
+    entries: [],
+    categories: { overseas: null, community: null },
+  };
 
   /** @type {{ overseas: Section[], community: Section[] } | null} */
   let datasets = null;
@@ -72,6 +79,14 @@
   const regUrl = /** @type {HTMLInputElement | null} */ (
     document.getElementById("reg-url")
   );
+  const regUrlOptional = /** @type {HTMLInputElement | null} */ (
+    document.getElementById("reg-url-optional")
+  );
+  const regBodyMd = /** @type {HTMLTextAreaElement | null} */ (
+    document.getElementById("reg-body-md")
+  );
+  const regBlockOverseas = document.getElementById("reg-block-overseas");
+  const regBlockCommunity = document.getElementById("reg-block-community");
   const regApiHint = document.getElementById("reg-api-hint");
 
   const dlgEdit = document.getElementById("dlg-edit");
@@ -96,6 +111,10 @@
   const editUrl = /** @type {HTMLInputElement | null} */ (
     document.getElementById("edit-url")
   );
+  const editBodyMd = /** @type {HTMLTextAreaElement | null} */ (
+    document.getElementById("edit-body-md")
+  );
+  const editBlockBody = document.getElementById("edit-block-body");
 
   const dlgDelete = document.getElementById("dlg-delete");
   const delId = /** @type {HTMLInputElement | null} */ (
@@ -106,6 +125,29 @@
   );
   const formDelete =
     /** @type {HTMLFormElement | null} */ (document.getElementById("form-delete"));
+
+  const dlgCatEdit = document.getElementById("dlg-cat-edit");
+  const formCatEdit =
+    /** @type {HTMLFormElement | null} */ (document.getElementById("form-cat-edit"));
+  const catEditId = /** @type {HTMLInputElement | null} */ (
+    document.getElementById("cat-edit-id")
+  );
+  const catEditEmoji = /** @type {HTMLInputElement | null} */ (
+    document.getElementById("cat-edit-emoji")
+  );
+  const catEditTitle = /** @type {HTMLInputElement | null} */ (
+    document.getElementById("cat-edit-title")
+  );
+  const catEditSubtitle = /** @type {HTMLInputElement | null} */ (
+    document.getElementById("cat-edit-subtitle")
+  );
+  const catEditPw = /** @type {HTMLInputElement | null} */ (
+    document.getElementById("cat-edit-pw")
+  );
+  const btnManageCategories = document.getElementById("btn-manage-categories");
+
+  /** @type {"edit"|"add"} */
+  let categoryDialogMode = "edit";
 
   const PERIOD_ALLOWED = [7, 30, 90, 182, 365];
 
@@ -139,8 +181,16 @@
 
   function applyPeriodPresetToInputs(days) {
     const { start, end } = getPresetRangeStrings(days);
-    if (rangeStartInp) rangeStartInp.value = start;
-    if (rangeEndInp) rangeEndInp.value = end;
+    if (rangeStartInp) {
+      rangeStartInp.value = start;
+      rangeStartInp.dispatchEvent(new Event("input", { bubbles: true }));
+      rangeStartInp.dispatchEvent(new Event("change", { bubbles: true }));
+    }
+    if (rangeEndInp) {
+      rangeEndInp.value = end;
+      rangeEndInp.dispatchEvent(new Event("input", { bubbles: true }));
+      rangeEndInp.dispatchEvent(new Event("change", { bubbles: true }));
+    }
   }
 
   function syncPeriodChipHighlight() {
@@ -194,10 +244,23 @@
         cache: "no-store",
       });
       if (!r.ok) return [];
-      /** @type {{ entries?: unknown }} */
+      /** @type {{ entries?: unknown, categories?: unknown }} */
       const j = await r.json();
-      if (!Array.isArray(j.entries)) return [];
-      return /** @type {SubmissionEntry[]} */ (j.entries);
+      rawSubmissionsData.version =
+        typeof j.version === "number" ? j.version : 2;
+      rawSubmissionsData.entries = Array.isArray(j.entries)
+        ? /** @type {SubmissionEntry[]} */ (j.entries)
+        : [];
+      if (j.categories && typeof j.categories === "object") {
+        const cg = /** @type {Record<string, unknown>} */ (j.categories);
+        rawSubmissionsData.categories = {
+          overseas: cg.overseas !== undefined ? cg.overseas : null,
+          community: cg.community !== undefined ? cg.community : null,
+        };
+      } else {
+        rawSubmissionsData.categories = { overseas: null, community: null };
+      }
+      return rawSubmissionsData.entries;
     } catch {
       return [];
     }
@@ -214,6 +277,52 @@
       .replace(/&/g, "&amp;")
       .replace(/"/g, "&quot;")
       .replace(/</g, "&lt;");
+  }
+
+  function stripForSearchBlob(s) {
+    if (!s) return "";
+    return String(s)
+      .replace(/```[\s\S]*?```/g, " ")
+      .replace(/`([^`]+)`/g, "$1")
+      .replace(/[#*_[\]()]/g, " ")
+      .replace(/\s+/g, " ")
+      .trim();
+  }
+
+  /**
+   * @param {string} md
+   */
+  function renderMarkdownSafe(md) {
+    if (!md || !String(md).trim()) return "";
+    try {
+      const g = /** @type {{ marked?: { parse: (x: string, o?: object) => string }, DOMPurify?: { sanitize: (x: string) => string } }} */ (
+        window
+      );
+      if (g.marked) {
+        let html = "";
+        if (typeof g.marked.parse === "function")
+          html = g.marked.parse(String(md), { breaks: true });
+        else if (typeof g.marked === "function")
+          html = /** @type {(s: string) => string} */ (g.marked)(String(md));
+        if (html) {
+          if (g.DOMPurify && typeof g.DOMPurify.sanitize === "function")
+            return g.DOMPurify.sanitize(html);
+          return html;
+        }
+      }
+    } catch {
+      /* ignore */
+    }
+    return `<p class="md-fallback">${escapeHtml(String(md))}</p>`;
+  }
+
+  function isHttpUrl(s) {
+    try {
+      const u = new URL(s);
+      return u.protocol === "http:" || u.protocol === "https:";
+    } catch {
+      return false;
+    }
   }
 
   /**
@@ -248,10 +357,66 @@
             url: String(raw.url || ""),
           };
           if (postedAt) out.postedAt = postedAt;
+          if (typeof raw.bodyMd === "string" && raw.bodyMd.trim()) {
+            out.bodyMd = raw.bodyMd.trim();
+            out.isArticle = true;
+          }
           return out;
         }),
       };
     });
+  }
+
+  /**
+   * 저장된 categories 배열이 있으면 그 정의로 섹션을 구성하고, 항목은 같은 id의 baseline에서 붙입니다.
+   * @param {Section[]} baseline
+   * @param {unknown} overrides
+   * @returns {Section[]}
+   */
+  function mergeCategoryDefs(baseline, overrides) {
+    const base = baseline.map((s) =>
+      /** @type {Section} */ (JSON.parse(JSON.stringify(s)))
+    );
+    if (!Array.isArray(overrides) || overrides.length === 0) return base;
+    const byId = new Map(base.map((s) => [s.id, s]));
+    return overrides.map((raw) => {
+      const o = /** @type {Record<string, unknown>} */ (raw);
+      const id = typeof o.id === "string" ? o.id.trim() : "";
+      const prev = id ? byId.get(id) : undefined;
+      const items =
+        prev && Array.isArray(prev.items)
+          ? JSON.parse(JSON.stringify(prev.items))
+          : [];
+      return {
+        id:
+          id ||
+          `c-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 6)}`,
+        emoji:
+          typeof o.emoji === "string" && o.emoji.trim()
+            ? o.emoji.trim()
+            : prev?.emoji || "📌",
+        title:
+          typeof o.title === "string" && o.title.trim()
+            ? o.title.trim()
+            : prev?.title || id || "카테고리",
+        subtitle:
+          typeof o.subtitle === "string" ? o.subtitle : prev?.subtitle || " ",
+        items,
+      };
+    });
+  }
+
+  /** @param {'overseas'|'community'} space */
+  function getCategoryDefsForSave(space) {
+    const src = space === "overseas" ? baselineOverseasArr : communityRowsRaw;
+    return src
+      .filter((s) => s.id !== "user-orphan")
+      .map((s) => ({
+        id: s.id,
+        emoji: s.emoji,
+        title: s.title,
+        subtitle: s.subtitle || " ",
+      }));
   }
 
   function slugifyHeading(text, id) {
@@ -311,6 +476,7 @@
     one(dlgRegister);
     one(dlgEdit);
     one(dlgDelete);
+    one(dlgCatEdit);
   }
 
   function apiOrigin() {
@@ -333,7 +499,12 @@
 
       const title = typeof ce.title === "string" ? ce.title.trim() : "";
       const url = typeof ce.url === "string" ? ce.url.trim() : "";
-      if (!title || !url) continue;
+      const bodyMd =
+        typeof ce.bodyMd === "string" ? ce.bodyMd.trim() : "";
+      if (!title) continue;
+      if (ce.space === "community") {
+        if (!bodyMd && !url) continue;
+      } else if (!url) continue;
       clean.push(ce);
     }
     return clean;
@@ -355,17 +526,27 @@
     for (const e of list) {
       const title = typeof e.title === "string" ? e.title.trim() : "";
       const url = typeof e.url === "string" ? e.url.trim() : "";
+      const bodyMd =
+        typeof e.bodyMd === "string" ? e.bodyMd.trim() : "";
       const cat = typeof e.categoryId === "string" ? e.categoryId.trim() : "";
-      if (!title || !url) continue;
+      if (spaceKey === "community") {
+        if (!title || (!bodyMd && !url)) continue;
+      } else {
+        if (!title || !url) continue;
+      }
 
       const sec = cat ? sections.find((s) => s.id === cat) : null;
       /** @type {CatalogItem} */
       const item = {
         title: e.title || "",
         desc: typeof e.desc === "string" ? e.desc : "",
-        url: e.url || "",
+        url: url || "",
         submissionId: e.id,
       };
+      if (bodyMd) {
+        item.bodyMd = bodyMd;
+        item.isArticle = true;
+      }
       const ts = e.updatedAt || e.createdAt;
       if (ts) item.postedAt = new Date(ts).toISOString();
 
@@ -395,8 +576,12 @@
   }
 
   async function reloadAfterMutation(message) {
-    const entries = await fetchSubmissionsEntries();
-    await applyMergedFromEntries(entries);
+    try {
+      await loadDatasets();
+    } catch {
+      await fetchSubmissionsEntries();
+      await applyMergedFromEntries(rawSubmissionsData.entries);
+    }
     buildNav();
     buildSections();
     observeNavFresh();
@@ -429,8 +614,21 @@
     if (!communityRes.ok)
       throw new Error(`community.json (${communityRes.status})`);
 
-    baselineOverseasArr = normalizeBaselineSections(await overseasRes.json());
-    communityRowsRaw = normalizeBaselineSections(await communityRes.json());
+    const overseasJson = await overseasRes.json();
+    const communityJson = await communityRes.json();
+
+    await fetchSubmissionsEntries();
+
+    const baseO = normalizeBaselineSections(overseasJson);
+    const baseC = normalizeBaselineSections(communityJson);
+    baselineOverseasArr = mergeCategoryDefs(
+      baseO,
+      rawSubmissionsData.categories.overseas
+    );
+    communityRowsRaw = mergeCategoryDefs(
+      baseC,
+      rawSubmissionsData.categories.community
+    );
 
     hubConfig.apiBase = "";
     if (configRes.ok) {
@@ -443,8 +641,7 @@
       }
     }
 
-    const submissions = await fetchSubmissionsEntries();
-    await applyMergedFromEntries(submissions);
+    await applyMergedFromEntries(rawSubmissionsData.entries);
   }
 
   function updateToolbarForTab() {
@@ -672,7 +869,11 @@
    * @param {Section} section
    */
   function renderItemLi(it, section) {
-    const lower = `${it.title} ${it.desc || ""}`.toLowerCase();
+    const lower = `${it.title} ${it.desc || ""} ${stripForSearchBlob(
+      it.bodyMd || ""
+    )}`
+      .trim()
+      .toLowerCase();
 
     const hasSub =
       !!(it.submissionId && typeof it.submissionId === "string");
@@ -682,11 +883,58 @@
         ? ` data-posted-at="${escapeAttr(String(it.postedAt).trim())}"`
         : "";
 
+    const isArticle =
+      activeSpace === "community" &&
+      !!(it.bodyMd && String(it.bodyMd).trim());
+
+    const subPill = hasSub ? `<span class="pill-sub">등록글</span>` : "";
+
+    if (isArticle) {
+      const mdHtml = renderMarkdownSafe(it.bodyMd || "");
+      const refLink =
+        it.url && isHttpUrl(it.url)
+          ? `<p class="article-ref-link"><a href="${escapeAttr(
+              it.url
+            )}" target="_blank" rel="noopener noreferrer">참고 링크</a></p>`
+          : "";
+      const actions = hasSub
+        ? `<div class="resource-actions resource-actions--article" aria-label="등록글 관리">
+        <button type="button" class="btn-mini" data-sub-action="edit" data-submission-id="${escapeAttr(
+          it.submissionId || ""
+        )}">수정</button>
+        <button type="button" class="btn-mini btn-mini--danger" data-sub-action="delete" data-submission-id="${escapeAttr(
+          it.submissionId || ""
+        )}">삭제</button>
+      </div>`
+        : "";
+
+      return `<li class="resource-item resource-item--article${
+        hasSub ? " resource-item--with-actions" : ""
+      }" data-text="${escapeAttr(lower)}"${postedAttr}>
+        <div class="resource-article-card">
+          <div class="resource-article-body">
+            <div class="resource-title-row">
+              <p class="resource-title">${escapeHtml(it.title)}</p>
+              ${subPill}
+            </div>
+            ${
+              it.desc
+                ? `<p class="resource-desc">${escapeHtml(it.desc)}</p>`
+                : ""
+            }
+            <div class="md-content">${mdHtml}</div>
+            ${refLink}
+          </div>
+          ${actions}
+        </div>
+      </li>`;
+    }
+
     const linkInner = `
       <div class="resource-main">
         <div class="resource-title-row">
           <p class="resource-title">${escapeHtml(it.title)}</p>
-          ${hasSub ? `<span class="pill-sub">등록글</span>` : ""}
+          ${subPill}
         </div>
         <p class="resource-desc">${escapeHtml(it.desc || "")}</p>
       </div>
@@ -694,13 +942,17 @@
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
       </span>`;
 
+    const href =
+      it.url && isHttpUrl(it.url) ? it.url : "";
+    const linkBlock = href
+      ? `<a class="resource-link-card" href="${escapeHtml(
+          href
+        )}" target="_blank" rel="noopener noreferrer">${linkInner}</a>`
+      : `<div class="resource-link-card resource-link-card--static">${linkInner}</div>`;
+
     if (!hasSub) {
       return `<li class="resource-item" data-text="${escapeAttr(lower)}"${postedAttr}>
-        <a class="resource-link-card" href="${escapeHtml(
-          it.url
-        )}" target="_blank" rel="noopener noreferrer">
-          ${linkInner}
-        </a>
+        ${linkBlock}
       </li>`;
     }
 
@@ -711,15 +963,17 @@
         <button type="button" class="btn-mini btn-mini--danger" data-sub-action="delete" data-submission-id="${sid}">삭제</button>
       </div>`;
 
+    const mainLink = href
+      ? `<a class="resource-link-card resource-link-grow" href="${escapeHtml(
+          href
+        )}" target="_blank" rel="noopener noreferrer">${linkInner}</a>`
+      : `<div class="resource-link-card resource-link-grow resource-link-card--static">${linkInner}</div>`;
+
     return `<li class="resource-item resource-item--with-actions" data-text="${escapeAttr(
       lower
     )}"${postedAttr}>
       <div class="resource-split">
-        <a class="resource-link-card resource-link-grow" href="${escapeHtml(
-          it.url
-        )}" target="_blank" rel="noopener noreferrer">
-          ${linkInner}
-        </a>
+        ${mainLink}
         ${actions}
       </div>
     </li>`;
@@ -741,26 +995,43 @@
           ? `<p class="section-subtitle">${escapeHtml(section.subtitle)}</p>`
           : "";
 
-      return `<section class="section" id="${escapeAttr(secId)}" data-section>
+      const canCatTools = !!apiOrigin() && section.id !== "user-orphan";
+      const catTools = canCatTools
+        ? `<div class="section-cat-tools">
+            <button type="button" class="btn-cat-tool" data-cat-action="edit" data-cat-id="${escapeAttr(
+              section.id
+            )}">수정</button>
+            <button type="button" class="btn-cat-tool btn-cat-tool--danger" data-cat-action="delete" data-cat-id="${escapeAttr(
+              section.id
+            )}">삭제</button>
+          </div>`
+        : "";
+
+      return `<section class="section" id="${escapeAttr(
+        secId
+      )}" data-section data-section-id="${escapeAttr(section.id)}">
         <h2 class="visually-hidden">${escapeHtml(section.title)}</h2>
-        <button type="button" class="section-trigger"
+        <div class="section-head-row">
+          <button type="button" class="section-trigger section-trigger--fill"
           aria-expanded="${expanded}"
           aria-controls="panel-${escapeAttr(secId)}"
           id="heading-${escapeAttr(secId)}">
-          <span class="section-icon" aria-hidden="true">${escapeHtml(
-            section.emoji
-          )}</span>
-          <div class="section-heading">
-            <div class="section-title-row">
-              <p class="section-title">${escapeHtml(section.title)}</p>
-              <span class="section-count">${section.items.length}개</span>
+            <span class="section-icon" aria-hidden="true">${escapeHtml(
+              section.emoji
+            )}</span>
+            <div class="section-heading">
+              <div class="section-title-row">
+                <p class="section-title">${escapeHtml(section.title)}</p>
+                <span class="section-count">${section.items.length}개</span>
+              </div>
+              ${subtitleHtml}
             </div>
-            ${subtitleHtml}
-          </div>
-          <span class="chevron" aria-hidden="true">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
-          </span>
-        </button>
+            <span class="chevron" aria-hidden="true">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+            </span>
+          </button>
+          ${catTools}
+        </div>
         <div class="section-panel ${expanded !== "true" ? "section-panel--collapsed" : ""}" id="panel-${escapeAttr(secId)}" role="region" aria-labelledby="heading-${escapeAttr(secId)}">
           <ul class="resource-list">${itemsHtml}</ul>
         </div>
@@ -955,17 +1226,13 @@
    * @returns {{ id: string; label: string }[]}
    */
   function getCategoryChoices(space) {
-    if (space === "overseas") {
-      return baselineOverseasArr.map((s) => ({
+    const arr = space === "overseas" ? baselineOverseasArr : communityRowsRaw;
+    return arr
+      .filter((s) => s.id !== "user-orphan")
+      .map((s) => ({
         id: s.id,
         label: `${s.emoji} ${s.title}`,
       }));
-    }
-
-    return communityRowsRaw.map((s) => ({
-      id: s.id,
-      label: `${s.emoji} ${s.title}`,
-    }));
   }
 
   /**
@@ -1001,6 +1268,121 @@
       if (regSpaceCommunity) regSpaceCommunity.checked = false;
     }
     fillCategorySelect(space, regCategory);
+    updateRegisterFormMode();
+  }
+
+  function updateRegisterFormMode() {
+    const comm = !!regSpaceCommunity?.checked;
+    if (regBlockOverseas) regBlockOverseas.hidden = comm;
+    if (regBlockCommunity) regBlockCommunity.hidden = !comm;
+    if (regUrl) regUrl.required = !comm;
+    const h = document.getElementById("dlg-reg-title");
+    if (h) h.textContent = comm ? "게시글 등록" : "링크 등록";
+  }
+
+  function updateEditFormForEntry(
+    /** @type {'overseas'|'community'} */ space,
+    /** @type {SubmissionEntry} */ entry
+  ) {
+    const comm = space === "community";
+    if (editBlockBody) editBlockBody.hidden = !comm;
+    if (editUrl) editUrl.required = !comm;
+    if (editBodyMd) {
+      editBodyMd.value =
+        comm && typeof entry.bodyMd === "string" ? entry.bodyMd : "";
+    }
+  }
+
+  async function saveCategoriesApi(
+    /** @type {'overseas'|'community'} */ space,
+    categories,
+    password
+  ) {
+    const origin = apiOrigin();
+    if (!origin) {
+      window.alert("config.json 에 apiBase 가 필요합니다.");
+      return false;
+    }
+    try {
+      const res = await fetch(`${origin}/api/save-categories`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-Admin-Password": password,
+        },
+        body: JSON.stringify({ space, categories }),
+      });
+      const j = await res.json().catch(() => ({}));
+      if (!res.ok || !j.ok) {
+        window.alert(j.error || `저장 실패 (${res.status})`);
+        return false;
+      }
+      return true;
+    } catch (err) {
+      window.alert(String(/** @type {Error} */ (err).message || err));
+      return false;
+    }
+  }
+
+  function openCategoryEditModal(sectionId) {
+    if (!apiOrigin()) {
+      window.alert("apiBase 가 필요합니다.");
+      return;
+    }
+    const defs = getCategoryDefsForSave(activeSpace);
+    const row = defs.find((d) => d.id === sectionId);
+    if (!row) return;
+    categoryDialogMode = "edit";
+    if (catEditId) {
+      catEditId.value = row.id;
+      catEditId.setAttribute("readonly", "");
+    }
+    if (catEditEmoji) catEditEmoji.value = row.emoji;
+    if (catEditTitle) catEditTitle.value = row.title;
+    if (catEditSubtitle) catEditSubtitle.value = row.subtitle || "";
+    if (catEditPw) catEditPw.value = "";
+    const ht = document.getElementById("dlg-cat-title");
+    if (ht) ht.textContent = "카테고리 수정";
+    openModal(dlgCatEdit);
+  }
+
+  function openCategoryAddModal() {
+    if (!apiOrigin()) {
+      window.alert("apiBase 가 필요합니다.");
+      return;
+    }
+    categoryDialogMode = "add";
+    if (catEditId) {
+      catEditId.value = "";
+      catEditId.removeAttribute("readonly");
+    }
+    if (catEditEmoji) catEditEmoji.value = "📌";
+    if (catEditTitle) catEditTitle.value = "";
+    if (catEditSubtitle) catEditSubtitle.value = " ";
+    if (catEditPw) catEditPw.value = "";
+    const ht = document.getElementById("dlg-cat-title");
+    if (ht) ht.textContent = "카테고리 추가";
+    openModal(dlgCatEdit);
+  }
+
+  async function deleteCategoryFlow(sectionId) {
+    if (!apiOrigin()) return;
+    const sec = getSections().find((s) => s.id === sectionId);
+    if (!sec) return;
+    if (sec.items.length > 0) {
+      window.alert(
+        "이 카테고리에 항목이 있으면 삭제할 수 없습니다. 먼저 항목을 옮기거나 삭제하세요."
+      );
+      return;
+    }
+    if (!window.confirm("이 카테고리를 삭제할까요?")) return;
+    const pw = window.prompt("관리 비밀번호");
+    if (!pw) return;
+    const defs = getCategoryDefsForSave(activeSpace).filter(
+      (d) => d.id !== sectionId
+    );
+    const ok = await saveCategoriesApi(activeSpace, defs, pw);
+    if (ok) await reloadAfterMutation("카테고리가 삭제되었습니다.");
   }
 
   function updateRegisterHint() {
@@ -1022,6 +1404,8 @@
     if (regTitle) regTitle.value = "";
     if (regDesc) regDesc.value = "";
     if (regUrl) regUrl.value = "";
+    if (regUrlOptional) regUrlOptional.value = "";
+    if (regBodyMd) regBodyMd.value = "";
     openModal(dlgRegister);
   }
 
@@ -1051,6 +1435,8 @@
     if (editUrl) editUrl.value = entry.url || "";
     if (editPwd) editPwd.value = "";
 
+    updateEditFormForEntry(space, entry);
+
     dlgEdit?.setAttribute("data-edit-space", space);
     openModal(dlgEdit);
   }
@@ -1073,6 +1459,10 @@
 
     btnRegisterTab?.addEventListener("click", () => openRegisterDialog());
 
+    btnManageCategories?.addEventListener("click", () =>
+      openCategoryAddModal()
+    );
+
     regSpaceOverseas?.addEventListener("change", () => {
       if (regSpaceOverseas?.checked) syncRegisterSpaceRadios("overseas");
     });
@@ -1092,24 +1482,48 @@
       const categoryId = regCategory?.value || "";
       const title = (regTitle?.value || "").trim();
       const desc = (regDesc?.value || "").trim();
-      const url = (regUrl?.value || "").trim();
+      const urlOverseas = (regUrl?.value || "").trim();
+      const urlOpt = (regUrlOptional?.value || "").trim();
+      const bodyMd = (regBodyMd?.value || "").trim();
 
-      if (!categoryId || !title || !url) {
-        window.alert("카테고리·제목·URL 은 필수입니다.");
+      if (!categoryId || !title) {
+        window.alert("카테고리와 제목은 필수입니다.");
+        return;
+      }
+
+      if (space === "overseas") {
+        if (!urlOverseas) {
+          window.alert("URL 을 입력하세요.");
+          return;
+        }
+      } else if (!bodyMd && !urlOpt) {
+        window.alert("게시글 본문(Markdown) 또는 참고 URL 중 하나는 필요합니다.");
         return;
       }
 
       try {
+        const payload =
+          space === "overseas"
+            ? {
+                space,
+                categoryId,
+                title,
+                desc,
+                url: urlOverseas,
+              }
+            : {
+                space,
+                categoryId,
+                title,
+                desc,
+                url: urlOpt,
+                ...(bodyMd ? { bodyMd } : {}),
+              };
+
         const res = await fetch(`${origin}/api/register`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            space,
-            categoryId,
-            title,
-            desc,
-            url,
-          }),
+          body: JSON.stringify(payload),
         });
         const j = await res.json().catch(() => ({}));
         if (!res.ok || !j.ok) {
@@ -1134,10 +1548,16 @@
       const title = (editTitle?.value || "").trim();
       const desc = (editDesc?.value || "").trim();
       const url = (editUrl?.value || "").trim();
+      const bodyMd = (editBodyMd?.value || "").trim();
       if (!id || !pw) {
         window.alert("비밀번호를 입력하세요.");
         return;
       }
+      const dlgSpace = dlgEdit?.getAttribute("data-edit-space");
+      const payload =
+        dlgSpace === "community"
+          ? { id, categoryId, title, desc, url, bodyMd }
+          : { id, categoryId, title, desc, url };
       try {
         const res = await fetch(`${origin}/api/edit`, {
           method: "POST",
@@ -1145,7 +1565,7 @@
             "Content-Type": "application/json",
             "X-Admin-Password": pw,
           },
-          body: JSON.stringify({ id, categoryId, title, desc, url }),
+          body: JSON.stringify(payload),
         });
         const j = await res.json().catch(() => ({}));
         if (!res.ok || !j.ok) {
@@ -1188,6 +1608,16 @@
 
     catalogEl?.addEventListener("click", (ev) => {
       const t = /** @type {HTMLElement | null} */ (ev.target);
+      const cbtn = t?.closest("[data-cat-action]");
+      if (cbtn && catalogEl.contains(cbtn)) {
+        ev.stopPropagation();
+        const id = cbtn.getAttribute("data-cat-id");
+        const act = cbtn.getAttribute("data-cat-action");
+        if (!id) return;
+        if (act === "edit") openCategoryEditModal(id);
+        else if (act === "delete") void deleteCategoryFlow(id);
+        return;
+      }
       const btn = t?.closest("[data-sub-action]");
       if (!btn) return;
       ev.preventDefault();
@@ -1196,6 +1626,46 @@
       if (!id) return;
       if (act === "edit") openEditDialog(id);
       else if (act === "delete") openDeleteDialog(id);
+    });
+
+    formCatEdit?.addEventListener("submit", async (ev) => {
+      ev.preventDefault();
+      const pw = (catEditPw?.value || "").trim();
+      const id = (catEditId?.value || "").trim();
+      const emoji = (catEditEmoji?.value || "").trim() || "📌";
+      const title = (catEditTitle?.value || "").trim();
+      const subtitle = (catEditSubtitle?.value || "").trim() || " ";
+      if (!pw) {
+        window.alert("관리 비밀번호를 입력하세요.");
+        return;
+      }
+      if (categoryDialogMode === "add") {
+        if (!id || !title) {
+          window.alert("ID와 제목은 필수입니다.");
+          return;
+        }
+      } else {
+        if (!id || !title) {
+          window.alert("제목은 필수입니다.");
+          return;
+        }
+      }
+      let defs = getCategoryDefsForSave(activeSpace);
+      const row = { id, emoji, title, subtitle };
+      if (categoryDialogMode === "add") {
+        if (defs.some((d) => d.id === id)) {
+          window.alert("같은 ID 의 카테고리가 이미 있습니다.");
+          return;
+        }
+        defs = defs.concat([row]);
+      } else {
+        defs = defs.map((d) => (d.id === id ? row : d));
+      }
+      const ok = await saveCategoriesApi(activeSpace, defs, pw);
+      if (ok) {
+        closeModal(dlgCatEdit);
+        await reloadAfterMutation("카테고리가 저장되었습니다.");
+      }
     });
   }
 
