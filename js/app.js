@@ -104,8 +104,15 @@
   /** @type {SubmissionEntry[]} */
   let lastSubmissionEntries = [];
 
-  /** @type {{ apiBase: string }} */
-  let hubConfig = { apiBase: "" };
+  /** @type {{ apiBase: string, githubOwner: string, githubRepo: string, githubBranch: string, submissionsPath: string, adminPassword: string }} */
+  let hubConfig = {
+    apiBase: "",
+    githubOwner: "meowdule",
+    githubRepo: "Content",
+    githubBranch: "main",
+    submissionsPath: "data/public-submissions.json",
+    adminPassword: "Tbell",
+  };
   /** @type {WeakMap<HTMLSelectElement, Set<string>>} */
   const relatedPickState = new WeakMap();
 
@@ -653,6 +660,146 @@
     return "";
   }
 
+  function isDirectGithubWriteMode() {
+    return !apiOrigin();
+  }
+
+  function checkClientAdminPassword(pw) {
+    const expected = (hubConfig.adminPassword || "").trim();
+    if (!expected) {
+      window.alert(
+        "관리 비밀번호 기준값이 설정되지 않았습니다. data/config.json 의 adminPassword 값을 확인하세요."
+      );
+      return false;
+    }
+    return String(pw || "") === expected;
+  }
+
+  function getGithubTokenOrPrompt() {
+    const key = "ax-gh-token";
+    const existing = sessionStorage.getItem(key) || "";
+    if (existing.trim()) return existing.trim();
+    const token = (window.prompt(
+      "GitHub 쓰기 권한 토큰(PAT)을 입력하세요.\n(브라우저 세션 동안만 저장됩니다)"
+    ) || "").trim();
+    if (!token) return "";
+    sessionStorage.setItem(key, token);
+    return token;
+  }
+
+  function toBase64Utf8(text) {
+    const bytes = new TextEncoder().encode(String(text || ""));
+    let bin = "";
+    for (const b of bytes) bin += String.fromCharCode(b);
+    return btoa(bin);
+  }
+
+  async function ghContentsGet(token) {
+    const p = encodeURIComponent(hubConfig.submissionsPath || "data/public-submissions.json");
+    const b = encodeURIComponent(hubConfig.githubBranch || "main");
+    const url = `https://api.github.com/repos/${encodeURIComponent(
+      hubConfig.githubOwner || "meowdule"
+    )}/${encodeURIComponent(hubConfig.githubRepo || "Content")}/contents/${p}?ref=${b}`;
+    const res = await fetch(url, {
+      headers: {
+        Accept: "application/vnd.github+json",
+        Authorization: `Bearer ${token}`,
+        "X-GitHub-Api-Version": "2022-11-28",
+      },
+    });
+    const j = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(j?.message || `GitHub 조회 실패 (${res.status})`);
+    const content = typeof j.content === "string" ? j.content.replace(/\n/g, "") : "";
+    let json = "{}";
+    if (content) {
+      const bin = atob(content);
+      const bytes = new Uint8Array(bin.length);
+      for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+      json = new TextDecoder().decode(bytes);
+    }
+    return {
+      sha: String(j.sha || ""),
+      body: JSON.parse(json || "{}"),
+    };
+  }
+
+  async function ghContentsPut(token, sha, body, message) {
+    const p = encodeURIComponent(hubConfig.submissionsPath || "data/public-submissions.json");
+    const url = `https://api.github.com/repos/${encodeURIComponent(
+      hubConfig.githubOwner || "meowdule"
+    )}/${encodeURIComponent(hubConfig.githubRepo || "Content")}/contents/${p}`;
+    const res = await fetch(url, {
+      method: "PUT",
+      headers: {
+        Accept: "application/vnd.github+json",
+        Authorization: `Bearer ${token}`,
+        "X-GitHub-Api-Version": "2022-11-28",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        message,
+        content: toBase64Utf8(JSON.stringify(body, null, 2)),
+        branch: hubConfig.githubBranch || "main",
+        sha,
+      }),
+    });
+    const j = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(j?.message || `GitHub 저장 실패 (${res.status})`);
+    return j;
+  }
+
+  async function registerDirectGithub(payload) {
+    const token = getGithubTokenOrPrompt();
+    if (!token) return false;
+    const { sha, body } = await ghContentsGet(token);
+    const entries = Array.isArray(body.entries) ? body.entries : [];
+    const nextEntry = {
+      id: crypto?.randomUUID ? crypto.randomUUID() : `s-${Date.now().toString(36)}`,
+      ...payload,
+      createdAt: new Date().toISOString(),
+    };
+    entries.push(nextEntry);
+    body.version = typeof body.version === "number" ? body.version : 2;
+    body.entries = entries;
+    await ghContentsPut(
+      token,
+      sha,
+      body,
+      `hub: register · ${String(payload.space || "")} · ${String(payload.title || "").slice(0, 42)}`
+    );
+    return true;
+  }
+
+  async function editDirectGithub(id, payload) {
+    const token = getGithubTokenOrPrompt();
+    if (!token) return false;
+    const { sha, body } = await ghContentsGet(token);
+    const entries = Array.isArray(body.entries) ? body.entries : [];
+    const idx = entries.findIndex((e) => e && e.id === id);
+    if (idx < 0) throw new Error("항목을 찾을 수 없습니다.");
+    entries[idx] = {
+      ...entries[idx],
+      ...payload,
+      id,
+      updatedAt: new Date().toISOString(),
+    };
+    body.entries = entries;
+    await ghContentsPut(token, sha, body, `hub: edit · ${id}`);
+    return true;
+  }
+
+  async function deleteDirectGithub(id) {
+    const token = getGithubTokenOrPrompt();
+    if (!token) return false;
+    const { sha, body } = await ghContentsGet(token);
+    const entries = Array.isArray(body.entries) ? body.entries : [];
+    const next = entries.filter((e) => !(e && e.id === id));
+    if (next.length === entries.length) throw new Error("삭제할 항목이 없습니다.");
+    body.entries = next;
+    await ghContentsPut(token, sha, body, `hub: delete · ${id}`);
+    return true;
+  }
+
   /** @type {SubmissionEntry[]} */
   function normalizeEntries(entries) {
     const clean = [];
@@ -820,9 +967,19 @@
     hubConfig.apiBase = "";
     if (configRes.ok) {
       try {
-        /** @type {{ apiBase?: string }} */
+        /** @type {{ apiBase?: string, githubOwner?: string, githubRepo?: string, githubBranch?: string, submissionsPath?: string, adminPassword?: string }} */
         const c = await configRes.json();
         hubConfig.apiBase = (c.apiBase || "").trim();
+        hubConfig.githubOwner = (c.githubOwner || hubConfig.githubOwner || "").trim() || "meowdule";
+        hubConfig.githubRepo = (c.githubRepo || hubConfig.githubRepo || "").trim() || "Content";
+        hubConfig.githubBranch = (c.githubBranch || hubConfig.githubBranch || "").trim() || "main";
+        hubConfig.submissionsPath =
+          (c.submissionsPath || hubConfig.submissionsPath || "").trim() ||
+          "data/public-submissions.json";
+        hubConfig.adminPassword =
+          typeof c.adminPassword === "string" && c.adminPassword.trim()
+            ? c.adminPassword.trim()
+            : hubConfig.adminPassword;
       } catch {
         /* ignore */
       }
@@ -2067,9 +2224,8 @@
     const explicit = !!(rawCfg || rawMeta);
     if (!base) {
       regApiHint.innerHTML =
-        `<strong>등록 API 주소를 알 수 없습니다.</strong> 이 페이지를 <code>http://</code> 또는 <code>https://</code> 로 열거나, ` +
-        `<code>data/config.json</code> 의 <code>apiBase</code>에 API 서버 루트 URL 을 넣으세요. ` +
-        `브라우저에서 호출하려면 해당 서버 CORS 에 <strong>이 사이트 출처</strong>를 허용해야 합니다.`;
+        `<strong>직접 GitHub 저장 모드</strong>입니다. 등록/수정/삭제 시 브라우저에서 GitHub PAT 입력을 요청합니다. ` +
+        `서버 API 모드로 쓰려면 <code>data/config.json</code> 의 <code>apiBase</code>를 설정하세요.`;
       regApiHint.hidden = false;
       return;
     }
@@ -2109,7 +2265,10 @@
       window.alert("항목을 찾을 수 없습니다. 새로고침 후 다시 시도하세요.");
       return;
     }
-    if (!apiOriginOrAlert("항목을 수정하려면")) return;
+    if (!apiOrigin() && !(hubConfig.adminPassword || "").trim()) {
+      window.alert("data/config.json 의 adminPassword 설정이 필요합니다.");
+      return;
+    }
     const space =
       entry.space === "community" ? "community" : "overseas";
     if (editId) editId.value = entry.id;
@@ -2166,7 +2325,10 @@
    * @param {string} id
    */
   function openDeleteDialog(id) {
-    if (!apiOriginOrAlert("항목을 삭제하려면")) return;
+    if (!apiOrigin() && !(hubConfig.adminPassword || "").trim()) {
+      window.alert("data/config.json 의 adminPassword 설정이 필요합니다.");
+      return;
+    }
     const entry = lastSubmissionEntries.find((e) => e.id === id);
     const hintEl = document.getElementById("delete-context-hint");
     if (hintEl) {
@@ -2299,8 +2461,7 @@
 
     dlgRegisterForm?.addEventListener("submit", async (ev) => {
       ev.preventDefault();
-      const origin = apiOriginOrAlert("등록하려면");
-      if (!origin) return;
+      const origin = apiOrigin();
       const space =
         regSpaceCommunity?.checked ? "community" : "overseas";
       const categoryId = regCategory?.value || "";
@@ -2366,15 +2527,20 @@
           };
         }
 
-        const res = await fetch(`${origin}/api/register`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload),
-        });
-        const j = await res.json().catch(() => ({}));
-        if (!res.ok || !j.ok) {
-          window.alert(j.error || `등록 실패 (${res.status})`);
-          return;
+        if (origin) {
+          const res = await fetch(`${origin}/api/register`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+          });
+          const j = await res.json().catch(() => ({}));
+          if (!res.ok || !j.ok) {
+            window.alert(j.error || `등록 실패 (${res.status})`);
+            return;
+          }
+        } else {
+          const ok = await registerDirectGithub(payload);
+          if (!ok) return;
         }
         closeModal(dlgRegister);
         await reloadAfterMutation("등록되었습니다.");
@@ -2387,8 +2553,7 @@
 
     dlgEditForm?.addEventListener("submit", async (ev) => {
       ev.preventDefault();
-      const origin = apiOriginOrAlert();
-      if (!origin) return;
+      const origin = apiOrigin();
       const id = (editId?.value || "").trim();
       const pw = (editPwd?.value || "").trim();
       const categoryId = (editCategory?.value || "").trim();
@@ -2414,6 +2579,10 @@
         window.alert("공용 비밀번호를 입력하세요.");
         return;
       }
+      if (!origin && !checkClientAdminPassword(pw)) {
+        window.alert("공용 비밀번호가 일치하지 않습니다.");
+        return;
+      }
       /** @type {Record<string, unknown>} */
       let payload;
       if (dlgSpace === "community") {
@@ -2433,18 +2602,23 @@
         payload = { id, categoryId, title, desc, url: urlPlain, enabled };
       }
       try {
-        const res = await fetch(`${origin}/api/edit`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "X-Admin-Password": pw,
-          },
-          body: JSON.stringify(payload),
-        });
-        const j = await res.json().catch(() => ({}));
-        if (!res.ok || !j.ok) {
-          window.alert(j.error || `수정 실패 (${res.status})`);
-          return;
+        if (origin) {
+          const res = await fetch(`${origin}/api/edit`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "X-Admin-Password": pw,
+            },
+            body: JSON.stringify(payload),
+          });
+          const j = await res.json().catch(() => ({}));
+          if (!res.ok || !j.ok) {
+            window.alert(j.error || `수정 실패 (${res.status})`);
+            return;
+          }
+        } else {
+          const ok = await editDirectGithub(id, payload);
+          if (!ok) return;
         }
         closeModal(dlgEdit);
         await reloadAfterMutation("수정되었습니다.");
@@ -2455,24 +2629,32 @@
 
     formDelete?.addEventListener("submit", async (ev) => {
       ev.preventDefault();
-      const origin = apiOriginOrAlert();
-      if (!origin) return;
+      const origin = apiOrigin();
       const id = (delId?.value || "").trim();
       const pw = (delPwd?.value || "").trim();
       if (!id || !pw) return;
+      if (!origin && !checkClientAdminPassword(pw)) {
+        window.alert("공용 비밀번호가 일치하지 않습니다.");
+        return;
+      }
       try {
-        const res = await fetch(`${origin}/api/delete`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "X-Admin-Password": pw,
-          },
-          body: JSON.stringify({ id }),
-        });
-        const j = await res.json().catch(() => ({}));
-        if (!res.ok || !j.ok) {
-          window.alert(j.error || `삭제 실패 (${res.status})`);
-          return;
+        if (origin) {
+          const res = await fetch(`${origin}/api/delete`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "X-Admin-Password": pw,
+            },
+            body: JSON.stringify({ id }),
+          });
+          const j = await res.json().catch(() => ({}));
+          if (!res.ok || !j.ok) {
+            window.alert(j.error || `삭제 실패 (${res.status})`);
+            return;
+          }
+        } else {
+          const ok = await deleteDirectGithub(id);
+          if (!ok) return;
         }
         closeModal(dlgDelete);
         await reloadAfterMutation("삭제되었습니다.");

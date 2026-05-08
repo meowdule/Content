@@ -1,3 +1,8 @@
 {
-  "apiBase": ""
+  "apiBase": "",
+  "githubOwner": "meowdule",
+  "githubRepo": "Content",
+  "githubBranch": "main",
+  "submissionsPath": "data/public-submissions.json",
+  "adminPassword": "Tbell"
 }
