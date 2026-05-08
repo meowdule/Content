@@ -139,10 +139,18 @@ body {
 .site-header-bar {
   display: flex;
   flex-wrap: wrap;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
   gap: 16px;
   margin-bottom: 14px;
+}
+
+.header-end {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin-left: auto;
 }
 
 .brand {
@@ -1163,24 +1171,24 @@ body {
 
 .modal-panel {
   position: relative;
-  width: min(440px, 100%);
+  width: min(520px, 100%);
   background: var(--bg-elevated);
   border: 1px solid var(--border);
   border-radius: calc(var(--radius) + 4px);
   box-shadow: var(--shadow);
-  max-height: min(640px, 92vh);
+  max-height: min(700px, 94vh);
   overflow: hidden;
   display: flex;
   flex-direction: column;
 }
 
 .modal-panel--register {
-  width: min(480px, 100%);
+  width: min(560px, 100%);
 }
 
 .modal-panel--wide {
-  width: min(560px, 100%);
-  max-height: min(85vh, 720px);
+  width: min(640px, 100%);
+  max-height: min(88vh, 800px);
 }
 
 .modal-panel--wide .modal-body {
@@ -2092,9 +2100,10 @@ body {
 }
 
 @media (max-width: 720px) {
-  .header-main-nav {
+  .header-end {
     flex-basis: 100%;
-    order: 3;
+    justify-content: flex-end;
+    margin-left: 0;
   }
 
   .site-header-bar {

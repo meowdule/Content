@@ -3,6 +3,31 @@
 
   const TAB_KEY = "ax-hub-space";
 
+  /**
+   * index.html 과 같은 디렉터리(정적 사이트 루트). GitHub Pages에서
+   * `/Repo`(끝 슬래시 없음)처럼 열리면 `fetch('data/…')` 가 상위 경로로 틀어져
+   * public-submissions.json 이 404 → 해외 링크가 비는 문제가 납니다.
+   * `js/app.js` 위치 기준으로 루트를 고정합니다.
+   */
+  const STATIC_SITE_ROOT = (() => {
+    try {
+      return new URL("../", new URL("js/app.js", document.baseURI));
+    } catch {
+      try {
+        return new URL("./", location.href);
+      } catch {
+        return null;
+      }
+    }
+  })();
+
+  /** @param {string} rel 예: data/overseas.json */
+  function dataAssetUrl(rel) {
+    const path = String(rel || "").replace(/^\//, "");
+    if (!STATIC_SITE_ROOT) return path;
+    return new URL(path, STATIC_SITE_ROOT).href;
+  }
+
   /** @param {ParentNode | null | undefined} root */
   function lucideRefresh(root) {
     const L =
@@ -324,8 +349,9 @@
   /** @returns {SubmissionEntry[]} */
   async function fetchSubmissionsEntries() {
     try {
-      const bust = `_=${Date.now()}`;
-      const r = await fetch(`data/public-submissions.json?${bust}`, {
+      const u = new URL("data/public-submissions.json", STATIC_SITE_ROOT || location.href);
+      u.searchParams.set("_", String(Date.now()));
+      const r = await fetch(u.href, {
         cache: "no-store",
       });
       if (!r.ok) return [];
@@ -732,9 +758,9 @@
 
   async function loadDatasets() {
     const [overseasRes, communityRes, configRes] = await Promise.all([
-      fetch("data/overseas.json", { cache: "no-cache" }),
-      fetch("data/community.json", { cache: "no-cache" }),
-      fetch("data/config.json", { cache: "no-cache" }),
+      fetch(dataAssetUrl("data/overseas.json"), { cache: "no-cache" }),
+      fetch(dataAssetUrl("data/community.json"), { cache: "no-cache" }),
+      fetch(dataAssetUrl("data/config.json"), { cache: "no-cache" }),
     ]);
     if (!overseasRes.ok)
       throw new Error(`overseas.json (${overseasRes.status})`);
