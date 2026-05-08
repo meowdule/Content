@@ -297,13 +297,13 @@
       <div class="modal-backdrop" data-modal-backdrop aria-hidden="true"></div>
       <div class="modal-panel" role="dialog" aria-modal="true">
         <header class="modal-head">
-          <h2 class="modal-title">등록글 삭제</h2>
+          <h2 class="modal-title">등록 항목 삭제</h2>
           <button type="button" class="btn-icon-x" data-modal-close aria-label="닫기">×</button>
         </header>
         <div class="modal-body">
           <form id="form-delete" class="stack-form form-delete">
             <input type="hidden" id="delete-id" />
-            <p class="delete-warn">이 항목은 목록에서 삭제됩니다. 공용 비밀번호를 입력하세요.</p>
+            <p class="delete-warn" id="delete-context-hint"></p>
             <div class="form-section form-section--auth">
               <label class="lbl lbl-tight" for="delete-password">공용 비밀번호 <span class="req-star">*</span></label>
               <input id="delete-password" type="password" class="fld" autocomplete="off" required placeholder="예: Tbell" data-modal-initial-focus />
@@ -313,6 +313,32 @@
               <button type="submit" class="btn btn-mini--danger-flat">삭제</button>
             </footer>
           </form>
+        </div>
+      </div>
+    </div>
+
+    <div id="dlg-cat-manage" class="modal" hidden aria-hidden="true">
+      <div class="modal-backdrop" data-modal-backdrop aria-hidden="true"></div>
+      <div
+        class="modal-panel modal-panel--wide"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="dlg-cat-manage-title"
+      >
+        <header class="modal-head modal-head--accent">
+          <h2 class="modal-title" id="dlg-cat-manage-title">카테고리 관리</h2>
+          <button type="button" class="btn-icon-x" data-modal-close aria-label="닫기">×</button>
+        </header>
+        <div class="modal-body">
+          <p class="cat-manage-scope" id="cat-manage-scope"></p>
+          <div class="cat-manage-toolbar">
+            <button type="button" class="btn btn-submit" id="cat-manage-add">카테고리 추가</button>
+          </div>
+          <ul class="cat-manage-list" id="cat-manage-list" aria-label="카테고리 목록"></ul>
+          <p class="cat-manage-footnote">
+            이름·이모지·부제는 「수정」에서 바꿉니다. <strong>등록된 해외 링크·게시글</strong>이 카테고리에 남아 있으면 해당 카테고리는 삭제할 수 없습니다. (개별 항목 삭제는 목록의
+            삭제 버튼)
+          </p>
         </div>
       </div>
     </div>

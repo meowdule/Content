@@ -145,6 +145,10 @@
     document.getElementById("cat-edit-pw")
   );
   const btnManageCategories = document.getElementById("btn-manage-categories");
+  const dlgCatManage = document.getElementById("dlg-cat-manage");
+  const catManageScope = document.getElementById("cat-manage-scope");
+  const catManageList = document.getElementById("cat-manage-list");
+  const btnCatManageAdd = document.getElementById("cat-manage-add");
 
   /** @type {"edit"|"add"} */
   let categoryDialogMode = "edit";
@@ -476,6 +480,7 @@
     one(dlgRegister);
     one(dlgEdit);
     one(dlgDelete);
+    one(dlgCatManage);
     one(dlgCatEdit);
   }
 
@@ -768,6 +773,15 @@
         "",
         space === "community" ? "#tab-community" : "#tab-overseas"
       );
+    if (dlgCatManage?.classList.contains("modal--open")) {
+      if (catManageScope) {
+        catManageScope.textContent =
+          activeSpace === "overseas"
+            ? "현재 탭: 해외 참고 링크 — 이 탭에만 적용되는 카테고리 목록입니다."
+            : "현재 탭: 게시글 초안 — 이 탭에만 적용되는 카테고리 목록입니다.";
+      }
+      renderCategoryManageList();
+    }
   }
 
   function initTabs() {
@@ -1029,18 +1043,6 @@
           ? `<p class="section-subtitle">${escapeHtml(section.subtitle)}</p>`
           : "";
 
-      const canCatTools = !!apiOrigin() && section.id !== "user-orphan";
-      const catTools = canCatTools
-        ? `<div class="section-cat-tools">
-            <button type="button" class="btn-cat-tool" data-cat-action="edit" data-cat-id="${escapeAttr(
-              section.id
-            )}">수정</button>
-            <button type="button" class="btn-cat-tool btn-cat-tool--danger" data-cat-action="delete" data-cat-id="${escapeAttr(
-              section.id
-            )}">삭제</button>
-          </div>`
-        : "";
-
       return `<section class="section" id="${escapeAttr(
         secId
       )}" data-section data-section-id="${escapeAttr(section.id)}">
@@ -1064,7 +1066,6 @@
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
             </span>
           </button>
-          ${catTools}
         </div>
         <div class="section-panel ${expanded !== "true" ? "section-panel--collapsed" : ""}" id="panel-${escapeAttr(secId)}" role="region" aria-labelledby="heading-${escapeAttr(secId)}">
           <ul class="resource-list">${itemsHtml}</ul>
@@ -1355,8 +1356,65 @@
     }
   }
 
+  function renderCategoryManageList() {
+    if (!catManageList) return;
+    const defs = getCategoryDefsForSave(activeSpace);
+    const sections = getSections().filter((s) => s.id !== "user-orphan");
+    const countById = Object.fromEntries(
+      sections.map((s) => [s.id, s.items.length])
+    );
+    if (!defs.length) {
+      catManageList.innerHTML =
+        `<li class="cat-manage-empty">아직 카테고리가 없습니다. 「카테고리 추가」로 만드세요.</li>`;
+      return;
+    }
+    catManageList.innerHTML = defs
+      .map((d) => {
+        const n = countById[d.id] ?? 0;
+        const sub = (d.subtitle || "").trim();
+        const subLine =
+          sub && sub !== " "
+            ? `<span class="cat-manage-sub">${escapeHtml(sub)}</span>`
+            : "";
+        return `<li class="cat-manage-item">
+      <div class="cat-manage-item-main">
+        <span class="cat-manage-emoji" aria-hidden="true">${escapeHtml(
+          d.emoji
+        )}</span>
+        <div class="cat-manage-text">
+          <span class="cat-manage-name">${escapeHtml(d.title)}</span>
+          ${subLine}
+          <span class="cat-manage-meta">ID <code>${escapeHtml(d.id)}</code> · 항목 ${n}개</span>
+        </div>
+      </div>
+      <div class="cat-manage-actions">
+        <button type="button" class="btn-mini" data-cat-manage="edit" data-cat-id="${escapeAttr(
+          d.id
+        )}">이름·설정 수정</button>
+        <button type="button" class="btn-mini btn-mini--danger" data-cat-manage="delete" data-cat-id="${escapeAttr(
+          d.id
+        )}">카테고리 삭제</button>
+      </div>
+    </li>`;
+      })
+      .join("");
+  }
+
+  function openCategoryManageModal() {
+    if (!apiOriginOrAlert("카테고리를 저장하려면")) return;
+    if (catManageScope) {
+      catManageScope.textContent =
+        activeSpace === "overseas"
+          ? "현재 탭: 해외 참고 링크 — 이 탭에만 적용되는 카테고리 목록입니다."
+          : "현재 탭: 게시글 초안 — 이 탭에만 적용되는 카테고리 목록입니다.";
+    }
+    renderCategoryManageList();
+    openModal(dlgCatManage);
+  }
+
   function openCategoryEditModal(sectionId) {
     if (!apiOriginOrAlert("카테고리를 저장하려면")) return;
+    closeModal(dlgCatManage);
     const defs = getCategoryDefsForSave(activeSpace);
     const row = defs.find((d) => d.id === sectionId);
     if (!row) return;
@@ -1376,6 +1434,7 @@
 
   function openCategoryAddModal() {
     if (!apiOriginOrAlert("카테고리를 저장하려면")) return;
+    closeModal(dlgCatManage);
     categoryDialogMode = "add";
     if (catEditId) {
       catEditId.value = "";
@@ -1401,13 +1460,17 @@
       return;
     }
     if (!window.confirm("이 카테고리를 삭제할까요?")) return;
+    closeModal(dlgCatManage);
     const pw = window.prompt("공용 비밀번호 (팀과 동일한 값)");
     if (!pw) return;
     const defs = getCategoryDefsForSave(activeSpace).filter(
       (d) => d.id !== sectionId
     );
     const ok = await saveCategoriesApi(activeSpace, defs, pw);
-    if (ok) await reloadAfterMutation("카테고리가 삭제되었습니다.");
+    if (ok) {
+      await reloadAfterMutation("카테고리가 삭제되었습니다.");
+      openCategoryManageModal();
+    }
   }
 
   function updateRegisterHint() {
@@ -1477,6 +1540,20 @@
    */
   function openDeleteDialog(id) {
     if (!apiOriginOrAlert("항목을 삭제하려면")) return;
+    const entry = lastSubmissionEntries.find((e) => e.id === id);
+    const hintEl = document.getElementById("delete-context-hint");
+    if (hintEl) {
+      if (entry?.space === "community") {
+        hintEl.innerHTML =
+          "<strong>게시글 초안</strong>에 등록된 항목을 삭제합니다. 사라진 뒤에는 복구할 수 없습니다. 공용 비밀번호를 입력하세요.";
+      } else if (entry?.space === "overseas") {
+        hintEl.innerHTML =
+          "<strong>해외 참고 링크</strong>에 등록된 항목을 삭제합니다. 사라진 뒤에는 복구할 수 없습니다. 공용 비밀번호를 입력하세요.";
+      } else {
+        hintEl.textContent =
+          "등록 항목을 삭제합니다. 공용 비밀번호를 입력하세요.";
+      }
+    }
     if (delId) delId.value = id;
     if (delPwd) delPwd.value = "";
     openModal(dlgDelete);
@@ -1488,8 +1565,28 @@
     btnRegisterTab?.addEventListener("click", () => openRegisterDialog());
 
     btnManageCategories?.addEventListener("click", () =>
-      openCategoryAddModal()
+      openCategoryManageModal()
     );
+
+    btnCatManageAdd?.addEventListener("click", () => {
+      closeModal(dlgCatManage);
+      openCategoryAddModal();
+    });
+
+    catManageList?.addEventListener("click", (ev) => {
+      const el = ev.target instanceof Element ? ev.target : null;
+      const btn = el?.closest("[data-cat-manage]");
+      if (!btn || !(btn instanceof HTMLElement) || !catManageList.contains(btn))
+        return;
+      const id = btn.getAttribute("data-cat-id");
+      const act = btn.getAttribute("data-cat-manage");
+      if (!id) return;
+      if (act === "edit") {
+        openCategoryEditModal(id);
+      } else if (act === "delete") {
+        void deleteCategoryFlow(id);
+      }
+    });
 
     regSpaceOverseas?.addEventListener("change", () => {
       if (regSpaceOverseas?.checked) syncRegisterSpaceRadios("overseas");
@@ -1635,16 +1732,6 @@
 
     catalogEl?.addEventListener("click", (ev) => {
       const t = /** @type {HTMLElement | null} */ (ev.target);
-      const cbtn = t?.closest("[data-cat-action]");
-      if (cbtn && catalogEl.contains(cbtn)) {
-        ev.stopPropagation();
-        const id = cbtn.getAttribute("data-cat-id");
-        const act = cbtn.getAttribute("data-cat-action");
-        if (!id) return;
-        if (act === "edit") openCategoryEditModal(id);
-        else if (act === "delete") void deleteCategoryFlow(id);
-        return;
-      }
       const btn = t?.closest("[data-sub-action]");
       if (!btn) return;
       ev.preventDefault();
@@ -1692,6 +1779,7 @@
       if (ok) {
         closeModal(dlgCatEdit);
         await reloadAfterMutation("카테고리가 저장되었습니다.");
+        openCategoryManageModal();
       }
     });
   }
