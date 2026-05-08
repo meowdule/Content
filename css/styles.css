@@ -133,11 +133,10 @@ body {
 
 /* Header */
 .site-header {
-  grid-column: 1 / -1;
-  padding-bottom: 8px;
+  margin-bottom: 8px;
 }
 
-.brand-row {
+.site-header-bar {
   display: flex;
   flex-wrap: wrap;
   align-items: flex-start;
@@ -172,6 +171,14 @@ body {
   line-height: 1.2;
 }
 
+.brand-tagline {
+  margin: 4px 0 0;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  letter-spacing: -0.01em;
+}
+
 .header-actions {
   display: flex;
   flex-wrap: wrap;
@@ -179,56 +186,80 @@ body {
   align-items: center;
 }
 
-.hero-toolbar {
+/* 상단 탭 · 검색 · 기간 — 한 카드 안에서 구역 분리 */
+.control-deck {
   background: var(--bg-elevated);
   border-radius: calc(var(--radius) + 4px);
-  padding: 20px 22px 18px;
+  padding: 18px 20px 20px;
   border: 1px solid var(--border);
   box-shadow: var(--shadow);
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 20px 28px;
 }
 
-.hero-toolbar-left {
-  flex: 0 1 auto;
-  min-width: min(100%, 260px);
+.control-deck__tabs {
+  margin-bottom: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border);
 }
 
-.hero-toolbar-right {
-  flex: 1 1 320px;
+.control-deck__tabs .space-tabs {
+  margin-bottom: 0;
+}
+
+.control-deck__tabs .sidebar-mobile {
+  margin-top: 12px;
+}
+
+.control-deck__filters {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 18px;
+}
+
+@media (min-width: 900px) {
+  .control-deck__filters {
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    align-items: start;
+  }
+}
+
+.filter-panel {
   min-width: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.hero-search {
-  width: 100%;
-}
-
-.hero-search .input-wrap {
-  flex: 1;
-  min-width: 0;
-}
-
-.hero-date-section {
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
 
-.hero-date-header {
-  margin-bottom: 4px;
+.filter-panel--period .filter-panel__body {
+  gap: 12px;
 }
 
-.hero-date-toolbar {
+.filter-panel__head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.filter-panel__title {
+  font-size: 0.7rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+}
+
+.filter-panel__body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.period-range-line {
   display: flex;
   flex-wrap: wrap;
   align-items: flex-end;
-  gap: 12px 18px;
+  gap: 8px 12px;
 }
 
 .range-date-row {
@@ -236,16 +267,6 @@ body {
   flex-wrap: wrap;
   align-items: flex-end;
   gap: 8px 12px;
-}
-
-.range-date-row--inline {
-  flex: 1 1 260px;
-  min-width: 0;
-}
-
-.period-filter--beside {
-  flex: 1 1 220px;
-  min-width: 0;
 }
 
 .range-date-field {
@@ -284,15 +305,6 @@ body {
 
 [data-theme="dark"] .fld-date {
   color-scheme: dark;
-}
-
-.space-tabs--toolbar {
-  margin-bottom: 12px;
-}
-
-.space-tabs--toolbar .space-tab {
-  flex: 0 1 auto;
-  min-width: auto;
 }
 
 .search-bar {
@@ -354,18 +366,14 @@ body {
   color: var(--text-muted);
 }
 
-.period-label {
-  font-size: 0.75rem;
-  font-weight: 800;
-  color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-}
-
 .period-filter {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
+}
+
+.period-filter--deck {
+  padding-top: 2px;
 }
 
 .period-chip {
@@ -548,16 +556,33 @@ body {
   min-width: 0;
 }
 
-.expand-toolbar {
+.main-toolbar {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
   align-items: center;
-  margin-bottom: 18px;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 20px;
+  padding: 14px 16px;
+  background: var(--bg-elevated);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+}
+
+.main-toolbar__end {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn--toolbar {
+  font-weight: 600;
 }
 
 .btn-register-tab {
-  margin-right: auto;
+  margin-right: 0;
   font: inherit;
   font-weight: 900;
   font-size: 0.875rem;
@@ -594,9 +619,10 @@ body {
 .section-cat-tools {
   flex-shrink: 0;
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 6px;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
   padding: 4px 0;
 }
 
@@ -778,8 +804,27 @@ body {
   background: transparent;
 }
 
-.resource-item--article .resource-article-card {
+.resource-article-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
   padding: 12px 8px;
+}
+
+@media (min-width: 720px) {
+  .resource-item--with-actions.resource-item--article .resource-article-card {
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  .resource-item--with-actions.resource-item--article .resource-actions--article {
+    margin-top: 0;
+    flex-shrink: 0;
+    flex-direction: column;
+    align-items: stretch;
+  }
 }
 
 .resource-article-body {
@@ -1152,6 +1197,30 @@ body {
 
 .stack-form--register .form-section {
   margin-bottom: 16px;
+}
+
+.stack-form--register .form-section--auth {
+  margin-top: 8px;
+  padding: 14px;
+  border-radius: var(--radius-sm);
+  border: 1px dashed rgba(99, 102, 241, 0.35);
+  background: linear-gradient(
+    135deg,
+    rgba(99, 102, 241, 0.06),
+    rgba(255, 107, 44, 0.05)
+  );
+}
+
+.form-delete .form-section--auth {
+  margin-bottom: 0;
+}
+
+.form-delete .modal-actions {
+  margin-top: 14px;
+}
+
+.stack-form .form-section--auth {
+  margin-bottom: 0;
 }
 
 .stack-form--register .lbl-tight {

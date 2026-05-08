@@ -242,7 +242,7 @@ app.post("/api/edit", async (req, res) => {
       ? req.headers["x-admin-password"]
       : "";
   if (!checkAdmin(pw)) {
-    res.status(401).json({ ok: false, error: "관리 비밀번호 필요" });
+    res.status(401).json({ ok: false, error: "공용 비밀번호가 필요합니다" });
     return;
   }
   /** @type {{ id?: string, title?: string, desc?: string, url?: string, categoryId?: string, bodyMd?: string }} */
@@ -352,7 +352,7 @@ app.post("/api/save-categories", async (req, res) => {
       ? req.headers["x-admin-password"]
       : "";
   if (!checkAdmin(pw)) {
-    res.status(401).json({ ok: false, error: "관리 비밀번호 필요" });
+    res.status(401).json({ ok: false, error: "공용 비밀번호가 필요합니다" });
     return;
   }
   /** @type {{ space?: string, categories?: unknown[] }} */
@@ -422,7 +422,7 @@ app.post("/api/delete", async (req, res) => {
       ? req.headers["x-admin-password"]
       : "";
   if (!checkAdmin(pw)) {
-    res.status(401).json({ ok: false, error: "관리 비밀번호 필요" });
+    res.status(401).json({ ok: false, error: "공용 비밀번호가 필요합니다" });
     return;
   }
 

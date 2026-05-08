@@ -1401,7 +1401,7 @@
       return;
     }
     if (!window.confirm("이 카테고리를 삭제할까요?")) return;
-    const pw = window.prompt("관리 비밀번호");
+    const pw = window.prompt("공용 비밀번호 (팀과 동일한 값)");
     if (!pw) return;
     const defs = getCategoryDefsForSave(activeSpace).filter(
       (d) => d.id !== sectionId
@@ -1576,7 +1576,7 @@
       const url = (editUrl?.value || "").trim();
       const bodyMd = (editBodyMd?.value || "").trim();
       if (!id || !pw) {
-        window.alert("비밀번호를 입력하세요.");
+        window.alert("공용 비밀번호를 입력하세요.");
         return;
       }
       const dlgSpace = dlgEdit?.getAttribute("data-edit-space");
@@ -1663,7 +1663,7 @@
       const title = (catEditTitle?.value || "").trim();
       const subtitle = (catEditSubtitle?.value || "").trim() || " ";
       if (!pw) {
-        window.alert("관리 비밀번호를 입력하세요.");
+        window.alert("공용 비밀번호를 입력하세요.");
         return;
       }
       if (categoryDialogMode === "add") {

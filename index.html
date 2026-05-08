@@ -17,12 +17,13 @@
     <div class="bg-mesh" aria-hidden="true"></div>
 
     <div class="layout-wrap">
-      <header class="site-header layout">
-        <div class="brand-row" style="grid-column: 1 / -1">
+      <header class="site-header">
+        <div class="site-header-bar">
           <div class="brand">
             <div class="logo" aria-hidden="true">⚡</div>
             <div>
               <h1 class="brand-title">AX 리소스 허브</h1>
+              <p class="brand-tagline">해외 링크 · 게시글 초안 한곳에서</p>
             </div>
           </div>
           <div class="header-actions">
@@ -37,13 +38,9 @@
           </div>
         </div>
 
-        <div class="hero-toolbar layout" style="grid-column: 1 / -1">
-          <div class="hero-toolbar-left">
-            <div
-              role="tablist"
-              aria-label="탭 선택"
-              class="space-tabs space-tabs--toolbar"
-            >
+        <div class="control-deck" aria-label="탭·검색·기간">
+          <div class="control-deck__tabs">
+            <div role="tablist" aria-label="탭 선택" class="space-tabs">
               <button
                 type="button"
                 role="tab"
@@ -65,43 +62,52 @@
             </div>
             <div class="sidebar-mobile">
               <select class="cat-select" id="nav-mobile" aria-label="카테고리로 이동">
-                <option value="">모바일: 카테고리로 이동…</option>
+                <option value="">카테고리로 이동…</option>
               </select>
             </div>
           </div>
 
-          <div class="hero-toolbar-right">
-            <div class="search-bar hero-search">
-              <label class="visually-hidden" for="search">리소스 검색</label>
-              <div class="input-wrap">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                >
-                  <circle cx="11" cy="11" r="8" />
-                  <path d="m21 21-4.3-4.3" />
-                </svg>
-                <input
-                  type="search"
-                  id="search"
-                  autocomplete="off"
-                  placeholder="제목·설명 검색…"
-                  enterkeyhint="search"
-                />
+          <div class="control-deck__filters">
+            <div class="filter-panel">
+              <div class="filter-panel__head">
+                <span class="filter-panel__title" id="search-region-label">검색</span>
+              </div>
+              <div class="filter-panel__body" aria-labelledby="search-region-label">
+                <div class="search-bar">
+                  <label class="visually-hidden" for="search">리소스 검색</label>
+                  <div class="input-wrap">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                    >
+                      <circle cx="11" cy="11" r="8" />
+                      <path d="m21 21-4.3-4.3" />
+                    </svg>
+                    <input
+                      type="search"
+                      id="search"
+                      autocomplete="off"
+                      placeholder="제목·설명 검색…"
+                      enterkeyhint="search"
+                    />
+                  </div>
+                </div>
+                <p class="search-meta" id="search-count" aria-live="polite"></p>
               </div>
             </div>
 
-            <div class="hero-date-section" aria-label="기간 필터">
-              <div class="hero-date-header">
-                <span class="period-label" id="period-label">기간</span>
+            <div class="filter-panel filter-panel--period" aria-label="기간 필터">
+              <div class="filter-panel__head">
+                <span class="filter-panel__title" id="period-region-label">기간</span>
               </div>
-              <div class="hero-date-toolbar">
-                <div class="range-date-row range-date-row--inline">
+              <div class="filter-panel__body">
+                <div class="period-range-line">
                   <label class="range-date-field">
                     <span class="range-date-label">시작</span>
                     <input
@@ -123,19 +129,15 @@
                   </label>
                 </div>
                 <div
-                  class="period-filter period-filter--beside"
+                  class="period-filter period-filter--deck"
                   id="period-filter"
                   role="group"
-                  aria-labelledby="period-label"
+                  aria-labelledby="period-region-label"
                 >
                   <button type="button" class="period-chip" data-period-days="7">
                     1주
                   </button>
-                  <button
-                    type="button"
-                    class="period-chip period-chip--active"
-                    data-period-days="30"
-                  >
+                  <button type="button" class="period-chip period-chip--active" data-period-days="30">
                     1달
                   </button>
                   <button type="button" class="period-chip" data-period-days="90">
@@ -150,8 +152,6 @@
                 </div>
               </div>
             </div>
-
-            <p class="search-meta" id="search-count" aria-live="polite"></p>
           </div>
         </div>
       </header>
@@ -159,30 +159,34 @@
       <div class="layout">
         <aside class="sidebar sidebar-desktop" aria-label="카테고리 내비게이션">
           <div class="sidebar-inner">
-            <p class="sidebar-title">Jump to</p>
+            <p class="sidebar-title">목차</p>
             <ul class="nav-list" id="nav-desktop"></ul>
           </div>
         </aside>
 
         <main class="main" id="main">
-          <div class="expand-toolbar">
-            <button
-              type="button"
-              class="btn btn-register-tab"
-              id="btn-register-tab"
-              aria-label="현재 탭에 링크 등록"
-            >
-              등록
-            </button>
-            <button type="button" class="btn btn--ghost" id="btn-manage-categories" aria-label="카테고리 편집">
-              카테고리
-            </button>
-            <button type="button" class="btn btn--ghost" id="expand-all">
-              모두 펼치기
-            </button>
-            <button type="button" class="btn btn--ghost" id="collapse-all">
-              모두 접기
-            </button>
+          <div class="main-toolbar">
+            <div class="main-toolbar__start">
+              <button
+                type="button"
+                class="btn btn-register-tab"
+                id="btn-register-tab"
+                aria-label="현재 탭에 등록"
+              >
+                등록
+              </button>
+            </div>
+            <div class="main-toolbar__end">
+              <button type="button" class="btn btn--ghost btn--toolbar" id="btn-manage-categories" aria-label="카테고리 편집">
+                카테고리
+              </button>
+              <button type="button" class="btn btn--ghost btn--toolbar" id="expand-all">
+                모두 펼치기
+              </button>
+              <button type="button" class="btn btn--ghost btn--toolbar" id="collapse-all">
+                모두 접기
+              </button>
+            </div>
           </div>
 
           <div id="catalog"></div>
@@ -276,9 +280,9 @@
               <label class="lbl lbl-tight" for="edit-url">URL</label>
               <input id="edit-url" type="url" class="fld" placeholder="https://" />
             </div>
-            <div class="form-section">
-              <label class="lbl lbl-tight" for="edit-password">관리 비밀번호 <span class="req-star">*</span></label>
-              <input id="edit-password" type="password" class="fld" autocomplete="current-password" required placeholder="수정에 필요합니다" />
+            <div class="form-section form-section--auth">
+              <label class="lbl lbl-tight" for="edit-password">공용 비밀번호 <span class="req-star">*</span> <span class="lbl-hint">팀 공유 (서버와 동일)</span></label>
+              <input id="edit-password" type="password" class="fld" autocomplete="off" required placeholder="예: Tbell" />
             </div>
             <footer class="modal-actions">
               <button type="button" class="btn btn--ghost" data-modal-close>취소</button>
@@ -297,12 +301,13 @@
           <button type="button" class="btn-icon-x" data-modal-close aria-label="닫기">×</button>
         </header>
         <div class="modal-body">
-          <form id="form-delete" class="stack-form">
+          <form id="form-delete" class="stack-form form-delete">
             <input type="hidden" id="delete-id" />
-            <p class="delete-warn">이 항목은 목록에서 삭제됩니다.</p>
-            <label class="lbl">관리 비밀번호
-              <input id="delete-password" type="password" class="fld" autocomplete="current-password" required data-modal-initial-focus />
-            </label>
+            <p class="delete-warn">이 항목은 목록에서 삭제됩니다. 공용 비밀번호를 입력하세요.</p>
+            <div class="form-section form-section--auth">
+              <label class="lbl lbl-tight" for="delete-password">공용 비밀번호 <span class="req-star">*</span></label>
+              <input id="delete-password" type="password" class="fld" autocomplete="off" required placeholder="예: Tbell" data-modal-initial-focus />
+            </div>
             <footer class="modal-actions">
               <button type="button" class="btn btn--ghost" data-modal-close>취소</button>
               <button type="submit" class="btn btn-mini--danger-flat">삭제</button>
@@ -337,9 +342,9 @@
               <label class="lbl lbl-tight" for="cat-edit-subtitle">부제 / 설명</label>
               <input id="cat-edit-subtitle" type="text" class="fld" maxlength="400" autocomplete="off" />
             </div>
-            <div class="form-section">
-              <label class="lbl lbl-tight" for="cat-edit-pw">관리 비밀번호 <span class="req-star">*</span></label>
-              <input id="cat-edit-pw" type="password" class="fld" autocomplete="current-password" required data-modal-initial-focus />
+            <div class="form-section form-section--auth">
+              <label class="lbl lbl-tight" for="cat-edit-pw">공용 비밀번호 <span class="req-star">*</span> <span class="lbl-hint">팀 공유</span></label>
+              <input id="cat-edit-pw" type="password" class="fld" autocomplete="off" required placeholder="예: Tbell" data-modal-initial-focus />
             </div>
             <footer class="modal-actions">
               <button type="button" class="btn btn--ghost" data-modal-close>취소</button>
