@@ -479,8 +479,42 @@
     one(dlgCatEdit);
   }
 
+  /**
+   * 등록·수정·삭제 API 베이스 URL.
+   * 1) data/config.json 의 apiBase
+   * 2) head 안 meta[name="ax-api-base"]
+   * 3) http(s) 로 열었을 때만: 현재 페이지 origin (정적·API가 같은 호스트면 설정 생략)
+   */
   function apiOrigin() {
-    return (hubConfig.apiBase || "").replace(/\/$/, "");
+    const fromConfig = (hubConfig.apiBase || "").trim().replace(/\/$/, "");
+    if (fromConfig) return fromConfig;
+    const metaEl = document.querySelector('meta[name="ax-api-base"]');
+    const fromMeta = (metaEl?.getAttribute("content") || "")
+      .trim()
+      .replace(/\/$/, "");
+    if (fromMeta) return fromMeta;
+    if (
+      typeof window !== "undefined" &&
+      window.location &&
+      /^https?:$/i.test(window.location.protocol || "")
+    ) {
+      return String(window.location.origin || "").replace(/\/$/, "");
+    }
+    return "";
+  }
+
+  /** API 주소를 쓸 수 없을 때 (file:// 등) 안내 */
+  function apiOriginOrAlert(hint) {
+    const o = apiOrigin();
+    if (o) return o;
+    window.alert(
+      (hint ? `${hint} ` : "") +
+        "등록 API 주소를 알 수 없습니다.\n\n" +
+        "· 로컬에서는 미리보기용 웹 서버로 index.html 을 열고(직접 파일 열기 말고), " +
+        "또는 data/config.json 의 apiBase 또는 index.html 의 " +
+        '<meta name="ax-api-base" content="https://...API서버..." /> 로 주소를 지정하세요.'
+    );
+    return "";
   }
 
   /** @type {SubmissionEntry[]} */
@@ -1298,11 +1332,8 @@
     categories,
     password
   ) {
-    const origin = apiOrigin();
-    if (!origin) {
-      window.alert("config.json 에 apiBase 가 필요합니다.");
-      return false;
-    }
+    const origin = apiOriginOrAlert();
+    if (!origin) return false;
     try {
       const res = await fetch(`${origin}/api/save-categories`, {
         method: "POST",
@@ -1325,10 +1356,7 @@
   }
 
   function openCategoryEditModal(sectionId) {
-    if (!apiOrigin()) {
-      window.alert("apiBase 가 필요합니다.");
-      return;
-    }
+    if (!apiOriginOrAlert("카테고리를 저장하려면")) return;
     const defs = getCategoryDefsForSave(activeSpace);
     const row = defs.find((d) => d.id === sectionId);
     if (!row) return;
@@ -1347,10 +1375,7 @@
   }
 
   function openCategoryAddModal() {
-    if (!apiOrigin()) {
-      window.alert("apiBase 가 필요합니다.");
-      return;
-    }
+    if (!apiOriginOrAlert("카테고리를 저장하려면")) return;
     categoryDialogMode = "add";
     if (catEditId) {
       catEditId.value = "";
@@ -1366,7 +1391,7 @@
   }
 
   async function deleteCategoryFlow(sectionId) {
-    if (!apiOrigin()) return;
+    if (!apiOriginOrAlert("카테고리를 삭제하려면")) return;
     const sec = getSections().find((s) => s.id === sectionId);
     if (!sec) return;
     if (sec.items.length > 0) {
@@ -1388,14 +1413,23 @@
   function updateRegisterHint() {
     if (!regApiHint) return;
     const base = apiOrigin();
+    const rawCfg = (hubConfig.apiBase || "").trim();
+    const metaEl = document.querySelector('meta[name="ax-api-base"]');
+    const rawMeta = (metaEl?.getAttribute("content") || "").trim();
+    const explicit = !!(rawCfg || rawMeta);
     if (!base) {
       regApiHint.innerHTML =
-        `<strong>등록 API 가 설정되지 않았습니다.</strong> <code>data/config.json</code> 의 <code>apiBase</code>에 등록 API 서버 주소를 넣으세요. 브라우저에서 호출하려면 해당 서버의 CORS 설정에 <strong>이 사이트의 주소(출처)</strong>를 허용해야 합니다.`;
+        `<strong>등록 API 주소를 알 수 없습니다.</strong> 이 페이지를 <code>http://</code> 또는 <code>https://</code> 로 열거나, ` +
+        `<code>data/config.json</code> 의 <code>apiBase</code>에 API 서버 루트 URL 을 넣으세요. ` +
+        `브라우저에서 호출하려면 해당 서버 CORS 에 <strong>이 사이트 출처</strong>를 허용해야 합니다.`;
       regApiHint.hidden = false;
-    } else {
-      regApiHint.innerHTML = `등록 API: <code>${escapeHtml(base)}</code>`;
-      regApiHint.hidden = false;
+      return;
     }
+    const note = explicit
+      ? ""
+      : ` <span class="reg-api-note">(설정 없음 — 지금 보고 있는 주소를 API 로 사용. API가 다른 도메인이면 <code>apiBase</code> 또는 <code>ax-api-base</code> 메타를 지정하세요.)</span>`;
+    regApiHint.innerHTML = `등록 API: <code>${escapeHtml(base)}</code>${note}`;
+    regApiHint.hidden = false;
   }
 
   function openRegisterDialog() {
@@ -1418,10 +1452,7 @@
       window.alert("항목을 찾을 수 없습니다. 새로고침 후 다시 시도하세요.");
       return;
     }
-    if (!apiOrigin()) {
-      window.alert("apiBase 가 설정되어 있어야 수정할 수 있습니다.");
-      return;
-    }
+    if (!apiOriginOrAlert("항목을 수정하려면")) return;
     const space =
       entry.space === "community" ? "community" : "overseas";
     if (editId) editId.value = entry.id;
@@ -1445,10 +1476,7 @@
    * @param {string} id
    */
   function openDeleteDialog(id) {
-    if (!apiOrigin()) {
-      window.alert("apiBase 가 설정되어 있어야 삭제할 수 있습니다.");
-      return;
-    }
+    if (!apiOriginOrAlert("항목을 삭제하려면")) return;
     if (delId) delId.value = id;
     if (delPwd) delPwd.value = "";
     openModal(dlgDelete);
@@ -1472,11 +1500,8 @@
 
     dlgRegisterForm?.addEventListener("submit", async (ev) => {
       ev.preventDefault();
-      const origin = apiOrigin();
-      if (!origin) {
-        window.alert("config.json 에 apiBase 를 먼저 설정하세요.");
-        return;
-      }
+      const origin = apiOriginOrAlert("등록하려면");
+      if (!origin) return;
       const space =
         regSpaceCommunity?.checked ? "community" : "overseas";
       const categoryId = regCategory?.value || "";
@@ -1541,7 +1566,8 @@
 
     dlgEditForm?.addEventListener("submit", async (ev) => {
       ev.preventDefault();
-      const origin = apiOrigin();
+      const origin = apiOriginOrAlert();
+      if (!origin) return;
       const id = (editId?.value || "").trim();
       const pw = (editPwd?.value || "").trim();
       const categoryId = (editCategory?.value || "").trim();
@@ -1581,7 +1607,8 @@
 
     formDelete?.addEventListener("submit", async (ev) => {
       ev.preventDefault();
-      const origin = apiOrigin();
+      const origin = apiOriginOrAlert();
+      if (!origin) return;
       const id = (delId?.value || "").trim();
       const pw = (delPwd?.value || "").trim();
       if (!id || !pw) return;
