@@ -190,7 +190,7 @@ body {
 .control-deck {
   background: var(--bg-elevated);
   border-radius: calc(var(--radius) + 4px);
-  padding: 18px 20px 20px;
+  padding: 14px 16px 16px;
   border: 1px solid var(--border);
   box-shadow: var(--shadow);
 }
@@ -212,14 +212,34 @@ body {
 .control-deck__filters {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 18px;
+  gap: 14px;
+}
+
+.control-deck__mobile {
+  margin-bottom: 14px;
 }
 
 @media (min-width: 900px) {
   .control-deck__filters {
-    grid-template-columns: 1fr 1fr;
-    gap: 24px;
+    grid-template-columns: 1fr 0.65fr;
+    gap: 14px;
     align-items: start;
+  }
+
+  /* 데스크톱: 검색/활성화 1행, 기간은 2행 전체 */
+  .filter-panel--search {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .filter-panel--status {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .filter-panel--period {
+    grid-column: 1 / span 2;
+    grid-row: 2;
   }
 }
 
@@ -227,11 +247,46 @@ body {
   min-width: 0;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
 }
 
 .filter-panel--period .filter-panel__body {
   gap: 12px;
+}
+
+/* period 패널: 데스크톱에서는 날짜(시작/종료) + 단축칩을 한 줄에 배치 */
+@media (min-width: 900px) {
+  .filter-panel--period .filter-panel__body {
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: flex-start;
+    gap: 12px;
+  }
+
+  .filter-panel--period .period-range-line {
+    flex-wrap: nowrap;
+    gap: 8px 12px;
+  }
+
+  .filter-panel--period .range-date-field {
+    flex: 0 0 auto;
+  }
+
+  .filter-panel--period .period-filter {
+    flex-wrap: nowrap;
+    gap: 6px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .filter-panel--period .period-filter--deck {
+    padding-top: 0;
+  }
+}
+
+/* search 패널 입력 높이 좀 더 타이트 */
+.filter-panel--search .input-wrap input {
+  padding: 10px 12px 10px 40px;
 }
 
 .filter-panel__head {
@@ -1667,7 +1722,7 @@ body {
 
 .filter-panel--status .fld-select--compact {
   width: 100%;
-  max-width: 200px;
+  max-width: none;
 }
 
 .seed-view {

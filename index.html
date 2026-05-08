@@ -46,7 +46,7 @@
       </header>
 
         <div class="filter-deck control-deck" aria-label="검색·기간·필터" id="control-deck">
-          <div class="control-deck__tabs">
+          <div class="control-deck__mobile">
             <div class="sidebar-mobile">
               <select class="cat-select" id="nav-mobile" aria-label="카테고리로 이동">
                 <option value="">카테고리로 이동…</option>
@@ -55,7 +55,7 @@
           </div>
 
           <div class="control-deck__filters">
-            <div class="filter-panel">
+            <div class="filter-panel filter-panel--search">
               <div class="filter-panel__head">
                 <span class="filter-panel__title" id="search-region-label">검색</span>
               </div>
@@ -140,15 +140,15 @@
               </div>
             </div>
 
-            <div class="filter-panel filter-panel--status">
+            <div class="filter-panel filter-panel--status" aria-label="활성화 상태 필터">
               <div class="filter-panel__head">
                 <span class="filter-panel__title" id="status-filter-label">활성화</span>
               </div>
               <div class="filter-panel__body" aria-labelledby="status-filter-label">
                 <label class="visually-hidden" for="filter-active">활성화 상태로 필터</label>
                 <select id="filter-active" class="fld fld-select fld-select--compact">
+                  <option value="active" selected>활성만</option>
                   <option value="all">전체</option>
-                  <option value="active">활성만</option>
                   <option value="inactive">비활성만</option>
                 </select>
               </div>
