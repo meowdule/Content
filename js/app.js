@@ -2064,21 +2064,35 @@
     categories,
     password
   ) {
-    const origin = apiOriginOrAlert();
-    if (!origin) return false;
+    const origin = apiOrigin();
+    if (!origin && !checkClientAdminPassword(password)) {
+      window.alert("공용 비밀번호가 일치하지 않습니다.");
+      return false;
+    }
     try {
-      const res = await fetch(`${origin}/api/save-categories`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "X-Admin-Password": password,
-        },
-        body: JSON.stringify({ space, categories }),
-      });
-      const j = await res.json().catch(() => ({}));
-      if (!res.ok || !j.ok) {
-        window.alert(j.error || `저장 실패 (${res.status})`);
-        return false;
+      if (origin) {
+        const res = await fetch(`${origin}/api/save-categories`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "X-Admin-Password": password,
+          },
+          body: JSON.stringify({ space, categories }),
+        });
+        const j = await res.json().catch(() => ({}));
+        if (!res.ok || !j.ok) {
+          window.alert(j.error || `저장 실패 (${res.status})`);
+          return false;
+        }
+      } else {
+        const token = getGithubTokenOrPrompt();
+        if (!token) return false;
+        const { sha, body } = await ghContentsGet(token);
+        if (!body.categories || typeof body.categories !== "object") {
+          body.categories = { overseas: null, community: null };
+        }
+        body.categories[space] = categories;
+        await ghContentsPut(token, sha, body, `hub: categories · ${space}`);
       }
       return true;
     } catch (err) {
@@ -2140,7 +2154,10 @@
   }
 
   function openCategoryManageModal() {
-    if (!apiOriginOrAlert("카테고리를 저장하려면")) return;
+    if (!apiOrigin() && !(hubConfig.adminPassword || "").trim()) {
+      window.alert("data/config.json 의 adminPassword 설정이 필요합니다.");
+      return;
+    }
     if (catManageScope) {
       catManageScope.textContent =
         activeSpace === "overseas"
@@ -2153,7 +2170,10 @@
   }
 
   function openCategoryEditModal(sectionId) {
-    if (!apiOriginOrAlert("카테고리를 저장하려면")) return;
+    if (!apiOrigin() && !(hubConfig.adminPassword || "").trim()) {
+      window.alert("data/config.json 의 adminPassword 설정이 필요합니다.");
+      return;
+    }
     closeModal(dlgCatManage);
     const defs = getCategoryDefsForSave(activeSpace);
     const row = defs.find((d) => d.id === sectionId);
@@ -2174,7 +2194,10 @@
   }
 
   function openCategoryAddModal() {
-    if (!apiOriginOrAlert("카테고리를 저장하려면")) return;
+    if (!apiOrigin() && !(hubConfig.adminPassword || "").trim()) {
+      window.alert("data/config.json 의 adminPassword 설정이 필요합니다.");
+      return;
+    }
     closeModal(dlgCatManage);
     categoryDialogMode = "add";
     if (catEditId) {
@@ -2192,7 +2215,10 @@
   }
 
   async function deleteCategoryFlow(sectionId) {
-    if (!apiOriginOrAlert("카테고리를 삭제하려면")) return;
+    if (!apiOrigin() && !(hubConfig.adminPassword || "").trim()) {
+      window.alert("data/config.json 의 adminPassword 설정이 필요합니다.");
+      return;
+    }
     const sec = getSections().find((s) => s.id === sectionId);
     if (!sec) return;
     if (sec.items.length > 0) {
