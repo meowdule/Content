@@ -233,7 +233,7 @@ body {
   margin-bottom: 14px;
 }
 
-/* 넓은 화면: 검색 · 기간 · 활성화 한 줄 */
+/* 넓은 화면: 검색 · 기간 · 활성화 한 줄 — 검색은 내용 폭만, 기간이 남은 공간 사용 */
 @media (min-width: 960px) {
   .control-deck__filters {
     display: flex;
@@ -241,9 +241,7 @@ body {
     flex-wrap: nowrap;
     align-items: center;
     gap: 12px 14px;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: thin;
+    overflow-x: visible;
     padding-bottom: 2px;
   }
 
@@ -251,18 +249,51 @@ body {
     flex-direction: row;
     align-items: center;
     gap: 10px;
-    flex-shrink: 0;
+    min-width: 0;
   }
 
+  /* 넓히지 않음: flex:1 1 0 + body/input flex:1 조합이 입력창 오른쪽 빈 공간·기간 패널 압축 유발 */
   .filter-panel--search {
-    flex: 1 1 0;
-    min-width: 160px;
+    flex: 0 0 auto;
+    width: min(19rem, 32vw);
+    max-width: 19rem;
+  }
+
+  .filter-panel--search .filter-panel__body {
+    flex: 0 0 auto;
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .filter-panel--search .filter-panel__body--search-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 4px;
+  }
+
+  .filter-panel--search .search-bar {
+    width: 100%;
+  }
+
+  .filter-panel--search .input-wrap {
+    flex: 0 0 auto;
+    min-width: 0;
+    max-width: none;
+  }
+
+  .filter-panel--search .search-meta {
+    margin: 0;
+    width: 100%;
+    font-size: 0.75rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .filter-panel--period {
-    flex: 1 1 auto;
-    min-width: 260px;
-    max-width: min(480px, 42vw);
+    flex: 1 1 0;
+    min-width: 0;
+    max-width: none;
   }
 
   .filter-panel--status {
@@ -274,23 +305,9 @@ body {
     margin: 0;
   }
 
-  .filter-panel__body {
+  .filter-panel:not(.filter-panel--search) .filter-panel__body {
     flex: 1 1 auto;
     min-width: 0;
-  }
-
-  .filter-panel--search .filter-panel__body--search-row {
-    flex-direction: row;
-    align-items: center;
-    gap: 8px;
-  }
-
-  .filter-panel--search .search-meta {
-    flex: 0 1 160px;
-    margin: 0;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
   }
 }
 
@@ -346,6 +363,8 @@ body {
   .filter-panel--period .period-chip {
     padding: 5px 8px;
     font-size: 0.72rem;
+    white-space: nowrap;
+    flex-shrink: 0;
   }
 }
 
