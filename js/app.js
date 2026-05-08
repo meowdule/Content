@@ -104,7 +104,7 @@
   /** @type {SubmissionEntry[]} */
   let lastSubmissionEntries = [];
 
-  /** @type {{ apiBase: string, githubOwner: string, githubRepo: string, githubBranch: string, submissionsPath: string, adminPassword: string }} */
+  /** @type {{ apiBase: string, githubOwner: string, githubRepo: string, githubBranch: string, submissionsPath: string, adminPassword: string, githubToken: string }} */
   let hubConfig = {
     apiBase: "",
     githubOwner: "meowdule",
@@ -112,6 +112,7 @@
     githubBranch: "main",
     submissionsPath: "data/public-submissions.json",
     adminPassword: "Tbell",
+    githubToken: "",
   };
   /** @type {WeakMap<HTMLSelectElement, Set<string>>} */
   const relatedPickState = new WeakMap();
@@ -676,6 +677,8 @@
   }
 
   function getGithubTokenOrPrompt() {
+    const fromConfig = (hubConfig.githubToken || "").trim();
+    if (fromConfig) return fromConfig;
     const key = "ax-gh-token";
     const existing = sessionStorage.getItem(key) || "";
     if (existing.trim()) return existing.trim();
@@ -967,7 +970,7 @@
     hubConfig.apiBase = "";
     if (configRes.ok) {
       try {
-        /** @type {{ apiBase?: string, githubOwner?: string, githubRepo?: string, githubBranch?: string, submissionsPath?: string, adminPassword?: string }} */
+        /** @type {{ apiBase?: string, githubOwner?: string, githubRepo?: string, githubBranch?: string, submissionsPath?: string, adminPassword?: string, githubToken?: string }} */
         const c = await configRes.json();
         hubConfig.apiBase = (c.apiBase || "").trim();
         hubConfig.githubOwner = (c.githubOwner || hubConfig.githubOwner || "").trim() || "meowdule";
@@ -980,6 +983,8 @@
           typeof c.adminPassword === "string" && c.adminPassword.trim()
             ? c.adminPassword.trim()
             : hubConfig.adminPassword;
+        hubConfig.githubToken =
+          typeof c.githubToken === "string" ? c.githubToken.trim() : "";
       } catch {
         /* ignore */
       }
