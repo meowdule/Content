@@ -78,6 +78,22 @@
     ]
   },
   {
+    "id": "market-pdf",
+    "parentId": "market",
+    "emoji": "📑",
+    "title": "리포트·원문 (하위 예시)",
+    "subtitle": "상위 「시장 스토리 & 정량 근거」 아래 — PDF·긴 원문 위주로 모은 하위 카테고리입니다.",
+    "items": []
+  },
+  {
+    "id": "market-charts",
+    "parentId": "market",
+    "emoji": "📈",
+    "title": "차트·요약 (하위 예시)",
+    "subtitle": "상위 「시장 스토리」 아래 — 짧은 아티클·차트 요약 류 예시입니다.",
+    "items": []
+  },
+  {
     "id": "ax-agentic",
     "emoji": "🤖",
     "title": "AX · 에이전틱 실행",

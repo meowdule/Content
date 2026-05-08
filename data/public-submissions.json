@@ -15,7 +15,7 @@
     {
       "id": "s-a9e285f051e52912",
       "space": "overseas",
-      "categoryId": "market",
+      "categoryId": "market-pdf",
       "title": "Stanford HAI — AI Index 2025 (PDF)",
       "desc": "전체 PDF 원문.",
       "url": "https://hai.stanford.edu/assets/files/hai_ai_index_report_2025.pdf",
@@ -26,7 +26,7 @@
     {
       "id": "s-3510872a5bd2a890",
       "space": "overseas",
-      "categoryId": "market",
+      "categoryId": "market-charts",
       "title": "Stanford HAI — State of AI in 10 Charts",
       "desc": "한 번에 훑기 좋은 요약 아티클.",
       "url": "https://hai.stanford.edu/news/ai-index-2025-state-of-ai-in-10-charts?highlight=2025",
@@ -37,7 +37,7 @@
     {
       "id": "s-641261499b7fcefd",
       "space": "overseas",
-      "categoryId": "market",
+      "categoryId": "market-pdf",
       "title": "McKinsey — State of AI 2025 (Agents & Innovation, PDF)",
       "desc": "에이전트·혁신 관점 숫자·사례.",
       "url": "https://www.mckinsey.com/~/media/mckinsey/business%20functions/quantumblack/our%20insights/the%20state%20of%20ai/november%202025/the-state-of-ai-2025-agents-innovation_cmyk-v1.pdf",
@@ -444,7 +444,7 @@
     {
       "id": "s-7e067d503d88f72e",
       "space": "community",
-      "categoryId": "drafts",
+      "categoryId": "drafts-brief",
       "title": "예시 초안 링크 (제목·URL 만 바꿔 쓰세요)",
       "desc": "Notion, Google Docs, 사내 위키 등 링크로 교체하면 됩니다.",
       "url": "https://example.com",

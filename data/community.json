@@ -11,5 +11,13 @@
         "url": "https://example.com"
       }
     ]
+  },
+  {
+    "id": "drafts-brief",
+    "parentId": "drafts",
+    "emoji": "🗂️",
+    "title": "브리핑·내부 공유 (하위 예시)",
+    "subtitle": "상위 「게시글 초안」 아래 — 팀 공유용 초안만 구분해 두는 예시입니다.",
+    "items": []
   }
 ]
