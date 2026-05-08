@@ -175,6 +175,8 @@
   const regRelatedOverseas = /** @type {HTMLSelectElement | null} */ (
     document.getElementById("reg-related-overseas")
   );
+  const regRelatedMenu = document.getElementById("reg-related-menu");
+  const regRelatedSelected = document.getElementById("reg-related-selected");
   const regRelatedCategory = /** @type {HTMLSelectElement | null} */ (
     document.getElementById("reg-related-category")
   );
@@ -223,6 +225,8 @@
   const editRelatedOverseas = /** @type {HTMLSelectElement | null} */ (
     document.getElementById("edit-related-overseas")
   );
+  const editRelatedMenu = document.getElementById("edit-related-menu");
+  const editRelatedSelected = document.getElementById("edit-related-selected");
   const editRelatedCategory = /** @type {HTMLSelectElement | null} */ (
     document.getElementById("edit-related-category")
   );
@@ -609,6 +613,15 @@
       .trim()
       .replace(/\/$/, "");
     if (fromMeta) return fromMeta;
+    // GitHub Pages는 정적 호스팅이므로 /api/* POST가 405가 납니다.
+    // 이 경우 명시적인 apiBase 없이는 호출하지 않도록 막습니다.
+    if (
+      typeof window !== "undefined" &&
+      window.location &&
+      /\.github\.io$/i.test(window.location.hostname || "")
+    ) {
+      return "";
+    }
     if (
       typeof window !== "undefined" &&
       window.location &&
@@ -623,9 +636,16 @@
   function apiOriginOrAlert(hint) {
     const o = apiOrigin();
     if (o) return o;
+    const isGhPages =
+      typeof window !== "undefined" &&
+      window.location &&
+      /\.github\.io$/i.test(window.location.hostname || "");
     window.alert(
       (hint ? `${hint} ` : "") +
         "등록 API 주소를 알 수 없습니다.\n\n" +
+        (isGhPages
+          ? "· GitHub Pages에서는 정적 페이지만 제공되어 /api 요청이 405가 됩니다. data/config.json의 apiBase에 API 서버 주소를 넣어주세요.\n"
+          : "") +
         "· 로컬에서는 미리보기용 웹 서버로 index.html 을 열고(직접 파일 열기 말고), " +
         "또는 data/config.json 의 apiBase 또는 index.html 의 " +
         '<meta name="ax-api-base" content="https://...API서버..." /> 로 주소를 지정하세요.'
@@ -1671,29 +1691,93 @@
       .filter((id) => !filtered.some((x) => x.id === id))
       .map((id) => byId.get(id))
       .filter(Boolean);
-    const selectedChunk = selectedOutOfFilter.length
-      ? `<optgroup label="선택됨 (현재 필터 밖)">${selectedOutOfFilter
-          .map((x) => {
-            const v = /** @type {SubmissionEntry} */ (x);
-            const cat = catMap.get(v.categoryId) || "기타";
-            return `<option value="${escapeAttr(v.id)}" selected>${escapeHtml(
-              `${v.title || v.id} · ${cat}`
-            )}</option>`;
-          })
-          .join("")}</optgroup>`
-      : "";
-    const filterChunk = filtered.length
-      ? filtered
-          .map((x) => {
-            const cat = catMap.get(x.categoryId) || "기타";
-            const selAttr = set.has(x.id) ? " selected" : "";
-            return `<option value="${escapeAttr(x.id)}"${selAttr}>${escapeHtml(
-              `${x.title || x.id} · ${cat}`
-            )}</option>`;
-          })
-          .join("")
-      : `<option value="" disabled>(조건에 맞는 레퍼런스 없음)</option>`;
-    sel.innerHTML = `${selectedChunk}${filterChunk}`;
+    const keepIds = new Set([
+      ...set,
+      ...filtered.map((x) => x.id),
+      ...selectedOutOfFilter.map((x) => /** @type {SubmissionEntry} */ (x).id),
+    ]);
+    const options = picks
+      .filter((x) => keepIds.has(x.id))
+      .map((x) => {
+        const cat = catMap.get(x.categoryId) || "기타";
+        const selAttr = set.has(x.id) ? " selected" : "";
+        return `<option value="${escapeAttr(x.id)}"${selAttr}>${escapeHtml(
+          `${x.title || x.id} · ${cat}`
+        )}</option>`;
+      })
+      .join("");
+    sel.innerHTML = options;
+  }
+
+  /**
+   * @param {HTMLSelectElement | null} sel
+   * @param {HTMLElement | null} wrap
+   */
+  function renderRelatedSelectedChips(sel, wrap) {
+    if (!sel || !wrap) return;
+    const ids = getRelatedOverseasSelectedIds(sel);
+    if (!ids.length) {
+      wrap.innerHTML = '<span class="related-empty">선택된 레퍼런스 없음</span>';
+      return;
+    }
+    const byId = new Map(
+      lastSubmissionEntries
+        .filter((x) => x.space === "overseas")
+        .map((x) => [x.id, x.title || x.id])
+    );
+    wrap.innerHTML = ids
+      .map(
+        (id) =>
+          `<button type="button" class="related-chip" data-related-remove="${escapeAttr(
+            id
+          )}" aria-label="연관 레퍼런스 제거">${escapeHtml(byId.get(id) || id)} <span aria-hidden="true">×</span></button>`
+      )
+      .join("");
+  }
+
+  /**
+   * @param {HTMLSelectElement | null} sel
+   * @param {HTMLElement | null} menuEl
+   * @param {string} categoryId
+   * @param {string} query
+   */
+  function renderRelatedPopup(sel, menuEl, categoryId, query) {
+    if (!sel || !menuEl) return;
+    const q = (query || "").trim().toLowerCase();
+    if (!q) {
+      menuEl.innerHTML = `<p class="related-menu-empty">검색어를 입력하면 일치 항목만 표시됩니다.</p>`;
+      menuEl.hidden = false;
+      return;
+    }
+    const set = new Set(getRelatedOverseasSelectedIds(sel));
+    const cats = new Map(
+      baselineOverseasArr
+        .filter((s) => s.id !== "user-orphan")
+        .map((s) => [s.id, `${s.emoji} ${s.title}`])
+    );
+    const rows = lastSubmissionEntries
+      .filter((x) => x.space === "overseas")
+      .filter((x) => (!categoryId ? true : x.categoryId === categoryId))
+      .filter((x) => `${x.title || ""} ${x.desc || ""}`.toLowerCase().includes(q))
+      .slice(0, 24);
+    if (!rows.length) {
+      menuEl.innerHTML = `<p class="related-menu-empty">일치하는 레퍼런스가 없습니다.</p>`;
+      menuEl.hidden = false;
+      return;
+    }
+    menuEl.innerHTML = rows
+      .map((x) => {
+        const checked = set.has(x.id) ? "true" : "false";
+        const active = set.has(x.id) ? " related-menu-item--active" : "";
+        return `<button type="button" class="related-menu-item${active}" data-related-id="${escapeAttr(
+          x.id
+        )}" aria-pressed="${checked}">
+          <span class="related-menu-title">${escapeHtml(x.title || x.id)}</span>
+          <span class="related-menu-cat">${escapeHtml(cats.get(x.categoryId) || "기타")}</span>
+        </button>`;
+      })
+      .join("");
+    menuEl.hidden = false;
   }
 
   /**
@@ -2011,6 +2095,8 @@
     if (regEnabled) regEnabled.checked = true;
     fillRelatedCategoryFilter(regRelatedOverseas, regRelatedCategory);
     fillRelatedOverseasSelect(regRelatedOverseas, [], "", "");
+    renderRelatedSelectedChips(regRelatedOverseas, regRelatedSelected);
+    if (regRelatedMenu) regRelatedMenu.hidden = true;
     openModal(dlgRegister);
   }
 
@@ -2062,6 +2148,8 @@
         "",
         ""
       );
+      renderRelatedSelectedChips(editRelatedOverseas, editRelatedSelected);
+      if (editRelatedMenu) editRelatedMenu.hidden = true;
     }
 
     if (editEnabled) editEnabled.checked = entry.enabled !== false;
@@ -2106,34 +2194,75 @@
      * @param {HTMLSelectElement | null} catSel
      * @param {HTMLInputElement | null} searchInp
      */
-    function bindRelatedPicker(listSel, catSel, searchInp) {
+    function bindRelatedPicker(listSel, catSel, searchInp, menuEl, selectedWrap) {
       if (!listSel) return;
-      listSel.addEventListener("change", () => {
-        const prev = relatedPickState.get(listSel) || new Set();
-        const next = new Set(prev);
-        const visible = [...listSel.options]
-          .map((o) => o.value)
-          .filter(Boolean);
-        visible.forEach((id) => next.delete(id));
-        [...listSel.selectedOptions]
-          .map((o) => o.value)
-          .filter(Boolean)
-          .forEach((id) => next.add(id));
-        relatedPickState.set(listSel, next);
-      });
-      const rerender = () =>
+      const rerender = () => {
         fillRelatedOverseasSelect(
           listSel,
           getRelatedOverseasSelectedIds(listSel),
           catSel?.value || "",
           searchInp?.value || ""
         );
-      catSel?.addEventListener("change", rerender);
+        renderRelatedSelectedChips(listSel, selectedWrap);
+        renderRelatedPopup(
+          listSel,
+          menuEl,
+          catSel?.value || "",
+          searchInp?.value || ""
+        );
+      };
+      searchInp?.addEventListener("focus", rerender);
       searchInp?.addEventListener("input", rerender);
+      catSel?.addEventListener("change", rerender);
+      menuEl?.addEventListener("click", (ev) => {
+        const t = ev.target instanceof Element ? ev.target : null;
+        const b = t?.closest("[data-related-id]");
+        if (!(b instanceof HTMLElement)) return;
+        const id = (b.getAttribute("data-related-id") || "").trim();
+        if (!id) return;
+        const set = new Set(getRelatedOverseasSelectedIds(listSel));
+        if (set.has(id)) set.delete(id);
+        else set.add(id);
+        relatedPickState.set(listSel, set);
+        rerender();
+      });
+      selectedWrap?.addEventListener("click", (ev) => {
+        const t = ev.target instanceof Element ? ev.target : null;
+        const b = t?.closest("[data-related-remove]");
+        if (!(b instanceof HTMLElement)) return;
+        const id = (b.getAttribute("data-related-remove") || "").trim();
+        if (!id) return;
+        const set = new Set(getRelatedOverseasSelectedIds(listSel));
+        set.delete(id);
+        relatedPickState.set(listSel, set);
+        rerender();
+      });
+      document.addEventListener("click", (ev) => {
+        const tg = ev.target instanceof Element ? ev.target : null;
+        if (!tg) return;
+        if (
+          tg.closest(".related-picker-tools") ||
+          tg.closest(".related-picker")
+        )
+          return;
+        if (menuEl) menuEl.hidden = true;
+      });
     }
 
-    bindRelatedPicker(regRelatedOverseas, regRelatedCategory, regRelatedSearch);
-    bindRelatedPicker(editRelatedOverseas, editRelatedCategory, editRelatedSearch);
+    bindRelatedPicker(
+      regRelatedOverseas,
+      regRelatedCategory,
+      regRelatedSearch,
+      regRelatedMenu,
+      regRelatedSelected
+    );
+    bindRelatedPicker(
+      editRelatedOverseas,
+      editRelatedCategory,
+      editRelatedSearch,
+      editRelatedMenu,
+      editRelatedSelected
+    );
 
     btnRegisterTab?.addEventListener("click", () => openRegisterDialog());
 

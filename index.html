@@ -336,7 +336,11 @@
                   aria-label="연관 레퍼런스 제목 검색"
                 />
               </div>
-              <select id="reg-related-overseas" name="relatedOverseas" class="fld fld-select fld-multi" multiple size="5" aria-describedby="reg-related-hint"></select>
+              <div class="related-picker" id="reg-related-picker" aria-describedby="reg-related-hint">
+                <div id="reg-related-selected" class="related-selected"></div>
+                <div id="reg-related-menu" class="related-menu" hidden></div>
+              </div>
+              <select id="reg-related-overseas" name="relatedOverseas" class="fld fld-select fld-multi related-hidden-select" multiple size="5" aria-hidden="true" tabindex="-1"></select>
               <p id="reg-related-hint" class="fld-hint">카테고리/검색으로 목록을 좁혀 여러 개 선택할 수 있습니다.</p>
             </div>
             <div class="form-section form-section--inline">
@@ -404,7 +408,11 @@
                   aria-label="연관 레퍼런스 제목 검색"
                 />
               </div>
-              <select id="edit-related-overseas" class="fld fld-select fld-multi" multiple size="5"></select>
+              <div class="related-picker" id="edit-related-picker">
+                <div id="edit-related-selected" class="related-selected"></div>
+                <div id="edit-related-menu" class="related-menu" hidden></div>
+              </div>
+              <select id="edit-related-overseas" class="fld fld-select fld-multi related-hidden-select" multiple size="5" aria-hidden="true" tabindex="-1"></select>
             </div>
             <div class="form-section form-section--inline" id="edit-enabled-row">
               <label class="lbl-check">

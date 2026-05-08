@@ -1428,7 +1428,9 @@ body {
 
 .stack-form .lbl {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
   gap: 6px;
   font-size: 0.8125rem;
   font-weight: 700;
@@ -2060,6 +2062,88 @@ body {
   display: grid;
   grid-template-columns: 1fr 1.2fr;
   gap: 8px;
+}
+
+.related-picker {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg);
+  padding: 8px;
+}
+
+.related-selected {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  min-height: 28px;
+}
+
+.related-empty {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.related-chip {
+  border: 1px solid var(--border);
+  background: var(--bg-elevated);
+  color: var(--text);
+  border-radius: 999px;
+  font: inherit;
+  font-size: 0.74rem;
+  padding: 3px 8px;
+  cursor: pointer;
+}
+
+.related-menu {
+  margin-top: 8px;
+  max-height: 210px;
+  overflow: auto;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg-elevated);
+  padding: 4px;
+}
+
+.related-menu-item {
+  width: 100%;
+  border: 0;
+  background: transparent;
+  text-align: left;
+  padding: 6px 8px;
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  cursor: pointer;
+}
+
+.related-menu-item:hover {
+  background: var(--accent-soft);
+}
+
+.related-menu-item--active {
+  background: var(--violet-soft);
+}
+
+.related-menu-title {
+  font-size: 0.82rem;
+  color: var(--text);
+}
+
+.related-menu-cat {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+
+.related-menu-empty {
+  margin: 0;
+  padding: 8px 10px;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+.related-hidden-select {
+  display: none !important;
 }
 
 .filter-deck.control-deck {
