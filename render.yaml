@@ -1,0 +1,27 @@
+services:
+  - type: web
+    name: content-hub-api
+    runtime: node
+    repo: https://github.com/meowdule/Content
+    rootDir: server
+    buildCommand: npm install
+    startCommand: npm start
+    plan: free
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_VERSION
+        value: 20
+      - key: ADMIN_PASSWORD
+        sync: false
+      - key: GITHUB_TOKEN
+        sync: false
+      - key: GITHUB_OWNER
+        value: meowdule
+      - key: GITHUB_REPO
+        value: Content
+      - key: GIT_BRANCH
+        value: main
+      - key: SUBMISSIONS_PATH
+        value: data/public-submissions.json
+      - key: CORS_ORIGIN
+        value: https://meowdule.github.io

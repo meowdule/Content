@@ -61,6 +61,18 @@ cd server && npm start
 
 헬스: `curl http://127.0.0.1:3847/health`
 
+### 운영 배포 (Render)
+
+이 저장소에는 `render.yaml` 이 포함되어 있어 Render에서 바로 배포할 수 있습니다.
+
+1. Render 대시보드에서 **Blueprint** 생성 후 이 저장소 연결
+2. `content-hub-api` 서비스 생성 확인
+3. 환경변수 입력
+   - `ADMIN_PASSWORD` (예: `Tbell`)
+   - `GITHUB_TOKEN` (Contents read/write 가능한 토큰)
+4. 배포 완료 후 `https://<서비스명>.onrender.com/health` 가 `ok: true` 인지 확인
+5. 프론트 `data/config.json` 의 `apiBase` 를 Render URL로 변경
+
 ### 3) 프론트 연결
 
 [`data/config.json`](data/config.json) 예 (로컬 API 연결 시):
