@@ -43,6 +43,17 @@
   const tabCommunity = document.getElementById("tab-community");
   const btnRegisterTab = document.getElementById("btn-register-tab");
 
+  const rangeStartInp = /** @type {HTMLInputElement | null} */ (
+    document.getElementById("range-start")
+  );
+  const rangeEndInp = /** @type {HTMLInputElement | null} */ (
+    document.getElementById("range-end")
+  );
+  const btnDateModePreset = document.getElementById("btn-date-mode-preset");
+  const btnDateModeRange = document.getElementById("btn-date-mode-range");
+  const wrapPeriodPreset = document.getElementById("wrap-period-preset");
+  const wrapPeriodRange = document.getElementById("wrap-period-range");
+
   const dlgRegister = document.getElementById("dlg-register");
   const dlgRegisterForm = /** @type {HTMLFormElement | null} */ (
     document.getElementById("form-register")
@@ -107,7 +118,59 @@
 
   const PERIOD_ALLOWED = [7, 30, 90, 182, 365];
 
+  const DATE_MODE_KEY = "ax-hub-date-mode";
+  const RANGE_START_KEY = "ax-hub-range-start";
+  const RANGE_END_KEY = "ax-hub-range-end";
+
+  /** @type {'preset' | 'range'} */
+  let dateFilterMode = "preset";
+
   const THEME_KEY = "ax-hub-theme";
+
+  /** @param {Date} d */
+  function toYMDLocal(d) {
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, "0");
+    const day = String(d.getDate()).padStart(2, "0");
+    return `${y}-${m}-${day}`;
+  }
+
+  function defaultRangeDates() {
+    const end = new Date();
+    const start = new Date(end);
+    start.setDate(start.getDate() - 29);
+    return { start: toYMDLocal(start), end: toYMDLocal(end) };
+  }
+
+  /** @param {string} iso */
+  function parseLocalDayStartMs(iso) {
+    const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso.trim());
+    if (!m) return NaN;
+    return new Date(
+      Number(m[1]),
+      Number(m[2]) - 1,
+      Number(m[3]),
+      0,
+      0,
+      0,
+      0
+    ).getTime();
+  }
+
+  /** @param {string} iso */
+  function parseLocalDayEndMs(iso) {
+    const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso.trim());
+    if (!m) return NaN;
+    return new Date(
+      Number(m[1]),
+      Number(m[2]) - 1,
+      Number(m[3]),
+      23,
+      59,
+      59,
+      999
+    ).getTime();
+  }
 
   /** @returns {SubmissionEntry[]} */
   async function fetchSubmissionsEntries() {
@@ -501,32 +564,132 @@
     searchEl?.addEventListener("input", filterResources);
   }
 
-  function initDatePeriodFilter() {
+  function syncDateFilterUi() {
+    const wrap = document.getElementById("period-filter");
+
+    btnDateModePreset?.classList.toggle(
+      "seg-btn--active",
+      dateFilterMode === "preset"
+    );
+    btnDateModePreset?.setAttribute(
+      "aria-selected",
+      dateFilterMode === "preset" ? "true" : "false"
+    );
+    btnDateModeRange?.classList.toggle(
+      "seg-btn--active",
+      dateFilterMode === "range"
+    );
+    btnDateModeRange?.setAttribute(
+      "aria-selected",
+      dateFilterMode === "range" ? "true" : "false"
+    );
+
+    if (wrapPeriodPreset)
+      wrapPeriodPreset.hidden = dateFilterMode !== "preset";
+    if (wrapPeriodRange)
+      wrapPeriodRange.hidden = dateFilterMode !== "range";
+
+    if (dateFilterMode === "preset" && wrap) {
+      wrap.querySelectorAll("[data-period-days]").forEach((b) => {
+        b.classList.toggle(
+          "period-chip--active",
+          b.getAttribute("data-period-days") === String(activePeriodDays)
+        );
+      });
+    }
+  }
+
+  /** @returns {{ start: number, end: number } | null} */
+  function getRangeBoundsMs() {
+    const s = rangeStartInp?.value?.trim();
+    const e = rangeEndInp?.value?.trim();
+    if (!s || !e) return null;
+    let a = parseLocalDayStartMs(s);
+    let b = parseLocalDayEndMs(e);
+    if (Number.isNaN(a) || Number.isNaN(b)) return null;
+    if (a > b) {
+      a = parseLocalDayStartMs(e);
+      b = parseLocalDayEndMs(s);
+      if (Number.isNaN(a) || Number.isNaN(b)) return null;
+    }
+    return { start: a, end: b };
+  }
+
+  function initDateFilters() {
     const wrap = document.getElementById("period-filter");
     if (!wrap) return;
-    const saved = localStorage.getItem(DATE_RANGE_KEY);
-    if (saved) {
-      const n = parseInt(saved, 10);
+
+    const savedMode = localStorage.getItem(DATE_MODE_KEY);
+    if (savedMode === "range" || savedMode === "preset")
+      dateFilterMode = savedMode;
+
+    const rs = localStorage.getItem(RANGE_START_KEY);
+    const re = localStorage.getItem(RANGE_END_KEY);
+    const def = defaultRangeDates();
+    if (rangeStartInp)
+      rangeStartInp.value =
+        rs && /^\d{4}-\d{2}-\d{2}$/.test(rs) ? rs : def.start;
+    if (rangeEndInp)
+      rangeEndInp.value =
+        re && /^\d{4}-\d{2}-\d{2}$/.test(re) ? re : def.end;
+
+    const savedDays = localStorage.getItem(DATE_RANGE_KEY);
+    if (savedDays) {
+      const n = parseInt(savedDays, 10);
       if (PERIOD_ALLOWED.includes(n)) activePeriodDays = n;
     }
+
     wrap.querySelectorAll("[data-period-days]").forEach((btn) => {
       btn.addEventListener("click", () => {
         const d = parseInt(btn.getAttribute("data-period-days") || "30", 10);
         if (!PERIOD_ALLOWED.includes(d)) return;
         activePeriodDays = d;
         localStorage.setItem(DATE_RANGE_KEY, String(d));
+        dateFilterMode = "preset";
+        localStorage.setItem(DATE_MODE_KEY, "preset");
         wrap.querySelectorAll("[data-period-days]").forEach((b) => {
           b.classList.toggle("period-chip--active", b === btn);
         });
+        syncDateFilterUi();
         filterResources();
       });
     });
-    wrap.querySelectorAll("[data-period-days]").forEach((b) => {
-      b.classList.toggle(
-        "period-chip--active",
-        b.getAttribute("data-period-days") === String(activePeriodDays)
-      );
+
+    btnDateModePreset?.addEventListener("click", () => {
+      dateFilterMode = "preset";
+      localStorage.setItem(DATE_MODE_KEY, "preset");
+      syncDateFilterUi();
+      filterResources();
     });
+
+    btnDateModeRange?.addEventListener("click", () => {
+      dateFilterMode = "range";
+      localStorage.setItem(DATE_MODE_KEY, "range");
+      const d = defaultRangeDates();
+      if (rangeStartInp && !rangeStartInp.value.trim())
+        rangeStartInp.value = d.start;
+      if (rangeEndInp && !rangeEndInp.value.trim())
+        rangeEndInp.value = d.end;
+      if (rangeStartInp?.value)
+        localStorage.setItem(RANGE_START_KEY, rangeStartInp.value);
+      if (rangeEndInp?.value)
+        localStorage.setItem(RANGE_END_KEY, rangeEndInp.value);
+      syncDateFilterUi();
+      filterResources();
+    });
+
+    function persistRange() {
+      if (rangeStartInp?.value)
+        localStorage.setItem(RANGE_START_KEY, rangeStartInp.value);
+      if (rangeEndInp?.value)
+        localStorage.setItem(RANGE_END_KEY, rangeEndInp.value);
+      filterResources();
+    }
+
+    rangeStartInp?.addEventListener("change", persistRange);
+    rangeEndInp?.addEventListener("change", persistRange);
+
+    syncDateFilterUi();
   }
 
   /** @param {Element} itemEl */
@@ -535,6 +698,13 @@
     if (!raw) return true;
     const t = Date.parse(raw);
     if (Number.isNaN(t)) return true;
+
+    if (dateFilterMode === "range") {
+      const bounds = getRangeBoundsMs();
+      if (!bounds) return true;
+      return t >= bounds.start && t <= bounds.end;
+    }
+
     const end = Date.now();
     const start = end - activePeriodDays * 86400000;
     return t >= start && t <= end;
@@ -1105,7 +1275,7 @@
     initRegisterEditDeleteUi();
     updateTabUI();
     initSearchOnce();
-    initDatePeriodFilter();
+    initDateFilters();
     buildNav();
     buildSections();
     updateToolbarForTab();
