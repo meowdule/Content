@@ -172,13 +172,6 @@ body {
   line-height: 1.2;
 }
 
-.brand-sub {
-  margin: 4px 0 0;
-  font-size: 0.875rem;
-  color: var(--text-muted);
-  font-weight: 500;
-}
-
 .header-actions {
   display: flex;
   flex-wrap: wrap;
@@ -219,14 +212,6 @@ body {
 .badge--violet {
   background: var(--violet-soft);
   color: var(--violet);
-}
-
-.hero-lead {
-  margin: 0 0 16px;
-  font-size: 1.05rem;
-  font-weight: 600;
-  line-height: 1.55;
-  max-width: 52ch;
 }
 
 .search-bar {
@@ -286,6 +271,62 @@ body {
   margin-top: 12px;
   font-size: 0.8125rem;
   color: var(--text-muted);
+}
+
+.period-filter-wrap {
+  width: 100%;
+  margin-top: 14px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 14px;
+}
+
+.period-label {
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.period-filter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.period-chip {
+  appearance: none;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+  font: inherit;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  padding: 8px 14px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s, color 0.15s;
+}
+
+.period-chip:hover {
+  border-color: rgba(255, 107, 44, 0.35);
+}
+
+.period-chip:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--violet-soft);
+}
+
+.period-chip--active {
+  border-color: transparent;
+  background: linear-gradient(135deg, var(--accent-soft), var(--violet-soft));
+  color: var(--accent);
+}
+
+[data-theme="dark"] .period-chip--active {
+  color: var(--text);
 }
 
 /* Buttons */
@@ -391,20 +432,6 @@ body {
   border-radius: 999px;
 }
 
-.sidebar-footer {
-  margin-top: 12px;
-  padding: 12px;
-  border-radius: var(--radius-sm);
-  background: linear-gradient(
-    135deg,
-    rgba(255, 107, 44, 0.08),
-    rgba(99, 102, 241, 0.08)
-  );
-  font-size: 0.75rem;
-  color: var(--text-muted);
-  line-height: 1.45;
-}
-
 .sidebar-mobile {
   display: none;
   margin-bottom: 20px;
@@ -442,15 +469,8 @@ body {
   margin-bottom: 18px;
 }
 
-.toolbar-hint {
-  font-size: 0.8125rem;
-  color: var(--text-muted);
-  margin-right: auto;
-  flex: 1 1 160px;
-  min-width: 0;
-}
-
 .btn-register-tab {
+  margin-right: auto;
   font: inherit;
   font-weight: 900;
   font-size: 0.875rem;
@@ -740,26 +760,6 @@ body {
 .space-tab:focus-visible {
   outline: none;
   box-shadow: 0 0 0 3px var(--violet-soft);
-}
-
-.hero-lead code {
-  font-size: 0.85em;
-  padding: 2px 7px;
-  border-radius: 6px;
-  background: var(--bg);
-  border: 1px solid var(--border);
-  font-weight: 600;
-}
-
-.sidebar-footer.muted {
-  margin-top: 8px;
-  font-size: 0.72rem;
-  line-height: 1.45;
-  opacity: 0.92;
-}
-
-.sidebar-footer code {
-  font-size: 0.86em;
 }
 
 .load-state {

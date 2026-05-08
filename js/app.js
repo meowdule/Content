@@ -4,7 +4,7 @@
   const TAB_KEY = "ax-hub-space";
 
   /** @typedef {{ id: string, emoji: string, title: string, subtitle: string, items: CatalogItem[] }} Section */
-  /** @typedef {{ title: string, desc?: string, url: string, submissionId?: string }} CatalogItem */
+  /** @typedef {{ title: string, desc?: string, url: string, submissionId?: string, postedAt?: string }} CatalogItem */
 
   /** @typedef {{ id: string, space: string, categoryId: string, title: string, desc?: string, url: string, createdAt?: string, updatedAt?: string }} SubmissionEntry */
 
@@ -100,6 +100,13 @@
   const formDelete =
     /** @type {HTMLFormElement | null} */ (document.getElementById("form-delete"));
 
+  const DATE_RANGE_KEY = "ax-hub-date-days";
+
+  /** 기본: 약 1달(30일) */
+  let activePeriodDays = 30;
+
+  const PERIOD_ALLOWED = [7, 30, 90, 182, 365];
+
   const THEME_KEY = "ax-hub-theme";
 
   /** @returns {SubmissionEntry[]} */
@@ -130,6 +137,44 @@
       .replace(/&/g, "&amp;")
       .replace(/"/g, "&quot;")
       .replace(/</g, "&lt;");
+  }
+
+  /**
+   * @param {unknown} secArr
+   * @returns {Section[]}
+   */
+  function normalizeBaselineSections(secArr) {
+    if (!Array.isArray(secArr)) return [];
+    return secArr.map((sec) => {
+      /** @type {Section} */
+      const s = /** @type {Section} */ (sec);
+      const items = Array.isArray(s.items) ? s.items : [];
+      return {
+        ...s,
+        items: items.map((it) => {
+          /** @type {Record<string, unknown>} */
+          const raw = /** @type {Record<string, unknown>} */ (it);
+          const cand =
+            (typeof raw.postedAt === "string" && raw.postedAt.trim()) ||
+            (typeof raw.date === "string" && raw.date.trim()) ||
+            (typeof raw.publishedAt === "string" && raw.publishedAt.trim()) ||
+            "";
+          let postedAt = cand ? String(cand).trim() : undefined;
+          if (postedAt) {
+            const ms = Date.parse(postedAt);
+            postedAt = Number.isNaN(ms) ? undefined : new Date(ms).toISOString();
+          }
+          /** @type {CatalogItem} */
+          const out = {
+            title: String(raw.title || ""),
+            desc: typeof raw.desc === "string" ? raw.desc : "",
+            url: String(raw.url || ""),
+          };
+          if (postedAt) out.postedAt = postedAt;
+          return out;
+        }),
+      };
+    });
   }
 
   function slugifyHeading(text, id) {
@@ -244,6 +289,9 @@
         url: e.url || "",
         submissionId: e.id,
       };
+      const ts = e.updatedAt || e.createdAt;
+      if (ts) item.postedAt = new Date(ts).toISOString();
+
       if (sec) sec.items.push(item);
       else orphanItems.push(item);
     }
@@ -252,9 +300,8 @@
       sections.push({
         id: "user-orphan",
         emoji: "📥",
-        title: "사용자 등록 · 미매칭",
-        subtitle:
-          "categoryId가 존재하지 않거나 카테고리 이름이 변경된 글입니다",
+        title: "미매칭",
+        subtitle: " ",
         items: orphanItems,
       });
     }
@@ -305,8 +352,8 @@
     if (!communityRes.ok)
       throw new Error(`community.json (${communityRes.status})`);
 
-    baselineOverseasArr = /** @type {Section[]} */ (await overseasRes.json());
-    communityRowsRaw = /** @type {Section[]} */ (await communityRes.json());
+    baselineOverseasArr = normalizeBaselineSections(await overseasRes.json());
+    communityRowsRaw = normalizeBaselineSections(await communityRes.json());
 
     hubConfig.apiBase = "";
     if (configRes.ok) {
@@ -324,22 +371,14 @@
   }
 
   function updateToolbarForTab() {
-    if (btnRegisterTab) {
-      btnRegisterTab.textContent = "등록";
-      btnRegisterTab.setAttribute(
-        "aria-label",
-        activeSpace === "overseas"
-          ? "해외 참고 링크 탭에 등록"
-          : "게시글 초안 탭에 등록"
-      );
-    }
-    const hint = document.getElementById("toolbar-hint");
-    if (hint) {
-      hint.textContent =
-        activeSpace === "overseas"
-          ? "해외 참고 링크 탭 · 카테고리 줄을 눌러 접기/펼치기"
-          : "게시글 초안 탭 · 카테고리 줄을 눌러 접기/펼치기";
-    }
+    if (!btnRegisterTab) return;
+    btnRegisterTab.textContent = "등록";
+    btnRegisterTab.setAttribute(
+      "aria-label",
+      activeSpace === "overseas"
+        ? "해외 참고 링크 탭에 등록"
+        : "게시글 초안 탭에 등록"
+    );
   }
 
   /* --- 테마 등 (기존) --- */
@@ -406,16 +445,6 @@
     );
   }
 
-  function updateSidebarNote() {
-    const note = document.getElementById("data-src-note");
-    if (note) {
-      note.textContent =
-        activeSpace === "overseas"
-          ? "해외 참고 링크 탭입니다. 위 「등록」으로 항목을 추가할 수 있습니다."
-          : "게시글 초안 탭입니다. 위 「등록」으로 항목을 추가할 수 있습니다.";
-    }
-  }
-
   /** @param {'overseas' | 'community'} space @param {boolean} [writeHash] */
   function switchSpace(space, writeHash) {
     activeSpace = space;
@@ -424,7 +453,6 @@
     buildNav();
     buildSections();
     filterResources();
-    updateSidebarNote();
     updateToolbarForTab();
     if (writeHash)
       history.replaceState(
@@ -473,6 +501,57 @@
     searchEl?.addEventListener("input", filterResources);
   }
 
+  function initDatePeriodFilter() {
+    const wrap = document.getElementById("period-filter");
+    if (!wrap) return;
+    const saved = localStorage.getItem(DATE_RANGE_KEY);
+    if (saved) {
+      const n = parseInt(saved, 10);
+      if (PERIOD_ALLOWED.includes(n)) activePeriodDays = n;
+    }
+    wrap.querySelectorAll("[data-period-days]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const d = parseInt(btn.getAttribute("data-period-days") || "30", 10);
+        if (!PERIOD_ALLOWED.includes(d)) return;
+        activePeriodDays = d;
+        localStorage.setItem(DATE_RANGE_KEY, String(d));
+        wrap.querySelectorAll("[data-period-days]").forEach((b) => {
+          b.classList.toggle("period-chip--active", b === btn);
+        });
+        filterResources();
+      });
+    });
+    wrap.querySelectorAll("[data-period-days]").forEach((b) => {
+      b.classList.toggle(
+        "period-chip--active",
+        b.getAttribute("data-period-days") === String(activePeriodDays)
+      );
+    });
+  }
+
+  /** @param {Element} itemEl */
+  function itemPassesDateFilter(itemEl) {
+    const raw = itemEl.getAttribute("data-posted-at");
+    if (!raw) return true;
+    const t = Date.parse(raw);
+    if (Number.isNaN(t)) return true;
+    const end = Date.now();
+    const start = end - activePeriodDays * 86400000;
+    return t >= start && t <= end;
+  }
+
+  function syncSectionCountsAndNav() {
+    const secs = document.querySelectorAll("#catalog [data-section]");
+    const navCounts = document.querySelectorAll("#nav-desktop .nav-count");
+    secs.forEach((sec, i) => {
+      const vis = sec.querySelectorAll(".resource-item:not(.hidden)").length;
+      const ce = sec.querySelector(".section-count");
+      if (ce) ce.textContent = `${vis}개`;
+      const nc = navCounts[i];
+      if (nc) nc.textContent = String(vis);
+    });
+  }
+
   /**
    * @param {CatalogItem} it
    * @param {Section} section
@@ -482,6 +561,11 @@
 
     const hasSub =
       !!(it.submissionId && typeof it.submissionId === "string");
+
+    const postedAttr =
+      it.postedAt && String(it.postedAt).trim()
+        ? ` data-posted-at="${escapeAttr(String(it.postedAt).trim())}"`
+        : "";
 
     const linkInner = `
       <div class="resource-main">
@@ -496,7 +580,7 @@
       </span>`;
 
     if (!hasSub) {
-      return `<li class="resource-item" data-text="${escapeAttr(lower)}">
+      return `<li class="resource-item" data-text="${escapeAttr(lower)}"${postedAttr}>
         <a class="resource-link-card" href="${escapeHtml(
           it.url
         )}" target="_blank" rel="noopener noreferrer">
@@ -514,7 +598,7 @@
 
     return `<li class="resource-item resource-item--with-actions" data-text="${escapeAttr(
       lower
-    )}">
+    )}"${postedAttr}>
       <div class="resource-split">
         <a class="resource-link-card resource-link-grow" href="${escapeHtml(
           it.url
@@ -537,6 +621,11 @@
         .map((it) => renderItemLi(it, section))
         .join("");
 
+      const subtitleHtml =
+        section.subtitle && String(section.subtitle).trim()
+          ? `<p class="section-subtitle">${escapeHtml(section.subtitle)}</p>`
+          : "";
+
       return `<section class="section" id="${escapeAttr(secId)}" data-section>
         <h2 class="visually-hidden">${escapeHtml(section.title)}</h2>
         <button type="button" class="section-trigger"
@@ -549,9 +638,9 @@
           <div class="section-heading">
             <div class="section-title-row">
               <p class="section-title">${escapeHtml(section.title)}</p>
-              <span class="section-count">${section.items.length}개 링크</span>
+              <span class="section-count">${section.items.length}개</span>
             </div>
-            <p class="section-subtitle">${escapeHtml(section.subtitle)}</p>
+            ${subtitleHtml}
           </div>
           <span class="chevron" aria-hidden="true">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
@@ -606,8 +695,7 @@
 
   function filterResources() {
     const q = (searchEl?.value || "").trim().toLowerCase();
-    let visibleSections = 0;
-    const sections = [...document.querySelectorAll("[data-section]")];
+    const sections = [...document.querySelectorAll("#catalog [data-section]")];
 
     sections.forEach((sec) => {
       let visibleItems = 0;
@@ -615,14 +703,15 @@
 
       items.forEach((item) => {
         const hay = item.getAttribute("data-text") || "";
-        const ok = !q || hay.includes(q);
+        const textOk = !q || hay.includes(q);
+        const dateOk = itemPassesDateFilter(item);
+        const ok = textOk && dateOk;
         item.classList.toggle("hidden", !ok);
         if (ok) visibleItems++;
       });
 
-      const hideSec = visibleItems === 0 && q !== "";
+      const hideSec = visibleItems === 0;
       sec.classList.toggle("hidden", hideSec);
-      if (!hideSec || q === "") visibleSections++;
 
       if (q !== "" && visibleItems > 0) {
         const tr = sec.querySelector(".section-trigger");
@@ -630,17 +719,30 @@
       }
     });
 
-    if (searchCountEl)
-      searchCountEl.textContent = q
-        ? `표시 중: ${visibleSections}개 카테고리 · "${searchEl?.value.trim()}"`
-        : "";
+    syncSectionCountsAndNav();
 
-    if (visibleSections === 0 && q !== "" && catalogEl) {
+    const totalVisibleItems = document.querySelectorAll(
+      "#catalog .resource-item:not(.hidden)"
+    ).length;
+
+    if (searchCountEl) {
+      const rawQ = (searchEl?.value || "").trim();
+      if (rawQ) {
+        searchCountEl.textContent = `표시 중: ${totalVisibleItems}개 · "${rawQ}"`;
+      } else if (totalVisibleItems > 0) {
+        searchCountEl.textContent = `표시 중: ${totalVisibleItems}개`;
+      } else {
+        searchCountEl.textContent = "";
+      }
+    }
+
+    if (totalVisibleItems === 0 && catalogEl) {
       let empty = catalogEl.querySelector(".empty-state");
       if (!empty) {
         empty = document.createElement("p");
         empty.className = "empty-state";
-        empty.textContent = "검색 결과가 없습니다. 다른 키워드를 시도해 보세요.";
+        empty.textContent =
+          "조건에 맞는 항목이 없습니다. 검색어나 기간을 바꿔 보세요.";
         catalogEl.appendChild(empty);
       }
     } else {
@@ -713,7 +815,6 @@
       updateTabUI();
       buildNav();
       buildSections();
-      updateSidebarNote();
       updateToolbarForTab();
     }
 
@@ -1004,9 +1105,9 @@
     initRegisterEditDeleteUi();
     updateTabUI();
     initSearchOnce();
+    initDatePeriodFilter();
     buildNav();
     buildSections();
-    updateSidebarNote();
     updateToolbarForTab();
     applyHashFromLocation(false);
   }

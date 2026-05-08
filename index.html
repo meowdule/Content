@@ -3,10 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta
-      name="description"
-      content="해외 참고 링크 탭과 게시글 초안 탭 — 링크 등록·검색"
-    />
+    <meta name="description" content="AX 리소스 허브" />
     <title>AX 리소스 허브</title>
     <link
       rel="stylesheet"
@@ -25,10 +22,6 @@
             <div class="logo" aria-hidden="true">⚡</div>
             <div>
               <h1 class="brand-title">AX 리소스 허브</h1>
-              <p class="brand-sub">
-                해외 참고 링크 탭과 게시글 초안 탭이 있습니다. 각 탭에서 등록할 수
-                있습니다.
-              </p>
             </div>
           </div>
           <div class="header-actions">
@@ -48,12 +41,6 @@
             <span class="badge badge--accent">해외 참고 링크</span>
             <span class="badge badge--violet">게시글 초안</span>
           </div>
-          <p class="hero-lead">
-            위 두 탭 중 하나를 선택한 뒤, 아래 목록 위의
-            <strong>「등록」</strong> 버튼으로 링크를 추가하세요. 수정·삭제는
-            등록된 항목에만 표시되며 관리 비밀번호가 필요합니다.
-          </p>
-
           <div
             role="tablist"
             aria-label="탭 선택"
@@ -109,6 +96,35 @@
               />
             </div>
           </div>
+          <div class="period-filter-wrap">
+            <span class="period-label" id="period-label">기간</span>
+            <div
+              class="period-filter"
+              id="period-filter"
+              role="group"
+              aria-labelledby="period-label"
+            >
+              <button type="button" class="period-chip" data-period-days="7">
+                1주
+              </button>
+              <button
+                type="button"
+                class="period-chip period-chip--active"
+                data-period-days="30"
+              >
+                1달
+              </button>
+              <button type="button" class="period-chip" data-period-days="90">
+                3달
+              </button>
+              <button type="button" class="period-chip" data-period-days="182">
+                반년
+              </button>
+              <button type="button" class="period-chip" data-period-days="365">
+                1년
+              </button>
+            </div>
+          </div>
           <p class="search-meta" id="search-count" aria-live="polite"></p>
         </div>
       </header>
@@ -118,15 +134,11 @@
           <div class="sidebar-inner">
             <p class="sidebar-title">Jump to</p>
             <ul class="nav-list" id="nav-desktop"></ul>
-            <p class="sidebar-footer" id="data-src-note"></p>
           </div>
         </aside>
 
         <main class="main" id="main">
           <div class="expand-toolbar">
-            <span class="toolbar-hint" id="toolbar-hint">
-              카테고리 줄을 눌러 접기/펼치기
-            </span>
             <button
               type="button"
               class="btn btn-register-tab"
