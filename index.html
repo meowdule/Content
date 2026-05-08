@@ -29,8 +29,24 @@
             </div>
           </a>
           <nav class="header-main-nav" aria-label="주요 메뉴">
-            <a href="#overseas" class="header-nav-link" id="nav-overseas" data-nav-target="overseas">해외 참고 링크</a>
-            <a href="#posts" class="header-nav-link" id="nav-posts" data-nav-target="community">게시글 초안</a>
+            <a
+              href="#overseas"
+              class="header-nav-link"
+              id="nav-overseas"
+              data-nav-target="overseas"
+            >
+              <i data-lucide="link" class="lucide-inline" aria-hidden="true"></i>
+              <span>해외 참고 링크</span>
+            </a>
+            <a
+              href="#posts"
+              class="header-nav-link"
+              id="nav-posts"
+              data-nav-target="community"
+            >
+              <i data-lucide="file-text" class="lucide-inline" aria-hidden="true"></i>
+              <span>게시글 초안</span>
+            </a>
           </nav>
           <div class="header-actions">
             <button
@@ -186,7 +202,17 @@
       <div class="layout">
         <aside class="sidebar sidebar-desktop" aria-label="카테고리 내비게이션">
           <div class="sidebar-inner">
-            <p class="sidebar-title">목차</p>
+            <div class="sidebar-title-row">
+              <p class="sidebar-title">목차</p>
+              <button
+                type="button"
+                class="btn-mini btn-mini--icon sidebar-manage-categories"
+                id="btn-manage-categories"
+                aria-label="카테고리 편집"
+              >
+                <i data-lucide="settings" class="lucide-icon lucide-inline" aria-hidden="true"></i>
+              </button>
+            </div>
             <ul class="nav-list" id="nav-desktop"></ul>
           </div>
         </aside>
@@ -204,13 +230,12 @@
               </button>
             </div>
             <div class="main-toolbar__end">
-              <button type="button" class="btn btn--ghost btn--toolbar" id="btn-manage-categories" aria-label="카테고리 편집">
-                카테고리
-              </button>
               <button type="button" class="btn btn--ghost btn--toolbar" id="expand-all">
+                <i data-lucide="chevrons-down" class="lucide-inline" aria-hidden="true"></i>
                 모두 펼치기
               </button>
               <button type="button" class="btn btn--ghost btn--toolbar" id="collapse-all">
+                <i data-lucide="chevrons-up" class="lucide-inline" aria-hidden="true"></i>
                 모두 접기
               </button>
             </div>

@@ -190,7 +190,7 @@ body {
 .control-deck {
   background: var(--bg-elevated);
   border-radius: calc(var(--radius) + 4px);
-  padding: 14px 16px 16px;
+  padding: 10px 12px 12px;
   border: 1px solid var(--border);
   box-shadow: var(--shadow);
 }
@@ -212,7 +212,7 @@ body {
 .control-deck__filters {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 14px;
+  gap: 10px;
 }
 
 .control-deck__mobile {
@@ -247,11 +247,11 @@ body {
   min-width: 0;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
 }
 
 .filter-panel--period .filter-panel__body {
-  gap: 12px;
+  gap: 10px;
 }
 
 /* period 패널: 데스크톱에서는 날짜(시작/종료) + 단축칩을 한 줄에 배치 */
@@ -260,7 +260,7 @@ body {
     flex-direction: row;
     align-items: flex-end;
     justify-content: flex-start;
-    gap: 12px;
+    gap: 10px;
   }
 
   .filter-panel--period .period-range-line {
@@ -292,11 +292,11 @@ body {
 .filter-panel__head {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
 }
 
 .filter-panel__title {
-  font-size: 0.7rem;
+  font-size: 0.64rem;
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -306,7 +306,7 @@ body {
 .filter-panel__body {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
   min-width: 0;
 }
 
@@ -314,7 +314,7 @@ body {
   display: flex;
   flex-wrap: wrap;
   align-items: flex-end;
-  gap: 8px 12px;
+  gap: 6px 10px;
 }
 
 .range-date-row {
@@ -340,7 +340,7 @@ body {
 }
 
 .range-date-sep {
-  padding-bottom: 10px;
+  padding-bottom: 6px;
   color: var(--text-muted);
   font-weight: 700;
   flex-shrink: 0;
@@ -353,9 +353,9 @@ body {
 
 .fld-date--compact {
   max-width: 9.5rem;
-  min-height: 36px;
+  min-height: 32px;
   padding: 6px 8px;
-  font-size: 0.8125rem;
+  font-size: 0.8rem;
 }
 
 [data-theme="dark"] .fld-date {
@@ -424,7 +424,7 @@ body {
 .period-filter {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 6px;
 }
 
 .period-filter--deck {
@@ -437,9 +437,9 @@ body {
   background: var(--bg);
   color: var(--text);
   font: inherit;
-  font-size: 0.8125rem;
+  font-size: 0.76rem;
   font-weight: 700;
-  padding: 8px 14px;
+  padding: 6px 10px;
   border-radius: 999px;
   cursor: pointer;
   transition: border-color 0.15s, background 0.15s, color 0.15s;
@@ -511,6 +511,28 @@ body {
   border: 1px solid var(--border);
   padding: 14px;
   box-shadow: var(--shadow);
+}
+
+.sidebar-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 10px;
+  padding: 0 8px;
+}
+
+.sidebar-title-row .sidebar-title {
+  margin: 0;
+}
+
+.sidebar-manage-categories {
+  flex-shrink: 0;
+}
+
+.sidebar-manage-categories .lucide-inline {
+  width: 16px;
+  height: 16px;
 }
 
 .sidebar-title {
