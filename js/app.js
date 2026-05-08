@@ -419,36 +419,11 @@
     return secArr.map((sec) => {
       /** @type {Section} */
       const s = /** @type {Section} */ (sec);
-      const items = Array.isArray(s.items) ? s.items : [];
       return {
         ...s,
-        items: items.map((it) => {
-          /** @type {Record<string, unknown>} */
-          const raw = /** @type {Record<string, unknown>} */ (it);
-          const cand =
-            (typeof raw.postedAt === "string" && raw.postedAt.trim()) ||
-            (typeof raw.date === "string" && raw.date.trim()) ||
-            (typeof raw.publishedAt === "string" && raw.publishedAt.trim()) ||
-            "";
-          let postedAt = cand ? String(cand).trim() : undefined;
-          if (postedAt) {
-            const ms = Date.parse(postedAt);
-            postedAt = Number.isNaN(ms) ? undefined : new Date(ms).toISOString();
-          }
-          /** @type {CatalogItem} */
-          const out = {
-            title: String(raw.title || ""),
-            desc: typeof raw.desc === "string" ? raw.desc : "",
-            url: String(raw.url || ""),
-          };
-          if (postedAt) out.postedAt = postedAt;
-          if (typeof raw.bodyMd === "string" && raw.bodyMd.trim()) {
-            out.bodyMd = raw.bodyMd.trim();
-            out.isArticle = true;
-          }
-          if (raw.enabled === false) out.enabled = false;
-          return out;
-        }),
+        // baseline json은 "카테고리(목차) 정의"만 제공하고,
+        // 실제 링크/게시글 목록(items)은 server의 `public-submissions.json`(entries)에서만 관리합니다.
+        items: [],
       };
     });
   }
