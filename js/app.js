@@ -799,7 +799,9 @@
 
   function updateToolbarForTab() {
     if (!btnRegisterTab) return;
-    btnRegisterTab.textContent = "등록";
+    btnRegisterTab.innerHTML =
+      '<i data-lucide="plus" class="lucide-inline" aria-hidden="true"></i>';
+    lucideRefresh(btnRegisterTab);
     btnRegisterTab.setAttribute(
       "aria-label",
       activeSpace === "overseas"

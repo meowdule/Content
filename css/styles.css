@@ -147,10 +147,15 @@ body {
 
 .header-end {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   margin-left: auto;
+  min-width: 0;
+  max-width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
 }
 
 .brand {
@@ -189,8 +194,9 @@ body {
 
 .header-actions {
   display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
+  flex-wrap: nowrap;
+  flex-shrink: 0;
+  gap: 8px;
   align-items: center;
 }
 
@@ -227,27 +233,64 @@ body {
   margin-bottom: 14px;
 }
 
-@media (min-width: 900px) {
+/* 넓은 화면: 검색 · 기간 · 활성화 한 줄 */
+@media (min-width: 960px) {
   .control-deck__filters {
-    grid-template-columns: 1fr 0.65fr;
-    gap: 14px;
-    align-items: start;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 12px 14px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    padding-bottom: 2px;
   }
 
-  /* 데스크톱: 검색/활성화 1행, 기간은 2행 전체 */
+  .control-deck__filters > .filter-panel {
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+  }
+
   .filter-panel--search {
-    grid-column: 1;
-    grid-row: 1;
-  }
-
-  .filter-panel--status {
-    grid-column: 2;
-    grid-row: 1;
+    flex: 1 1 0;
+    min-width: 160px;
   }
 
   .filter-panel--period {
-    grid-column: 1 / span 2;
-    grid-row: 2;
+    flex: 1 1 auto;
+    min-width: 260px;
+    max-width: min(480px, 42vw);
+  }
+
+  .filter-panel--status {
+    flex: 0 0 auto;
+  }
+
+  .filter-panel__head {
+    flex-shrink: 0;
+    margin: 0;
+  }
+
+  .filter-panel__body {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  .filter-panel--search .filter-panel__body--search-row {
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .filter-panel--search .search-meta {
+    flex: 0 1 160px;
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 }
 
@@ -262,33 +305,47 @@ body {
   gap: 10px;
 }
 
-/* period 패널: 데스크톱에서는 날짜(시작/종료) + 단축칩을 한 줄에 배치 */
-@media (min-width: 900px) {
+/* period 패널: 데스크톱 한 줄 — 날짜 + 단축칩 */
+@media (min-width: 960px) {
   .filter-panel--period .filter-panel__body {
     flex-direction: row;
-    align-items: flex-end;
+    align-items: center;
     justify-content: flex-start;
-    gap: 10px;
+    gap: 8px;
+    flex-wrap: nowrap;
   }
 
   .filter-panel--period .period-range-line {
     flex-wrap: nowrap;
-    gap: 8px 12px;
+    gap: 6px 8px;
   }
 
   .filter-panel--period .range-date-field {
     flex: 0 0 auto;
   }
 
+  .filter-panel--period .range-date-label {
+    display: none;
+  }
+
+  .filter-panel--period .fld-date--compact {
+    max-width: 8.5rem;
+  }
+
   .filter-panel--period .period-filter {
     flex-wrap: nowrap;
-    gap: 6px;
+    gap: 4px;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
   }
 
   .filter-panel--period .period-filter--deck {
     padding-top: 0;
+  }
+
+  .filter-panel--period .period-chip {
+    padding: 5px 8px;
+    font-size: 0.72rem;
   }
 }
 
@@ -680,6 +737,19 @@ body {
   box-shadow: 0 4px 16px rgba(255, 107, 44, 0.35);
 }
 
+.btn-register-tab--icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 12px;
+  line-height: 0;
+}
+
+.btn-register-tab--icon .lucide-inline {
+  width: 22px;
+  height: 22px;
+}
+
 .btn-register-tab:hover {
   filter: brightness(1.05);
 }
@@ -687,6 +757,21 @@ body {
 .btn-register-tab:focus-visible {
   outline: none;
   box-shadow: 0 0 0 3px var(--violet-soft), 0 4px 16px rgba(255, 107, 44, 0.35);
+}
+
+.btn--toolbar-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 10px;
+  line-height: 0;
+  min-width: 40px;
+  min-height: 40px;
+}
+
+.btn--toolbar-icon .lucide-inline {
+  width: 20px;
+  height: 20px;
 }
 
 /* Category section */
@@ -1681,9 +1766,10 @@ body {
 
 .header-main-nav {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   align-items: center;
   gap: 6px;
+  flex-shrink: 0;
 }
 
 .header-nav-link {
@@ -1695,6 +1781,10 @@ body {
   color: var(--text-muted);
   border: 1px solid transparent;
   transition: color 0.15s, background 0.15s, border-color 0.15s;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
 }
 
 .header-nav-link:hover {
@@ -2100,14 +2190,28 @@ body {
 }
 
 @media (max-width: 720px) {
-  .header-end {
-    flex-basis: 100%;
-    justify-content: flex-end;
-    margin-left: 0;
+  .site-header-bar {
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 10px;
   }
 
-  .site-header-bar {
-    flex-direction: row;
-    align-items: center;
+  .brand {
+    min-width: 0;
+    flex-shrink: 1;
+  }
+
+  .brand-tagline {
+    display: none;
+  }
+
+  .header-end {
+    margin-left: auto;
+    flex-shrink: 0;
+  }
+
+  .header-nav-link {
+    padding: 8px 10px;
+    font-size: 0.8rem;
   }
 }

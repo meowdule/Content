@@ -77,7 +77,10 @@
               <div class="filter-panel__head">
                 <span class="filter-panel__title" id="search-region-label">검색</span>
               </div>
-              <div class="filter-panel__body" aria-labelledby="search-region-label">
+              <div
+                class="filter-panel__body filter-panel__body--search-row"
+                aria-labelledby="search-region-label"
+              >
                 <div class="search-bar">
                   <label class="visually-hidden" for="search">리소스 검색</label>
                   <div class="input-wrap">
@@ -120,6 +123,7 @@
                       id="range-start"
                       class="fld fld-date fld-date--compact"
                       autocomplete="off"
+                      aria-label="기간 시작일"
                     />
                   </label>
                   <span class="range-date-sep" aria-hidden="true">~</span>
@@ -130,6 +134,7 @@
                       id="range-end"
                       class="fld fld-date fld-date--compact"
                       autocomplete="off"
+                      aria-label="기간 종료일"
                     />
                   </label>
                 </div>
@@ -224,21 +229,29 @@
             <div class="main-toolbar__start">
               <button
                 type="button"
-                class="btn btn-register-tab"
+                class="btn btn-register-tab btn-register-tab--icon"
                 id="btn-register-tab"
                 aria-label="현재 탭에 등록"
               >
-                등록
+                <i data-lucide="plus" class="lucide-inline" aria-hidden="true"></i>
               </button>
             </div>
             <div class="main-toolbar__end">
-              <button type="button" class="btn btn--ghost btn--toolbar" id="expand-all">
+              <button
+                type="button"
+                class="btn btn--ghost btn--toolbar btn--toolbar-icon"
+                id="expand-all"
+                aria-label="모두 펼치기"
+              >
                 <i data-lucide="chevrons-down" class="lucide-inline" aria-hidden="true"></i>
-                모두 펼치기
               </button>
-              <button type="button" class="btn btn--ghost btn--toolbar" id="collapse-all">
+              <button
+                type="button"
+                class="btn btn--ghost btn--toolbar btn--toolbar-icon"
+                id="collapse-all"
+                aria-label="모두 접기"
+              >
                 <i data-lucide="chevrons-up" class="lucide-inline" aria-hidden="true"></i>
-                모두 접기
               </button>
             </div>
           </div>
