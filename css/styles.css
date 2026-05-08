@@ -221,55 +221,14 @@ body {
 }
 
 .hero-date-header {
+  margin-bottom: 4px;
+}
+
+.hero-date-toolbar {
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
-  gap: 10px 16px;
-}
-
-.hero-date-panel {
-  width: 100%;
-}
-
-.date-mode-toggle {
-  display: inline-flex;
-  border-radius: 999px;
-  border: 1px solid var(--border);
-  padding: 3px;
-  background: var(--bg);
-  gap: 2px;
-}
-
-.seg-btn {
-  appearance: none;
-  border: none;
-  cursor: pointer;
-  font: inherit;
-  font-size: 0.78rem;
-  font-weight: 800;
-  padding: 7px 14px;
-  border-radius: 999px;
-  background: transparent;
-  color: var(--text-muted);
-  transition: background 0.15s, color 0.15s;
-}
-
-.seg-btn:hover {
-  color: var(--text);
-}
-
-.seg-btn--active {
-  background: linear-gradient(135deg, var(--accent-soft), var(--violet-soft));
-  color: var(--accent);
-}
-
-[data-theme="dark"] .seg-btn--active {
-  color: var(--text);
-}
-
-.seg-btn:focus-visible {
-  outline: none;
-  box-shadow: 0 0 0 2px var(--violet-soft);
+  align-items: flex-end;
+  gap: 12px 18px;
 }
 
 .range-date-row {
@@ -277,6 +236,16 @@ body {
   flex-wrap: wrap;
   align-items: flex-end;
   gap: 8px 12px;
+}
+
+.range-date-row--inline {
+  flex: 1 1 260px;
+  min-width: 0;
+}
+
+.period-filter--beside {
+  flex: 1 1 220px;
+  min-width: 0;
 }
 
 .range-date-field {

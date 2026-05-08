@@ -98,34 +98,31 @@
             <div class="hero-date-section" aria-label="기간 필터">
               <div class="hero-date-header">
                 <span class="period-label" id="period-label">기간</span>
-                <div
-                  class="date-mode-toggle"
-                  role="tablist"
-                  aria-label="기간 방식"
-                >
-                  <button
-                    type="button"
-                    class="seg-btn seg-btn--active"
-                    id="btn-date-mode-preset"
-                    role="tab"
-                    aria-selected="true"
-                  >
-                    단축
-                  </button>
-                  <button
-                    type="button"
-                    class="seg-btn"
-                    id="btn-date-mode-range"
-                    role="tab"
-                    aria-selected="false"
-                  >
-                    날짜 지정
-                  </button>
-                </div>
               </div>
-              <div id="wrap-period-preset" class="hero-date-panel">
+              <div class="hero-date-toolbar">
+                <div class="range-date-row range-date-row--inline">
+                  <label class="range-date-field">
+                    <span class="range-date-label">시작</span>
+                    <input
+                      type="date"
+                      id="range-start"
+                      class="fld fld-date"
+                      autocomplete="off"
+                    />
+                  </label>
+                  <span class="range-date-sep" aria-hidden="true">~</span>
+                  <label class="range-date-field">
+                    <span class="range-date-label">종료</span>
+                    <input
+                      type="date"
+                      id="range-end"
+                      class="fld fld-date"
+                      autocomplete="off"
+                    />
+                  </label>
+                </div>
                 <div
-                  class="period-filter"
+                  class="period-filter period-filter--beside"
                   id="period-filter"
                   role="group"
                   aria-labelledby="period-label"
@@ -149,29 +146,6 @@
                   <button type="button" class="period-chip" data-period-days="365">
                     1년
                   </button>
-                </div>
-              </div>
-              <div id="wrap-period-range" class="hero-date-panel" hidden>
-                <div class="range-date-row">
-                  <label class="range-date-field">
-                    <span class="range-date-label">시작</span>
-                    <input
-                      type="date"
-                      id="range-start"
-                      class="fld fld-date"
-                      autocomplete="off"
-                    />
-                  </label>
-                  <span class="range-date-sep" aria-hidden="true">~</span>
-                  <label class="range-date-field">
-                    <span class="range-date-label">종료</span>
-                    <input
-                      type="date"
-                      id="range-end"
-                      class="fld fld-date"
-                      autocomplete="off"
-                    />
-                  </label>
                 </div>
               </div>
             </div>

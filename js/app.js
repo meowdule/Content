@@ -49,10 +49,6 @@
   const rangeEndInp = /** @type {HTMLInputElement | null} */ (
     document.getElementById("range-end")
   );
-  const btnDateModePreset = document.getElementById("btn-date-mode-preset");
-  const btnDateModeRange = document.getElementById("btn-date-mode-range");
-  const wrapPeriodPreset = document.getElementById("wrap-period-preset");
-  const wrapPeriodRange = document.getElementById("wrap-period-range");
 
   const dlgRegister = document.getElementById("dlg-register");
   const dlgRegisterForm = /** @type {HTMLFormElement | null} */ (
@@ -111,19 +107,10 @@
   const formDelete =
     /** @type {HTMLFormElement | null} */ (document.getElementById("form-delete"));
 
-  const DATE_RANGE_KEY = "ax-hub-date-days";
-
-  /** 기본: 약 1달(30일) */
-  let activePeriodDays = 30;
-
   const PERIOD_ALLOWED = [7, 30, 90, 182, 365];
 
-  const DATE_MODE_KEY = "ax-hub-date-mode";
   const RANGE_START_KEY = "ax-hub-range-start";
   const RANGE_END_KEY = "ax-hub-range-end";
-
-  /** @type {'preset' | 'range'} */
-  let dateFilterMode = "preset";
 
   const THEME_KEY = "ax-hub-theme";
 
@@ -135,11 +122,38 @@
     return `${y}-${m}-${day}`;
   }
 
-  function defaultRangeDates() {
+  /**
+   * 단축 칩: 종료일 오늘(로컬). 1년은 시작을 1년 전 같은 날, 그 외는 오늘 포함 N일.
+   * @param {number} days
+   */
+  function getPresetRangeStrings(days) {
     const end = new Date();
     const start = new Date(end);
-    start.setDate(start.getDate() - 29);
+    if (days === 365) {
+      start.setFullYear(start.getFullYear() - 1);
+    } else {
+      start.setDate(start.getDate() - (days - 1));
+    }
     return { start: toYMDLocal(start), end: toYMDLocal(end) };
+  }
+
+  function applyPeriodPresetToInputs(days) {
+    const { start, end } = getPresetRangeStrings(days);
+    if (rangeStartInp) rangeStartInp.value = start;
+    if (rangeEndInp) rangeEndInp.value = end;
+  }
+
+  function syncPeriodChipHighlight() {
+    const wrap = document.getElementById("period-filter");
+    if (!wrap || !rangeStartInp || !rangeEndInp) return;
+    const rs = rangeStartInp.value.trim();
+    const re = rangeEndInp.value.trim();
+    wrap.querySelectorAll("[data-period-days]").forEach((btn) => {
+      const d = parseInt(btn.getAttribute("data-period-days") || "0", 10);
+      if (!PERIOD_ALLOWED.includes(d)) return;
+      const pr = getPresetRangeStrings(d);
+      btn.classList.toggle("period-chip--active", rs === pr.start && re === pr.end);
+    });
   }
 
   /** @param {string} iso */
@@ -564,41 +578,6 @@
     searchEl?.addEventListener("input", filterResources);
   }
 
-  function syncDateFilterUi() {
-    const wrap = document.getElementById("period-filter");
-
-    btnDateModePreset?.classList.toggle(
-      "seg-btn--active",
-      dateFilterMode === "preset"
-    );
-    btnDateModePreset?.setAttribute(
-      "aria-selected",
-      dateFilterMode === "preset" ? "true" : "false"
-    );
-    btnDateModeRange?.classList.toggle(
-      "seg-btn--active",
-      dateFilterMode === "range"
-    );
-    btnDateModeRange?.setAttribute(
-      "aria-selected",
-      dateFilterMode === "range" ? "true" : "false"
-    );
-
-    if (wrapPeriodPreset)
-      wrapPeriodPreset.hidden = dateFilterMode !== "preset";
-    if (wrapPeriodRange)
-      wrapPeriodRange.hidden = dateFilterMode !== "range";
-
-    if (dateFilterMode === "preset" && wrap) {
-      wrap.querySelectorAll("[data-period-days]").forEach((b) => {
-        b.classList.toggle(
-          "period-chip--active",
-          b.getAttribute("data-period-days") === String(activePeriodDays)
-        );
-      });
-    }
-  }
-
   /** @returns {{ start: number, end: number } | null} */
   function getRangeBoundsMs() {
     const s = rangeStartInp?.value?.trim();
@@ -619,77 +598,50 @@
     const wrap = document.getElementById("period-filter");
     if (!wrap) return;
 
-    const savedMode = localStorage.getItem(DATE_MODE_KEY);
-    if (savedMode === "range" || savedMode === "preset")
-      dateFilterMode = savedMode;
+    function persistRangeStorage() {
+      if (rangeStartInp?.value)
+        localStorage.setItem(RANGE_START_KEY, rangeStartInp.value);
+      if (rangeEndInp?.value)
+        localStorage.setItem(RANGE_END_KEY, rangeEndInp.value);
+    }
 
     const rs = localStorage.getItem(RANGE_START_KEY);
     const re = localStorage.getItem(RANGE_END_KEY);
-    const def = defaultRangeDates();
-    if (rangeStartInp)
-      rangeStartInp.value =
-        rs && /^\d{4}-\d{2}-\d{2}$/.test(rs) ? rs : def.start;
-    if (rangeEndInp)
-      rangeEndInp.value =
-        re && /^\d{4}-\d{2}-\d{2}$/.test(re) ? re : def.end;
+    const hasSaved =
+      rs &&
+      re &&
+      /^\d{4}-\d{2}-\d{2}$/.test(rs) &&
+      /^\d{4}-\d{2}-\d{2}$/.test(re);
 
-    const savedDays = localStorage.getItem(DATE_RANGE_KEY);
-    if (savedDays) {
-      const n = parseInt(savedDays, 10);
-      if (PERIOD_ALLOWED.includes(n)) activePeriodDays = n;
+    if (hasSaved) {
+      if (rangeStartInp) rangeStartInp.value = rs;
+      if (rangeEndInp) rangeEndInp.value = re;
+    } else {
+      applyPeriodPresetToInputs(30);
+      persistRangeStorage();
     }
 
     wrap.querySelectorAll("[data-period-days]").forEach((btn) => {
       btn.addEventListener("click", () => {
         const d = parseInt(btn.getAttribute("data-period-days") || "30", 10);
         if (!PERIOD_ALLOWED.includes(d)) return;
-        activePeriodDays = d;
-        localStorage.setItem(DATE_RANGE_KEY, String(d));
-        dateFilterMode = "preset";
-        localStorage.setItem(DATE_MODE_KEY, "preset");
-        wrap.querySelectorAll("[data-period-days]").forEach((b) => {
-          b.classList.toggle("period-chip--active", b === btn);
-        });
-        syncDateFilterUi();
+        applyPeriodPresetToInputs(d);
+        persistRangeStorage();
+        syncPeriodChipHighlight();
         filterResources();
       });
     });
 
-    btnDateModePreset?.addEventListener("click", () => {
-      dateFilterMode = "preset";
-      localStorage.setItem(DATE_MODE_KEY, "preset");
-      syncDateFilterUi();
-      filterResources();
-    });
-
-    btnDateModeRange?.addEventListener("click", () => {
-      dateFilterMode = "range";
-      localStorage.setItem(DATE_MODE_KEY, "range");
-      const d = defaultRangeDates();
-      if (rangeStartInp && !rangeStartInp.value.trim())
-        rangeStartInp.value = d.start;
-      if (rangeEndInp && !rangeEndInp.value.trim())
-        rangeEndInp.value = d.end;
-      if (rangeStartInp?.value)
-        localStorage.setItem(RANGE_START_KEY, rangeStartInp.value);
-      if (rangeEndInp?.value)
-        localStorage.setItem(RANGE_END_KEY, rangeEndInp.value);
-      syncDateFilterUi();
-      filterResources();
-    });
-
-    function persistRange() {
-      if (rangeStartInp?.value)
-        localStorage.setItem(RANGE_START_KEY, rangeStartInp.value);
-      if (rangeEndInp?.value)
-        localStorage.setItem(RANGE_END_KEY, rangeEndInp.value);
+    function onRangeChange() {
+      persistRangeStorage();
+      syncPeriodChipHighlight();
       filterResources();
     }
 
-    rangeStartInp?.addEventListener("change", persistRange);
-    rangeEndInp?.addEventListener("change", persistRange);
+    rangeStartInp?.addEventListener("change", onRangeChange);
+    rangeEndInp?.addEventListener("change", onRangeChange);
 
-    syncDateFilterUi();
+    syncPeriodChipHighlight();
   }
 
   /** @param {Element} itemEl */
@@ -698,16 +650,9 @@
     if (!raw) return true;
     const t = Date.parse(raw);
     if (Number.isNaN(t)) return true;
-
-    if (dateFilterMode === "range") {
-      const bounds = getRangeBoundsMs();
-      if (!bounds) return true;
-      return t >= bounds.start && t <= bounds.end;
-    }
-
-    const end = Date.now();
-    const start = end - activePeriodDays * 86400000;
-    return t >= start && t <= end;
+    const bounds = getRangeBoundsMs();
+    if (!bounds) return true;
+    return t >= bounds.start && t <= bounds.end;
   }
 
   function syncSectionCountsAndNav() {
