@@ -3,10 +3,51 @@
 
   const TAB_KEY = "ax-hub-space";
 
-  /** @typedef {{ id: string, emoji: string, title: string, subtitle: string, items: CatalogItem[] }} Section */
-  /** @typedef {{ title: string, desc?: string, url: string, bodyMd?: string, submissionId?: string, postedAt?: string, isArticle?: boolean }} CatalogItem */
+  /** @param {ParentNode | null | undefined} root */
+  function lucideRefresh(root) {
+    const L =
+      /** @type {{ createIcons?: (opts?: Record<string, unknown>) => void }} */ (
+        window
+      ).lucide;
+    if (!L || typeof L.createIcons !== "function") return;
+    try {
+      if (root) L.createIcons({ nodes: [root] });
+      else L.createIcons();
+    } catch {
+      try {
+        L.createIcons();
+      } catch {
+        /* ignore */
+      }
+    }
+  }
 
-  /** @typedef {{ id: string, space: string, categoryId: string, title: string, desc?: string, url?: string, bodyMd?: string, createdAt?: string, updatedAt?: string }} SubmissionEntry */
+  /** @typedef {{ id: string, emoji: string, title: string, subtitle: string, parentId?: string }} CatDefRow */
+
+  /**
+   * @param {CatDefRow[]} defs
+   * @returns {{ d: CatDefRow, depth: number }[]}
+   */
+  function orderCategoryDefsForManage(defs) {
+    const byId = new Map(defs.map((d) => [d.id, d]));
+    const roots = defs.filter((d) => !d.parentId || !byId.get(d.parentId));
+    roots.sort((a, b) => a.title.localeCompare(b.title, "ko"));
+    /** @type {{ d: CatDefRow, depth: number }[]} */
+    const out = [];
+    function walk(/** @type {CatDefRow} */ d, depth) {
+      out.push({ d, depth });
+      const kids = defs.filter((x) => x.parentId === d.id);
+      kids.sort((a, b) => a.title.localeCompare(b.title, "ko"));
+      for (const k of kids) walk(k, depth + 1);
+    }
+    for (const r of roots) walk(r, 0);
+    return out;
+  }
+
+  /** @typedef {{ id: string, emoji: string, title: string, subtitle: string, parentId?: string, items: CatalogItem[] }} Section */
+  /** @typedef {{ title: string, desc?: string, url: string, bodyMd?: string, submissionId?: string, postedAt?: string, isArticle?: boolean, enabled?: boolean, referenceUrls?: string[], relatedOverseasIds?: string[], publishLocation?: string }} CatalogItem */
+
+  /** @typedef {{ id: string, space: string, categoryId: string, title: string, desc?: string, url?: string, bodyMd?: string, createdAt?: string, updatedAt?: string, enabled?: boolean, referenceUrls?: string[], relatedOverseasIds?: string[], publishLocation?: string }} SubmissionEntry */
 
   /** @type {{ version?: number, entries: SubmissionEntry[], categories: { overseas: unknown, community: unknown } }} */
   let rawSubmissionsData = {
@@ -20,6 +61,9 @@
 
   /** @type {'overseas' | 'community'} */
   let activeSpace = "overseas";
+
+  /** @type {'seed' | 'catalog' | 'post-detail'} */
+  let appView = "seed";
 
   let navObserver = null;
 
@@ -46,8 +90,18 @@
   const expandBtn = document.getElementById("expand-all");
   const collapseBtn = document.getElementById("collapse-all");
   const themeBtn = document.getElementById("theme-toggle");
-  const tabOverseas = document.getElementById("tab-overseas");
-  const tabCommunity = document.getElementById("tab-community");
+  const navOverseas = document.getElementById("nav-overseas");
+  const navPosts = document.getElementById("nav-posts");
+  const brandHome = document.getElementById("brand-home");
+  const controlDeck = document.getElementById("control-deck");
+  const viewSeed = document.getElementById("view-seed");
+  const catalogShell = document.getElementById("catalog-shell");
+  const viewPostDetail = document.getElementById("view-post-detail");
+  const postDetailBody = document.getElementById("post-detail-body");
+  const postDetailBack = document.getElementById("post-detail-back");
+  const filterActive = /** @type {HTMLSelectElement | null} */ (
+    document.getElementById("filter-active")
+  );
   const btnRegisterTab = document.getElementById("btn-register-tab");
 
   const rangeStartInp = /** @type {HTMLInputElement | null} */ (
@@ -79,15 +133,24 @@
   const regUrl = /** @type {HTMLInputElement | null} */ (
     document.getElementById("reg-url")
   );
-  const regUrlOptional = /** @type {HTMLInputElement | null} */ (
-    document.getElementById("reg-url-optional")
-  );
   const regBodyMd = /** @type {HTMLTextAreaElement | null} */ (
     document.getElementById("reg-body-md")
   );
   const regBlockOverseas = document.getElementById("reg-block-overseas");
   const regBlockCommunity = document.getElementById("reg-block-community");
   const regApiHint = document.getElementById("reg-api-hint");
+  const regReferenceUrls = /** @type {HTMLTextAreaElement | null} */ (
+    document.getElementById("reg-reference-urls")
+  );
+  const regPublishLocation = /** @type {HTMLInputElement | null} */ (
+    document.getElementById("reg-publish-location")
+  );
+  const regRelatedOverseas = /** @type {HTMLSelectElement | null} */ (
+    document.getElementById("reg-related-overseas")
+  );
+  const regEnabled = /** @type {HTMLInputElement | null} */ (
+    document.getElementById("reg-enabled")
+  );
 
   const dlgEdit = document.getElementById("dlg-edit");
   const dlgEditForm = /** @type {HTMLFormElement | null} */ (
@@ -115,6 +178,21 @@
     document.getElementById("edit-body-md")
   );
   const editBlockBody = document.getElementById("edit-block-body");
+  const editBlockCommunityExtra = document.getElementById(
+    "edit-block-community-extra"
+  );
+  const editReferenceUrls = /** @type {HTMLTextAreaElement | null} */ (
+    document.getElementById("edit-reference-urls")
+  );
+  const editPublishLocation = /** @type {HTMLInputElement | null} */ (
+    document.getElementById("edit-publish-location")
+  );
+  const editRelatedOverseas = /** @type {HTMLSelectElement | null} */ (
+    document.getElementById("edit-related-overseas")
+  );
+  const editEnabled = /** @type {HTMLInputElement | null} */ (
+    document.getElementById("edit-enabled")
+  );
 
   const dlgDelete = document.getElementById("dlg-delete");
   const delId = /** @type {HTMLInputElement | null} */ (
@@ -149,6 +227,9 @@
   const catManageScope = document.getElementById("cat-manage-scope");
   const catManageList = document.getElementById("cat-manage-list");
   const btnCatManageAdd = document.getElementById("cat-manage-add");
+  const catEditParent = /** @type {HTMLSelectElement | null} */ (
+    document.getElementById("cat-edit-parent")
+  );
 
   /** @type {"edit"|"add"} */
   let categoryDialogMode = "edit";
@@ -365,6 +446,7 @@
             out.bodyMd = raw.bodyMd.trim();
             out.isArticle = true;
           }
+          if (raw.enabled === false) out.enabled = false;
           return out;
         }),
       };
@@ -383,6 +465,13 @@
     );
     if (!Array.isArray(overrides) || overrides.length === 0) return base;
     const byId = new Map(base.map((s) => [s.id, s]));
+    const ovIds = overrides
+      .map((raw) => {
+        const x = /** @type {Record<string, unknown>} */ (raw);
+        return typeof x.id === "string" ? x.id.trim() : "";
+      })
+      .filter(Boolean);
+    const allCatIds = new Set([...base.map((s) => s.id), ...ovIds]);
     return overrides.map((raw) => {
       const o = /** @type {Record<string, unknown>} */ (raw);
       const id = typeof o.id === "string" ? o.id.trim() : "";
@@ -391,6 +480,11 @@
         prev && Array.isArray(prev.items)
           ? JSON.parse(JSON.stringify(prev.items))
           : [];
+      const cid =
+        typeof o.parentId === "string" ? o.parentId.trim() : "";
+      const parentId =
+        cid && cid !== id && allCatIds.has(cid) ? cid : "";
+
       return {
         id:
           id ||
@@ -405,6 +499,7 @@
             : prev?.title || id || "카테고리",
         subtitle:
           typeof o.subtitle === "string" ? o.subtitle : prev?.subtitle || " ",
+        ...(parentId ? { parentId } : {}),
         items,
       };
     });
@@ -420,6 +515,7 @@
         emoji: s.emoji,
         title: s.title,
         subtitle: s.subtitle || " ",
+        ...(s.parentId ? { parentId: s.parentId } : {}),
       }));
   }
 
@@ -580,11 +676,25 @@
         title: e.title || "",
         desc: typeof e.desc === "string" ? e.desc : "",
         url: url || "",
-        submissionId: e.id,
+        submissionId: String(e.id),
       };
       if (bodyMd) {
         item.bodyMd = bodyMd;
         item.isArticle = true;
+      }
+      if (e.enabled === false) item.enabled = false;
+      if (Array.isArray(e.referenceUrls) && e.referenceUrls.length) {
+        item.referenceUrls = e.referenceUrls.filter(
+          (u) => typeof u === "string" && u.trim()
+        );
+      }
+      if (Array.isArray(e.relatedOverseasIds) && e.relatedOverseasIds.length) {
+        item.relatedOverseasIds = e.relatedOverseasIds.filter(
+          (x) => typeof x === "string" && x.trim()
+        );
+      }
+      if (typeof e.publishLocation === "string" && e.publishLocation.trim()) {
+        item.publishLocation = e.publishLocation.trim();
       }
       const ts = e.updatedAt || e.createdAt;
       if (ts) item.postedAt = new Date(ts).toISOString();
@@ -625,6 +735,9 @@
     buildSections();
     observeNavFresh();
     filterResources();
+    const rh = window.location.hash.slice(1);
+    if (rh.startsWith("post-")) renderPostDetail(rh.slice(5));
+    if (catalogEl) lucideRefresh(catalogEl);
     if (message) {
       /** optional toast */
       if (typeof message === "string" && window.requestAnimationFrame) {
@@ -689,8 +802,8 @@
     btnRegisterTab.setAttribute(
       "aria-label",
       activeSpace === "overseas"
-        ? "해외 참고 링크 탭에 등록"
-        : "게시글 초안 탭에 등록"
+        ? "해외 참고 링크에 등록"
+        : "게시글 초안에 등록"
     );
   }
 
@@ -715,7 +828,9 @@
       "aria-label",
       isDark ? "라이트 모드로 전환" : "다크 모드로 전환"
     );
-    themeBtn.textContent = isDark ? "라이트" : "다크";
+    const icon = isDark ? "sun" : "moon";
+    themeBtn.innerHTML = `<i data-lucide="${icon}" class="lucide-icon lucide-icon--theme" aria-hidden="true"></i>`;
+    lucideRefresh(themeBtn);
   }
 
   themeBtn?.addEventListener("click", () => {
@@ -732,88 +847,122 @@
     updateThemeToggleLabel(next === "dark");
   });
 
-  function applyTabFromHashOrStorage() {
-    const raw = window.location.hash.slice(1);
-    if (raw === "tab-community" || raw.startsWith("c-")) {
-      activeSpace = "community";
-      return;
-    }
-    if (raw === "tab-overseas" || raw.startsWith("o-")) {
-      activeSpace = "overseas";
-      return;
-    }
-    const stored = localStorage.getItem(TAB_KEY);
-    if (stored === "community" || stored === "overseas") activeSpace = stored;
-    else activeSpace = "overseas";
+  function setHeaderNavActive() {
+    navOverseas?.removeAttribute("aria-current");
+    navPosts?.removeAttribute("aria-current");
+    if (appView === "catalog" && activeSpace === "overseas")
+      navOverseas?.setAttribute("aria-current", "page");
+    if (appView === "catalog" && activeSpace === "community")
+      navPosts?.setAttribute("aria-current", "page");
+    if (navOverseas)
+      navOverseas.setAttribute(
+        "data-active",
+        appView === "catalog" && activeSpace === "overseas" ? "true" : "false"
+      );
+    if (navPosts)
+      navPosts.setAttribute(
+        "data-active",
+        appView === "catalog" && activeSpace === "community" ? "true" : "false"
+      );
   }
 
-  function updateTabUI() {
-    tabOverseas?.setAttribute(
-      "aria-selected",
-      activeSpace === "overseas" ? "true" : "false"
-    );
-    tabCommunity?.setAttribute(
-      "aria-selected",
-      activeSpace === "community" ? "true" : "false"
-    );
+  function showViewSeed() {
+    appView = "seed";
+    if (viewSeed) viewSeed.hidden = false;
+    if (catalogShell) catalogShell.hidden = true;
+    if (viewPostDetail) viewPostDetail.hidden = true;
+    if (controlDeck) controlDeck.hidden = true;
+    setHeaderNavActive();
   }
 
-  /** @param {'overseas' | 'community'} space @param {boolean} [writeHash] */
-  function switchSpace(space, writeHash) {
+  function showViewCatalog(/** @type {'overseas'|'community'} */ space) {
     activeSpace = space;
     localStorage.setItem(TAB_KEY, space);
-    updateTabUI();
+    appView = "catalog";
+    if (viewSeed) viewSeed.hidden = true;
+    if (catalogShell) catalogShell.hidden = false;
+    if (viewPostDetail) viewPostDetail.hidden = true;
+    if (controlDeck) controlDeck.hidden = false;
+    setHeaderNavActive();
     buildNav();
     buildSections();
     filterResources();
+    observeNavFresh();
     updateToolbarForTab();
-    if (writeHash)
-      history.replaceState(
-        null,
-        "",
-        space === "community" ? "#tab-community" : "#tab-overseas"
-      );
     if (dlgCatManage?.classList.contains("modal--open")) {
       if (catManageScope) {
         catManageScope.textContent =
           activeSpace === "overseas"
-            ? "현재 탭: 해외 참고 링크 — 이 탭에만 적용되는 카테고리 목록입니다."
-            : "현재 탭: 게시글 초안 — 이 탭에만 적용되는 카테고리 목록입니다.";
+            ? "현재: 해외 참고 링크 — 이 영역 전용 카테고리입니다."
+            : "현재: 게시글 초안 — 이 영역 전용 카테고리입니다.";
       }
       renderCategoryManageList();
     }
   }
 
-  function initTabs() {
-    tabOverseas?.addEventListener("click", () =>
-      switchSpace("overseas", true)
-    );
-    tabCommunity?.addEventListener("click", () =>
-      switchSpace("community", true)
-    );
+  function showViewPostDetail() {
+    appView = "post-detail";
+    if (viewSeed) viewSeed.hidden = true;
+    if (catalogShell) catalogShell.hidden = true;
+    if (viewPostDetail) viewPostDetail.hidden = false;
+    if (controlDeck) controlDeck.hidden = true;
+    setHeaderNavActive();
+  }
+
+  /**
+   * @param {Section[]} list
+   * @returns {{ section: Section, depth: number }[]}
+   */
+  function orderSectionsForNav(list) {
+    const byId = new Map(list.map((s) => [s.id, s]));
+    const roots = list.filter((s) => !s.parentId || !byId.has(s.parentId));
+    roots.sort((a, b) => a.title.localeCompare(b.title, "ko"));
+    /** @type {{ section: Section, depth: number }[]} */
+    const out = [];
+    function walk(/** @type {Section} */ node, /** @type {number} */ depth) {
+      out.push({ section: node, depth });
+      const kids = list.filter((s) => s.parentId === node.id);
+      kids.sort((a, b) => a.title.localeCompare(b.title, "ko"));
+      for (const k of kids) walk(k, depth + 1);
+    }
+    for (const r of roots) walk(r, 0);
+    return out;
   }
 
   function buildNav() {
-    const SECTIONS = getSections();
+    const SECTIONS = getSections().filter((s) => s.id !== "user-orphan");
+    const orphanSec = getSections().find((s) => s.id === "user-orphan");
+    /** @type {{ section: Section, depth: number }[]} */
+    let ordered = orderSectionsForNav(SECTIONS);
+    if (orphanSec && orphanSec.items.length)
+      ordered = ordered.concat([{ section: orphanSec, depth: 0 }]);
+
     if (!navDesktop) return;
-    navDesktop.innerHTML = SECTIONS.map(
-      (s) =>
-        `<li><a class="nav-link" href="#${escapeAttr(sectionDomId(activeSpace, s))}">
+    navDesktop.innerHTML = ordered
+      .map(
+        ({ section: s, depth }) =>
+          `<li class="nav-li nav-li--depth-${depth}" style="--nav-depth:${depth}"><a class="nav-link" href="#${escapeAttr(
+            sectionDomId(activeSpace, s)
+          )}" data-section-id="${escapeAttr(s.id)}">
           <span class="nav-emoji">${escapeHtml(s.emoji)}</span>
-          <span>${escapeHtml(s.title)}</span>
+          <span class="nav-text">${escapeHtml(s.title)}</span>
           <span class="nav-count">${s.items.length}</span>
         </a></li>`
-    ).join("");
+      )
+      .join("");
 
     if (navMobile) {
+      const allForMobile = getSections();
       navMobile.innerHTML =
         `<option value="">카테고리로 이동…</option>` +
-        SECTIONS.map(
-          (s) =>
-            `<option value="#${escapeAttr(
-              sectionDomId(activeSpace, s)
-            )}">${escapeHtml(s.emoji + " " + s.title)}</option>`
-        ).join("");
+        allForMobile
+          .map(
+            (s) =>
+              `<option value="#${escapeAttr(
+                sectionDomId(activeSpace, s)
+              )}">${escapeHtml(s.emoji + " " + s.title)}</option>`
+          )
+          .join("");
     }
   }
 
@@ -821,6 +970,7 @@
     if (searchBound) return;
     searchBound = true;
     searchEl?.addEventListener("input", filterResources);
+    filterActive?.addEventListener("change", filterResources);
   }
 
   /** @returns {{ start: number, end: number } | null} */
@@ -902,12 +1052,16 @@
 
   function syncSectionCountsAndNav() {
     const secs = document.querySelectorAll("#catalog [data-section]");
-    const navCounts = document.querySelectorAll("#nav-desktop .nav-count");
-    secs.forEach((sec, i) => {
+    secs.forEach((sec) => {
+      const sid = sec.getAttribute("data-section-id");
       const vis = sec.querySelectorAll(".resource-item:not(.hidden)").length;
       const ce = sec.querySelector(".section-count");
       if (ce) ce.textContent = `${vis}개`;
-      const nc = navCounts[i];
+      if (!sid || !navDesktop) return;
+      const navA = Array.from(
+        navDesktop.querySelectorAll(".nav-link[data-section-id]")
+      ).find((a) => a.getAttribute("data-section-id") === sid);
+      const nc = navA?.querySelector(".nav-count");
       if (nc) nc.textContent = String(vis);
     });
   }
@@ -931,39 +1085,110 @@
         ? ` data-posted-at="${escapeAttr(String(it.postedAt).trim())}"`
         : "";
 
+    const enabledFlag = it.enabled !== false;
+    const enAttr = ` data-enabled="${enabledFlag ? "true" : "false"}"`;
+
+    const inactivePill =
+      !enabledFlag && hasSub
+        ? `<span class="pill-inactive" title="비활성">비활성</span>`
+        : "";
+
+    const isCommunityPost =
+      activeSpace === "community" &&
+      hasSub &&
+      (!!(it.bodyMd && String(it.bodyMd).trim()) ||
+        !!(it.url && isHttpUrl(it.url)));
+
+    const subPill = hasSub ? `<span class="pill-sub">등록</span>` : "";
+
+    const btnEdit = `<button type="button" class="btn-mini btn-mini--icon" data-sub-action="edit" data-submission-id="${escapeAttr(
+      it.submissionId || ""
+    )}" aria-label="수정"><i data-lucide="pencil" class="lucide-18" aria-hidden="true"></i></button>`;
+    const btnDel = `<button type="button" class="btn-mini btn-mini--icon btn-mini--danger" data-sub-action="delete" data-submission-id="${escapeAttr(
+      it.submissionId || ""
+    )}" aria-label="삭제"><i data-lucide="trash-2" class="lucide-18" aria-hidden="true"></i></button>`;
+
+    if (isCommunityPost) {
+      const sid = escapeAttr(it.submissionId || "");
+      const excerpt =
+        (it.desc && String(it.desc).trim()) ||
+        stripForSearchBlob(it.bodyMd || "").slice(0, 220) ||
+        (it.url ? "참고 링크만 있는 초안" : "");
+      const pub =
+        it.publishLocation && it.publishLocation.trim()
+          ? `<span class="post-summary-meta">${escapeHtml(
+              it.publishLocation
+            )}</span>`
+          : "";
+      const actions = hasSub
+        ? `<div class="resource-actions resource-actions--post" aria-label="게시글 관리">${btnEdit}${btnDel}</div>`
+        : "";
+      return `<li class="resource-item resource-item--post-summary${
+        hasSub ? " resource-item--with-actions" : ""
+      }" data-text="${escapeAttr(lower)}"${postedAttr}${enAttr}>
+        <div class="post-summary-row">
+          <a class="post-summary-card" href="#post-${sid}">
+            <div class="resource-main">
+              <div class="resource-title-row">
+                <p class="resource-title">${escapeHtml(it.title)}</p>
+                ${subPill}
+                ${inactivePill}
+              </div>
+              ${
+                excerpt
+                  ? `<p class="resource-desc post-summary-excerpt">${escapeHtml(
+                      excerpt
+                    )}</p>`
+                  : ""
+              }
+              ${pub}
+            </div>
+            <span class="post-summary-chev" aria-hidden="true">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="m9 18 6-6-6-6"/></svg>
+            </span>
+          </a>
+          ${actions}
+        </div>
+      </li>`;
+    }
+
     const isArticle =
       activeSpace === "community" &&
-      !!(it.bodyMd && String(it.bodyMd).trim());
-
-    const subPill = hasSub ? `<span class="pill-sub">등록글</span>` : "";
+      !!(it.bodyMd && String(it.bodyMd).trim()) &&
+      !isCommunityPost;
 
     if (isArticle) {
       const mdHtml = renderMarkdownSafe(it.bodyMd || "");
+      const refLines = [];
+      if (it.url && isHttpUrl(it.url)) refLines.push(it.url);
+      if (Array.isArray(it.referenceUrls))
+        refLines.push(
+          ...it.referenceUrls.filter((u) => u && isHttpUrl(String(u)))
+        );
       const refLink =
-        it.url && isHttpUrl(it.url)
-          ? `<p class="article-ref-link"><a href="${escapeAttr(
-              it.url
-            )}" target="_blank" rel="noopener noreferrer">참고 링크</a></p>`
+        refLines.length > 0
+          ? `<ul class="article-ref-list">${refLines
+              .map(
+                (u) =>
+                  `<li><a href="${escapeAttr(u)}" target="_blank" rel="noopener noreferrer">${escapeHtml(
+                    u
+                  )}</a></li>`
+              )
+              .join("")}</ul>`
           : "";
       const actions = hasSub
-        ? `<div class="resource-actions resource-actions--article" aria-label="등록글 관리">
-        <button type="button" class="btn-mini" data-sub-action="edit" data-submission-id="${escapeAttr(
-          it.submissionId || ""
-        )}">수정</button>
-        <button type="button" class="btn-mini btn-mini--danger" data-sub-action="delete" data-submission-id="${escapeAttr(
-          it.submissionId || ""
-        )}">삭제</button>
-      </div>`
+        ? `<div class="resource-actions resource-actions--article" aria-label="게시글 관리">${btnEdit}${btnDel}</div>`
         : "";
 
       return `<li class="resource-item resource-item--article${
         hasSub ? " resource-item--with-actions" : ""
-      }" data-text="${escapeAttr(lower)}"${postedAttr}>
+      }" data-text="${escapeAttr(lower)}"${postedAttr}${enAttr}>
         <div class="resource-article-card">
           <div class="resource-article-body">
             <div class="resource-title-row">
               <p class="resource-title">${escapeHtml(it.title)}</p>
               ${subPill}
+              ${inactivePill}
             </div>
             ${
               it.desc
@@ -983,6 +1208,7 @@
         <div class="resource-title-row">
           <p class="resource-title">${escapeHtml(it.title)}</p>
           ${subPill}
+          ${inactivePill}
         </div>
         <p class="resource-desc">${escapeHtml(it.desc || "")}</p>
       </div>
@@ -999,28 +1225,24 @@
       : `<div class="resource-link-card resource-link-card--static">${linkInner}</div>`;
 
     if (!hasSub) {
-      return `<li class="resource-item" data-text="${escapeAttr(lower)}"${postedAttr}>
+      return `<li class="resource-item" data-text="${escapeAttr(lower)}"${postedAttr}${enAttr}>
         ${linkBlock}
       </li>`;
     }
 
     const sid = escapeAttr(it.submissionId || "");
-    const actions = `
-      <div class="resource-actions" aria-label="등록글 관리">
-        <button type="button" class="btn-mini" data-sub-action="edit" data-submission-id="${sid}">수정</button>
-        <button type="button" class="btn-mini btn-mini--danger" data-sub-action="delete" data-submission-id="${sid}">삭제</button>
-      </div>`;
+    const actions = `<div class="overseas-link-toolbar" aria-label="링크 관리"><button type="button" class="btn-mini btn-mini--icon" data-sub-action="edit" data-submission-id="${sid}" aria-label="수정"><i data-lucide="pencil" class="lucide-18" aria-hidden="true"></i></button><button type="button" class="btn-mini btn-mini--icon btn-mini--danger" data-sub-action="delete" data-submission-id="${sid}" aria-label="삭제"><i data-lucide="trash-2" class="lucide-18" aria-hidden="true"></i></button></div>`;
 
     const mainLink = href
-      ? `<a class="resource-link-card resource-link-grow" href="${escapeHtml(
+      ? `<a class="resource-link-card resource-link-card--full" href="${escapeHtml(
           href
         )}" target="_blank" rel="noopener noreferrer">${linkInner}</a>`
-      : `<div class="resource-link-card resource-link-grow resource-link-card--static">${linkInner}</div>`;
+      : `<div class="resource-link-card resource-link-card--full resource-link-card--static">${linkInner}</div>`;
 
-    return `<li class="resource-item resource-item--with-actions" data-text="${escapeAttr(
+    return `<li class="resource-item resource-item--overseas-registered" data-text="${escapeAttr(
       lower
-    )}"${postedAttr}>
-      <div class="resource-split">
+    )}"${postedAttr}${enAttr}>
+      <div class="overseas-registered-wrap">
         ${mainLink}
         ${actions}
       </div>
@@ -1042,6 +1264,18 @@
         section.subtitle && String(section.subtitle).trim()
           ? `<p class="section-subtitle">${escapeHtml(section.subtitle)}</p>`
           : "";
+      const parentLine =
+        section.parentId &&
+        SECTIONS.some((s) => s.id === section.parentId)
+          ? (() => {
+              const psec = SECTIONS.find((s) => s.id === section.parentId);
+              return psec
+                ? `<p class="section-hierarchy-hint"><span class="section-hierarchy-label">상위 카테고리</span> · ${escapeHtml(
+                    psec.emoji + " " + psec.title
+                  )}</p>`
+                : "";
+            })()
+          : "";
 
       return `<section class="section" id="${escapeAttr(
         secId
@@ -1057,9 +1291,16 @@
             )}</span>
             <div class="section-heading">
               <div class="section-title-row">
-                <p class="section-title">${escapeHtml(section.title)}</p>
+                <p class="section-title">${escapeHtml(section.title)}${
+                  section.id === "user-orphan"
+                    ? ""
+                    : section.parentId
+                      ? ` <span class="section-badge-child">하위 카테고리</span>`
+                      : ` <span class="section-badge-root">상위 카테고리</span>`
+                }</p>
                 <span class="section-count">${section.items.length}개</span>
               </div>
+              ${parentLine}
               ${subtitleHtml}
             </div>
             <span class="chevron" aria-hidden="true">
@@ -1082,6 +1323,7 @@
 
     filterResources();
     observeNavFresh();
+    if (catalogEl) lucideRefresh(catalogEl);
   }
 
   /** @param {HTMLElement} btn */
@@ -1126,7 +1368,13 @@
         const hay = item.getAttribute("data-text") || "";
         const textOk = !q || hay.includes(q);
         const dateOk = itemPassesDateFilter(item);
-        const ok = textOk && dateOk;
+        const mode = (filterActive?.value || "all").trim();
+        const en = item.getAttribute("data-enabled");
+        const isAct = en !== "false";
+        let activeOk = true;
+        if (mode === "active") activeOk = isAct;
+        else if (mode === "inactive") activeOk = !isAct;
+        const ok = textOk && dateOk && activeOk;
         item.classList.toggle("hidden", !ok);
         if (ok) visibleItems++;
       });
@@ -1163,7 +1411,7 @@
         empty = document.createElement("p");
         empty.className = "empty-state";
         empty.textContent =
-          "조건에 맞는 항목이 없습니다. 검색어나 기간을 바꿔 보세요.";
+          "조건에 맞는 항목이 없습니다. 검색·기간·활성화 필터를 바꿔 보세요.";
         catalogEl.appendChild(empty);
       }
     } else {
@@ -1220,24 +1468,125 @@
     });
   }
 
-  function applyHashFromLocation(smoothScroll) {
+  function renderPostDetail(/** @type {string} */ id) {
+    const entry = lastSubmissionEntries.find((e) => e.id === id);
+    if (!entry || entry.space !== "community" || !postDetailBody) {
+      window.alert("게시글을 찾을 수 없습니다. 목록으로 돌아갑니다.");
+      history.replaceState(null, "", "#posts");
+      showViewCatalog("community");
+      return;
+    }
+    const catRow = communityRowsRaw.find((s) => s.id === entry.categoryId);
+    const catLabel = catRow
+      ? `${catRow.emoji} ${catRow.title}`
+      : entry.categoryId || "";
+    const mdHtml = renderMarkdownSafe(
+      typeof entry.bodyMd === "string" ? entry.bodyMd : ""
+    );
+    /** @type {string[]} */
+    const refs = [];
+    if (entry.url && isHttpUrl(String(entry.url)))
+      refs.push(String(entry.url).trim());
+    if (Array.isArray(entry.referenceUrls))
+      refs.push(
+        ...entry.referenceUrls.filter((u) => u && isHttpUrl(String(u)))
+      );
+    const refBlock =
+      refs.length > 0
+        ? `<section class="pd-block"><h3 class="pd-h">참고 링크</h3><ul class="article-ref-list">${refs
+            .map(
+              (u) =>
+                `<li><a href="${escapeAttr(u)}" target="_blank" rel="noopener noreferrer">${escapeHtml(
+                  u
+                )}</a></li>`
+            )
+            .join("")}</ul></section>`
+        : "";
+    let relBlock = "";
+    if (
+      Array.isArray(entry.relatedOverseasIds) &&
+      entry.relatedOverseasIds.length
+    ) {
+      const lis = entry.relatedOverseasIds
+        .map((rid) => {
+          const oe = lastSubmissionEntries.find(
+            (x) => x.id === rid && x.space === "overseas"
+          );
+          if (!oe || !oe.url || !isHttpUrl(String(oe.url))) return "";
+          const u = String(oe.url).trim();
+          return `<li><a href="${escapeAttr(
+            u
+          )}" target="_blank" rel="noopener noreferrer">${escapeHtml(
+            oe.title || u
+          )}</a></li>`;
+        })
+        .filter(Boolean);
+      if (lis.length)
+        relBlock = `<section class="pd-block"><h3 class="pd-h">연관 해외 레퍼런스</h3><ul class="article-ref-list">${lis.join(
+          ""
+        )}</ul></section>`;
+    }
+    const loc =
+      entry.publishLocation && String(entry.publishLocation).trim()
+        ? `<p class="pd-loc"><strong>게시 위치</strong> · ${escapeHtml(
+            String(entry.publishLocation).trim()
+          )}</p>`
+        : "";
+    const en =
+      entry.enabled === false
+        ? `<p class="pd-flag"><span class="pill-inactive">비활성</span></p>`
+        : "";
+    postDetailBody.innerHTML = `
+      <header class="pd-head">
+        <p class="pd-cat">${escapeHtml(catLabel)}</p>
+        <h1 class="pd-title">${escapeHtml(entry.title || "")}</h1>
+        ${
+          entry.desc
+            ? `<p class="pd-desc">${escapeHtml(String(entry.desc))}</p>`
+            : ""
+        }
+        ${loc}
+        ${en}
+      </header>
+      <div class="pd-md md-content">${mdHtml || ""}</div>
+      ${refBlock}
+      ${relBlock}
+    `;
+    showViewPostDetail();
+  }
+
+  function applyRouteFromHash(/** @type {boolean} */ smoothScroll) {
     const raw = window.location.hash.slice(1);
-    let needRebuild = false;
-    if (raw.startsWith("c-") && activeSpace !== "community") {
-      activeSpace = "community";
-      needRebuild = true;
-    } else if (raw.startsWith("o-") && activeSpace !== "overseas") {
-      activeSpace = "overseas";
-      needRebuild = true;
+    if (raw.startsWith("post-")) {
+      renderPostDetail(raw.slice(5));
+      return;
+    }
+    if (!raw || raw === "seed") {
+      showViewSeed();
+      return;
     }
 
-    if (needRebuild) {
-      localStorage.setItem(TAB_KEY, activeSpace);
-      updateTabUI();
-      buildNav();
-      buildSections();
-      updateToolbarForTab();
+    /** @type {'overseas'|'community'} */
+    let space = "overseas";
+    if (
+      raw === "posts" ||
+      raw === "tab-community" ||
+      raw === "community" ||
+      raw.startsWith("c-")
+    ) {
+      space = "community";
+    } else if (
+      raw === "overseas" ||
+      raw === "tab-overseas" ||
+      raw.startsWith("o-")
+    ) {
+      space = "overseas";
+    } else {
+      const stored = localStorage.getItem(TAB_KEY);
+      if (stored === "community" || stored === "overseas") space = stored;
     }
+
+    showViewCatalog(space);
 
     document.querySelectorAll(".nav-link").forEach((a) => {
       const el = /** @type {HTMLElement} */ (a);
@@ -1252,7 +1601,12 @@
     }
   }
 
-  window.addEventListener("hashchange", () => applyHashFromLocation(true));
+  postDetailBack?.addEventListener("click", () => {
+    history.replaceState(null, "", "#posts");
+    applyRouteFromHash(false);
+  });
+
+  window.addEventListener("hashchange", () => applyRouteFromHash(true));
 
   /* --- 카테고리 옵션 (등록/수정) --- */
 
@@ -1262,12 +1616,47 @@
    */
   function getCategoryChoices(space) {
     const arr = space === "overseas" ? baselineOverseasArr : communityRowsRaw;
-    return arr
-      .filter((s) => s.id !== "user-orphan")
-      .map((s) => ({
-        id: s.id,
-        label: `${s.emoji} ${s.title}`,
-      }));
+    const list = arr.filter((s) => s.id !== "user-orphan");
+    return orderSectionsForNav(list).map(({ section, depth }) => ({
+      id: section.id,
+      label: `${"\u2003".repeat(depth)}${section.emoji} ${section.title}`,
+    }));
+  }
+
+  function fillRelatedOverseasSelect(
+    /** @type {HTMLSelectElement | null} */ sel,
+    /** @type {string[] | undefined} */ selectedIds
+  ) {
+    if (!sel) return;
+    const set = new Set(selectedIds || []);
+    const picks = lastSubmissionEntries.filter((x) => x.space === "overseas");
+    sel.innerHTML = picks
+      .map((x) => {
+        const selAttr = set.has(x.id) ? " selected" : "";
+        return `<option value="${escapeAttr(x.id)}"${selAttr}>${escapeHtml(
+          x.title || x.id
+        )}</option>`;
+      })
+      .join("");
+  }
+
+  function fillCatEditParentSelect(
+    /** @type {string} */ excludeId,
+    /** @type {string | undefined} */ selectedParentId
+  ) {
+    if (!catEditParent) return;
+    const defs = getCategoryDefsForSave(activeSpace);
+    catEditParent.innerHTML =
+      `<option value="">${escapeHtml("(없음 — 최상위)")}</option>` +
+      defs
+        .filter((d) => d.id !== excludeId)
+        .map((d) => {
+          const sel = d.id === selectedParentId ? " selected" : "";
+          return `<option value="${escapeAttr(d.id)}"${sel}>${escapeHtml(
+            `${d.emoji} ${d.title}`
+          )}</option>`;
+        })
+        .join("");
   }
 
   /**
@@ -1312,7 +1701,7 @@
     if (regBlockCommunity) regBlockCommunity.hidden = !comm;
     if (regUrl) regUrl.required = !comm;
     const h = document.getElementById("dlg-reg-title");
-    if (h) h.textContent = comm ? "게시글 등록" : "링크 등록";
+    if (h) h.textContent = comm ? "게시글 초안 등록" : "해외 참고 링크 등록";
   }
 
   function updateEditFormForEntry(
@@ -1321,7 +1710,13 @@
   ) {
     const comm = space === "community";
     if (editBlockBody) editBlockBody.hidden = !comm;
-    if (editUrl) editUrl.required = !comm;
+    if (editBlockCommunityExtra) editBlockCommunityExtra.hidden = !comm;
+    const editBlockUrl = document.getElementById("edit-block-url");
+    if (editBlockUrl) editBlockUrl.hidden = comm;
+    if (editUrl) {
+      if (comm) editUrl.value = "";
+      editUrl.required = !comm;
+    }
     if (editBodyMd) {
       editBodyMd.value =
         comm && typeof entry.bodyMd === "string" ? entry.bodyMd : "";
@@ -1368,32 +1763,40 @@
         `<li class="cat-manage-empty">아직 카테고리가 없습니다. 「카테고리 추가」로 만드세요.</li>`;
       return;
     }
-    catManageList.innerHTML = defs
-      .map((d) => {
+    catManageList.innerHTML = orderCategoryDefsForManage(
+      /** @type {CatDefRow[]} */ (defs)
+    )
+      .map(({ d, depth }) => {
         const n = countById[d.id] ?? 0;
         const sub = (d.subtitle || "").trim();
         const subLine =
           sub && sub !== " "
             ? `<span class="cat-manage-sub">${escapeHtml(sub)}</span>`
             : "";
-        return `<li class="cat-manage-item">
+        const tier =
+          depth === 0
+            ? `<span class="cat-tier cat-tier--parent">상위</span>`
+            : `<span class="cat-tier cat-tier--child">하위</span>`;
+        return `<li class="cat-manage-item cat-manage-item--depth-${depth}" style="--cat-depth:${depth}">
       <div class="cat-manage-item-main">
         <span class="cat-manage-emoji" aria-hidden="true">${escapeHtml(
           d.emoji
         )}</span>
         <div class="cat-manage-text">
-          <span class="cat-manage-name">${escapeHtml(d.title)}</span>
+          <span class="cat-manage-name-row">${tier}<span class="cat-manage-name">${escapeHtml(
+            d.title
+          )}</span></span>
           ${subLine}
           <span class="cat-manage-meta">ID <code>${escapeHtml(d.id)}</code> · 항목 ${n}개</span>
         </div>
       </div>
       <div class="cat-manage-actions">
-        <button type="button" class="btn-mini" data-cat-manage="edit" data-cat-id="${escapeAttr(
+        <button type="button" class="btn-mini btn-mini--icon" data-cat-manage="edit" data-cat-id="${escapeAttr(
           d.id
-        )}">이름·설정 수정</button>
-        <button type="button" class="btn-mini btn-mini--danger" data-cat-manage="delete" data-cat-id="${escapeAttr(
+        )}" aria-label="카테고리 수정"><i data-lucide="pencil" class="lucide-18" aria-hidden="true"></i></button>
+        <button type="button" class="btn-mini btn-mini--icon btn-mini--danger" data-cat-manage="delete" data-cat-id="${escapeAttr(
           d.id
-        )}">카테고리 삭제</button>
+        )}" aria-label="카테고리 삭제"><i data-lucide="trash-2" class="lucide-18" aria-hidden="true"></i></button>
       </div>
     </li>`;
       })
@@ -1405,11 +1808,12 @@
     if (catManageScope) {
       catManageScope.textContent =
         activeSpace === "overseas"
-          ? "현재 탭: 해외 참고 링크 — 이 탭에만 적용되는 카테고리 목록입니다."
-          : "현재 탭: 게시글 초안 — 이 탭에만 적용되는 카테고리 목록입니다.";
+          ? "현재: 해외 참고 링크 — 이 영역 전용 카테고리 목록입니다."
+          : "현재: 게시글 초안 — 이 영역 전용 카테고리 목록입니다.";
     }
     renderCategoryManageList();
     openModal(dlgCatManage);
+    lucideRefresh(dlgCatManage);
   }
 
   function openCategoryEditModal(sectionId) {
@@ -1427,6 +1831,7 @@
     if (catEditTitle) catEditTitle.value = row.title;
     if (catEditSubtitle) catEditSubtitle.value = row.subtitle || "";
     if (catEditPw) catEditPw.value = "";
+    fillCatEditParentSelect(row.id, row.parentId);
     const ht = document.getElementById("dlg-cat-title");
     if (ht) ht.textContent = "카테고리 수정";
     openModal(dlgCatEdit);
@@ -1444,6 +1849,7 @@
     if (catEditTitle) catEditTitle.value = "";
     if (catEditSubtitle) catEditSubtitle.value = " ";
     if (catEditPw) catEditPw.value = "";
+    fillCatEditParentSelect("", "");
     const ht = document.getElementById("dlg-cat-title");
     if (ht) ht.textContent = "카테고리 추가";
     openModal(dlgCatEdit);
@@ -1501,8 +1907,11 @@
     if (regTitle) regTitle.value = "";
     if (regDesc) regDesc.value = "";
     if (regUrl) regUrl.value = "";
-    if (regUrlOptional) regUrlOptional.value = "";
     if (regBodyMd) regBodyMd.value = "";
+    if (regReferenceUrls) regReferenceUrls.value = "";
+    if (regPublishLocation) regPublishLocation.value = "";
+    if (regEnabled) regEnabled.checked = true;
+    fillRelatedOverseasSelect(regRelatedOverseas, []);
     openModal(dlgRegister);
   }
 
@@ -1526,7 +1935,33 @@
     if (editDesc)
       editDesc.value = typeof entry.desc === "string" ? entry.desc : "";
 
-    if (editUrl) editUrl.value = entry.url || "";
+    if (space === "overseas" && editUrl)
+      editUrl.value = typeof entry.url === "string" ? entry.url : "";
+
+    if (space === "community") {
+      /** @type {string[]} */
+      const refLines = [];
+      if (entry.url && isHttpUrl(String(entry.url)))
+        refLines.push(String(entry.url).trim());
+      if (Array.isArray(entry.referenceUrls))
+        refLines.push(
+          ...entry.referenceUrls.map((u) => String(u).trim()).filter(Boolean)
+        );
+      if (editReferenceUrls)
+        editReferenceUrls.value = refLines.join("\n");
+      if (editPublishLocation)
+        editPublishLocation.value =
+          typeof entry.publishLocation === "string" ? entry.publishLocation : "";
+      fillRelatedOverseasSelect(
+        editRelatedOverseas,
+        Array.isArray(entry.relatedOverseasIds)
+          ? entry.relatedOverseasIds
+          : []
+      );
+    }
+
+    if (editEnabled) editEnabled.checked = entry.enabled !== false;
+
     if (editPwd) editPwd.value = "";
 
     updateEditFormForEntry(space, entry);
@@ -1605,8 +2040,22 @@
       const title = (regTitle?.value || "").trim();
       const desc = (regDesc?.value || "").trim();
       const urlOverseas = (regUrl?.value || "").trim();
-      const urlOpt = (regUrlOptional?.value || "").trim();
       const bodyMd = (regBodyMd?.value || "").trim();
+      const refRaw = (regReferenceUrls?.value || "").trim();
+      const refLines = refRaw
+        ? refRaw
+            .split(/\r?\n/)
+            .map((s) => s.trim())
+            .filter((s) => isHttpUrl(s))
+        : [];
+      const urlCommunity = refLines[0] || "";
+      const refRest =
+        space === "community" && refLines.length > 1 ? refLines.slice(1) : [];
+      const publishLocation = (regPublishLocation?.value || "").trim();
+      const relatedSel = regRelatedOverseas
+        ? [...regRelatedOverseas.selectedOptions].map((o) => o.value)
+        : [];
+      const enabled = regEnabled?.checked !== false;
 
       if (!categoryId || !title) {
         window.alert("카테고리와 제목은 필수입니다.");
@@ -1618,29 +2067,39 @@
           window.alert("URL 을 입력하세요.");
           return;
         }
-      } else if (!bodyMd && !urlOpt) {
-        window.alert("게시글 본문(Markdown) 또는 참고 URL 중 하나는 필요합니다.");
+      } else if (!bodyMd && !urlCommunity) {
+        window.alert(
+          "게시글: 본문(Markdown) 또는 참고 링크 첫 줄(URL) 중 하나는 필요합니다."
+        );
         return;
       }
 
       try {
-        const payload =
-          space === "overseas"
-            ? {
-                space,
-                categoryId,
-                title,
-                desc,
-                url: urlOverseas,
-              }
-            : {
-                space,
-                categoryId,
-                title,
-                desc,
-                url: urlOpt,
-                ...(bodyMd ? { bodyMd } : {}),
-              };
+        /** @type {Record<string, unknown>} */
+        let payload;
+        if (space === "overseas") {
+          payload = {
+            space,
+            categoryId,
+            title,
+            desc,
+            url: urlOverseas,
+            enabled,
+          };
+        } else {
+          payload = {
+            space,
+            categoryId,
+            title,
+            desc,
+            url: urlCommunity,
+            enabled,
+            ...(bodyMd ? { bodyMd } : {}),
+            ...(refRest.length ? { referenceUrls: refRest } : {}),
+            ...(relatedSel.length ? { relatedOverseasIds: relatedSel } : {}),
+            ...(publishLocation ? { publishLocation } : {}),
+          };
+        }
 
         const res = await fetch(`${origin}/api/register`, {
           method: "POST",
@@ -1670,17 +2129,46 @@
       const categoryId = (editCategory?.value || "").trim();
       const title = (editTitle?.value || "").trim();
       const desc = (editDesc?.value || "").trim();
-      const url = (editUrl?.value || "").trim();
+      const urlPlain = (editUrl?.value || "").trim();
       const bodyMd = (editBodyMd?.value || "").trim();
+      const dlgSpace = dlgEdit?.getAttribute("data-edit-space");
+      const refRaw = (editReferenceUrls?.value || "").trim();
+      const refLines = refRaw
+        ? refRaw
+            .split(/\r?\n/)
+            .map((s) => s.trim())
+            .filter((s) => isHttpUrl(s))
+        : [];
+      const urlFromRefs = refLines[0] || "";
+      const refRest =
+        dlgSpace === "community" && refLines.length > 1 ? refLines.slice(1) : [];
+      const publishLoc = (editPublishLocation?.value || "").trim();
+      const relatedSel = editRelatedOverseas
+        ? [...editRelatedOverseas.selectedOptions].map((o) => o.value)
+        : [];
+      const enabled = editEnabled?.checked !== false;
       if (!id || !pw) {
         window.alert("공용 비밀번호를 입력하세요.");
         return;
       }
-      const dlgSpace = dlgEdit?.getAttribute("data-edit-space");
-      const payload =
-        dlgSpace === "community"
-          ? { id, categoryId, title, desc, url, bodyMd }
-          : { id, categoryId, title, desc, url };
+      /** @type {Record<string, unknown>} */
+      let payload;
+      if (dlgSpace === "community") {
+        payload = {
+          id,
+          categoryId,
+          title,
+          desc,
+          url: urlFromRefs,
+          bodyMd,
+          enabled,
+          referenceUrls: refRest,
+          relatedOverseasIds: relatedSel,
+          publishLocation: publishLoc,
+        };
+      } else {
+        payload = { id, categoryId, title, desc, url: urlPlain, enabled };
+      }
       try {
         const res = await fetch(`${origin}/api/edit`, {
           method: "POST",
@@ -1735,6 +2223,7 @@
       const btn = t?.closest("[data-sub-action]");
       if (!btn) return;
       ev.preventDefault();
+      ev.stopPropagation();
       const id = btn.getAttribute("data-submission-id");
       const act = btn.getAttribute("data-sub-action");
       if (!id) return;
@@ -1753,27 +2242,37 @@
         window.alert("공용 비밀번호를 입력하세요.");
         return;
       }
+      const parentVal = (catEditParent?.value || "").trim();
+      let defs = getCategoryDefsForSave(activeSpace);
       if (categoryDialogMode === "add") {
         if (!id || !title) {
           window.alert("ID와 제목은 필수입니다.");
           return;
         }
-      } else {
-        if (!id || !title) {
-          window.alert("제목은 필수입니다.");
+        if (parentVal === id) {
+          window.alert("자기 자신을 상위로 둘 수 없습니다.");
           return;
         }
-      }
-      let defs = getCategoryDefsForSave(activeSpace);
-      const row = { id, emoji, title, subtitle };
-      if (categoryDialogMode === "add") {
+        /** @type {{ id: string, emoji: string, title: string, subtitle: string, parentId?: string }} */
+        const row = { id, emoji, title, subtitle };
+        if (parentVal) row.parentId = parentVal;
         if (defs.some((d) => d.id === id)) {
           window.alert("같은 ID 의 카테고리가 이미 있습니다.");
           return;
         }
         defs = defs.concat([row]);
       } else {
-        defs = defs.map((d) => (d.id === id ? row : d));
+        if (!id || !title) {
+          window.alert("제목은 필수입니다.");
+          return;
+        }
+        defs = defs.map((d) => {
+          if (d.id !== id) return d;
+          /** @type {{ id: string, emoji: string, title: string, subtitle: string, parentId?: string }} */
+          const next = { id, emoji, title, subtitle };
+          if (parentVal && parentVal !== id) next.parentId = parentVal;
+          return next;
+        });
       }
       const ok = await saveCategoriesApi(activeSpace, defs, pw);
       if (ok) {
@@ -1799,17 +2298,14 @@
       return;
     }
 
-    applyTabFromHashOrStorage();
     initTheme();
-    initTabs();
     initRegisterEditDeleteUi();
-    updateTabUI();
     initSearchOnce();
     initDateFilters();
-    buildNav();
-    buildSections();
-    updateToolbarForTab();
-    applyHashFromLocation(false);
+    if (catalogEl && !catalogEl.querySelector("[data-section]"))
+      catalogEl.innerHTML = "";
+    applyRouteFromHash(false);
+    lucideRefresh(document.body);
   }
 
   bootstrap();

@@ -151,7 +151,7 @@ app.get("/health", (_req, res) => {
 app.post("/api/register", async (req, res) => {
   if (!requireTokenOr503(res)) return;
 
-  /** @type {{ space?: string, categoryId?: string, title?: string, desc?: string, url?: string, bodyMd?: string }} */
+  /** @type {{ space?: string, categoryId?: string, title?: string, desc?: string, url?: string, bodyMd?: string, enabled?: boolean | string, referenceUrls?: unknown, relatedOverseasIds?: unknown, publishLocation?: string }} */
   const b = req.body || {};
   const title = typeof b.title === "string" ? b.title.trim() : "";
   const desc = typeof b.desc === "string" ? b.desc.trim() : "";
@@ -195,7 +195,34 @@ app.post("/api/register", async (req, res) => {
   try {
     const { blobSha, body } = await readSubmissionsPayload();
 
-    /** @typedef {{ id: string, space: string, categoryId: string, title: string, desc?: string, url: string, bodyMd?: string, createdAt?: string }} Entry */
+    const enabled =
+      b.enabled === false || b.enabled === "false" ? false : true;
+
+    /** @type {string[]} */
+    let referenceUrls = [];
+    if (Array.isArray(b.referenceUrls)) {
+      referenceUrls = b.referenceUrls
+        .filter((x) => typeof x === "string" && validUrl(x.trim()))
+        .map((x) => x.trim());
+    } else if (typeof b.referenceUrls === "string" && b.referenceUrls.trim()) {
+      referenceUrls = b.referenceUrls
+        .split(/\r?\n/)
+        .map((s) => s.trim())
+        .filter((s) => validUrl(s));
+    }
+
+    /** @type {string[]} */
+    let relatedOverseasIds = [];
+    if (Array.isArray(b.relatedOverseasIds)) {
+      relatedOverseasIds = b.relatedOverseasIds
+        .filter((x) => typeof x === "string" && x.trim())
+        .map((x) => x.trim());
+    }
+
+    const publishLocation =
+      typeof b.publishLocation === "string" ? b.publishLocation.trim() : "";
+
+    /** @typedef {{ id: string, space: string, categoryId: string, title: string, desc?: string, url?: string, bodyMd?: string, createdAt?: string, enabled?: boolean, referenceUrls?: string[], relatedOverseasIds?: string[], publishLocation?: string }} Entry */
     /** @type {Entry} */
     const entry = {
       id: crypto.randomUUID(),
@@ -205,8 +232,14 @@ app.post("/api/register", async (req, res) => {
       desc,
       url: space === "overseas" ? url : url && validUrl(url) ? url : "",
       createdAt: new Date().toISOString(),
+      enabled,
     };
     if (space === "community" && bodyMd) entry.bodyMd = bodyMd;
+    if (space === "community") {
+      if (referenceUrls.length) entry.referenceUrls = referenceUrls;
+      if (relatedOverseasIds.length) entry.relatedOverseasIds = relatedOverseasIds;
+      if (publishLocation) entry.publishLocation = publishLocation;
+    }
 
     body.version = typeof body.version === "number" ? body.version : 1;
     body.entries = Array.isArray(body.entries) ? body.entries : [];
@@ -245,7 +278,7 @@ app.post("/api/edit", async (req, res) => {
     res.status(401).json({ ok: false, error: "공용 비밀번호가 필요합니다" });
     return;
   }
-  /** @type {{ id?: string, title?: string, desc?: string, url?: string, categoryId?: string, bodyMd?: string }} */
+  /** @type {{ id?: string, title?: string, desc?: string, url?: string, categoryId?: string, bodyMd?: string, enabled?: boolean, referenceUrls?: unknown, relatedOverseasIds?: unknown, publishLocation?: string }} */
   const b = req.body || {};
   const id = typeof b.id === "string" ? b.id.trim() : "";
   if (!id) {
@@ -294,6 +327,37 @@ app.post("/api/edit", async (req, res) => {
     };
     if (typeof b.categoryId === "string" && b.categoryId.trim()) {
       next.categoryId = b.categoryId.trim();
+    }
+
+    if (b.enabled === true || b.enabled === false || b.enabled === "true" || b.enabled === "false") {
+      next.enabled = b.enabled === true || b.enabled === "true";
+    }
+
+    if (curSpace === "community") {
+      if (Array.isArray(b.referenceUrls)) {
+        const arr = b.referenceUrls
+          .filter((x) => typeof x === "string" && validUrl(x.trim()))
+          .map((x) => x.trim());
+        if (arr.length) next.referenceUrls = arr;
+        else delete next.referenceUrls;
+      } else if (typeof b.referenceUrls === "string") {
+        next.referenceUrls = b.referenceUrls
+          .split(/\r?\n/)
+          .map((s) => s.trim())
+          .filter((s) => validUrl(s));
+        if (!next.referenceUrls.length) delete next.referenceUrls;
+      }
+      if (Array.isArray(b.relatedOverseasIds)) {
+        next.relatedOverseasIds = b.relatedOverseasIds
+          .filter((x) => typeof x === "string" && x.trim())
+          .map((x) => x.trim());
+        if (!next.relatedOverseasIds.length) delete next.relatedOverseasIds;
+      }
+      if (typeof b.publishLocation === "string") {
+        const pl = b.publishLocation.trim();
+        if (pl) next.publishLocation = pl;
+        else delete next.publishLocation;
+      }
     }
 
     if (curSpace === "overseas") {
@@ -372,7 +436,7 @@ app.post("/api/save-categories", async (req, res) => {
     return;
   }
 
-  /** @type {{ id: string, emoji: string, title: string, subtitle: string }[]} */
+  /** @type {{ id: string, emoji: string, title: string, subtitle: string, parentId?: string }[]} */
   const cleaned = [];
   for (const c of categories) {
     if (!c || typeof c !== "object") continue;
@@ -380,7 +444,11 @@ app.post("/api/save-categories", async (req, res) => {
     const id = typeof raw.id === "string" ? raw.id.trim() : "";
     const title = typeof raw.title === "string" ? raw.title.trim() : "";
     if (!id || !title) continue;
-    cleaned.push({
+    const parentRaw =
+      typeof raw.parentId === "string" ? raw.parentId.trim() : "";
+    const parentId = parentRaw && parentRaw !== id ? parentRaw : "";
+    /** @type {{ id: string, emoji: string, title: string, subtitle: string, parentId?: string }} */
+    const row = {
       id,
       emoji:
         typeof raw.emoji === "string" && raw.emoji.trim()
@@ -389,7 +457,9 @@ app.post("/api/save-categories", async (req, res) => {
       title,
       subtitle:
         typeof raw.subtitle === "string" ? raw.subtitle : " ",
-    });
+    };
+    if (parentId) row.parentId = parentId;
+    cleaned.push(row);
   }
 
   try {
