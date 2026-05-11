@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import type { Reference } from '../../types'
 import { ActiveBadge } from '../common/Badge'
 import { formatDateOnly } from '../../utils/formatDate'
+import { categoryEmoji } from '../../utils/categoryEmoji'
 
 export function ReferenceListRow({
   refItem,
@@ -11,19 +12,22 @@ export function ReferenceListRow({
   refItem: Reference
   categoryLabel: string
 }) {
+  const emoji = categoryEmoji(refItem.category_id)
+
   return (
     <div className="grid grid-cols-1 gap-3 border-b border-gray-100 px-3 py-3.5 last:border-b-0 min-[40rem]:grid-cols-12 min-[40rem]:items-center min-[40rem]:gap-4 min-[40rem]:px-4 dark:border-gray-800">
-      <div className="min-w-0 min-[40rem]:col-span-7">
-        <div className="flex flex-col gap-1 min-[40rem]:flex-row min-[40rem]:items-start min-[40rem]:justify-between min-[40rem]:gap-3">
-          <h3 className="text-[15px] font-semibold leading-snug text-gray-900 min-[40rem]:min-w-0 min-[40rem]:flex-1 dark:text-white">
+      <div className="min-w-0 min-[40rem]:col-span-8">
+        <div className="flex items-start justify-between gap-3">
+          <h3 className="min-w-0 flex-1 text-[15px] font-semibold leading-snug text-gray-900 dark:text-white">
             {refItem.title}
           </h3>
-          <p
-            className="text-xs leading-snug text-gray-500 break-keep text-pretty min-[40rem]:max-w-[min(46%,15rem)] min-[40rem]:shrink-0 min-[40rem]:text-right dark:text-gray-400"
+          <span
+            className="shrink-0 select-none text-xl leading-none"
             title={categoryLabel}
+            aria-label={categoryLabel}
           >
-            {categoryLabel}
-          </p>
+            {emoji}
+          </span>
         </div>
         {refItem.summary ? (
           <p className="mt-1.5 line-clamp-2 text-sm text-gray-600 min-[40rem]:line-clamp-1 dark:text-gray-300">
@@ -32,7 +36,7 @@ export function ReferenceListRow({
         ) : null}
       </div>
 
-      <div className="flex flex-wrap items-center justify-end gap-x-2 gap-y-2 min-[40rem]:col-span-5">
+      <div className="flex flex-wrap items-center justify-end gap-x-2 gap-y-2 min-[40rem]:col-span-4">
         <span className="text-xs tabular-nums text-gray-500 dark:text-gray-400">
           {formatDateOnly(refItem.written_at, 'iso-date')}
         </span>

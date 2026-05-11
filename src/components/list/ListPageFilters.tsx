@@ -18,6 +18,24 @@ function FieldLabel({ children }: { children: ReactNode }) {
   )
 }
 
+function clampRange(
+  from: string,
+  to: string,
+  which: 'from' | 'to',
+  next: string
+): { from: string; to: string } {
+  if (!next) {
+    return which === 'from' ? { from: '', to } : { from, to: '' }
+  }
+  let f = which === 'from' ? next : from
+  let t = which === 'to' ? next : to
+  if (f && t && f > t) {
+    if (which === 'from') t = f
+    else f = t
+  }
+  return { from: f, to: t }
+}
+
 export function ListPageFilters({
   keyword,
   onKeywordChange,
@@ -29,14 +47,12 @@ export function ListPageFilters({
   roots,
   childrenCats,
   dateFrom,
-  onDateFromChange,
   dateTo,
-  onDateToChange,
+  onDateRangeChange,
   onDatePreset,
   onDateReset,
   activeFilter,
   onActiveChange,
-  toolbarCaption,
 }: {
   keyword: string
   onKeywordChange: (v: string) => void
@@ -48,15 +64,12 @@ export function ListPageFilters({
   roots: Category[]
   childrenCats: Category[]
   dateFrom: string
-  onDateFromChange: (v: string) => void
   dateTo: string
-  onDateToChange: (v: string) => void
+  onDateRangeChange: (from: string, to: string) => void
   onDatePreset: (r: { from: string; to: string }) => void
   onDateReset: () => void
   activeFilter: 'all' | 'active' | 'inactive'
   onActiveChange: (v: 'all' | 'active' | 'inactive') => void
-  /** 필터 패널 우측(넓은 화면)에 표시할 페이지 설명 문구 */
-  toolbarCaption: string
 }) {
   const presets = [
     ['전일', presetYesterday],
@@ -66,9 +79,14 @@ export function ListPageFilters({
     ['1년', () => presetLastMonths(12)],
   ] as const
 
+  const childPlaceholder = (() => {
+    if (!parentFilter) return '하위: 전체'
+    if (childrenCats.length === 0) return '하위 없음'
+    return '하위: 전체'
+  })()
+
   return (
     <div className="space-y-4 rounded-2xl border border-gray-100 bg-white p-4 shadow-sm dark:border-gray-800 dark:bg-gray-900">
-      {/* 분류(좌) + 키워드 검색(우). 40rem 미만에서는 세로 스택 */}
       <div className="flex flex-col gap-3 min-[40rem]:flex-row min-[40rem]:items-stretch min-[40rem]:gap-3">
         <div className="flex flex-wrap items-center gap-x-2 gap-y-2 min-[40rem]:shrink-0">
           <FieldLabel>분류</FieldLabel>
@@ -78,7 +96,7 @@ export function ListPageFilters({
             onChange={(e) => onParentChange(e.target.value)}
             aria-label="상위 카테고리"
           >
-            <option value="">전체 · 상위</option>
+            <option value="">상위: 전체</option>
             {roots.map((c) => (
               <option key={c.id} value={c.id}>
                 {c.name}
@@ -95,9 +113,7 @@ export function ListPageFilters({
             onChange={(e) => onChildChange(e.target.value)}
             aria-label="하위 카테고리"
           >
-            <option value="">
-              {!parentFilter ? '상위 선택 후' : childrenCats.length ? '전체 · 하위' : '하위 없음'}
-            </option>
+            <option value="">{childPlaceholder}</option>
             {childrenCats.map((c) => (
               <option key={c.id} value={c.id}>
                 {c.name}
@@ -133,21 +149,29 @@ export function ListPageFilters({
 
       <div className="flex flex-wrap items-center gap-x-2 gap-y-2">
         <FieldLabel>기간</FieldLabel>
-        <input
-          type="date"
-          className={dateInputCls}
-          value={dateFrom}
-          onChange={(e) => onDateFromChange(e.target.value)}
-          aria-label="등록일 시작"
-        />
-        <span className="text-gray-400">~</span>
-        <input
-          type="date"
-          className={dateInputCls}
-          value={dateTo}
-          onChange={(e) => onDateToChange(e.target.value)}
-          aria-label="등록일 종료"
-        />
+        <div className="inline-flex flex-wrap items-center gap-2 rounded-xl border border-gray-100 bg-gray-50/80 px-2 py-1.5 dark:border-gray-800 dark:bg-gray-950/50">
+          <input
+            type="date"
+            className={`${dateInputCls} border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-900`}
+            value={dateFrom}
+            onChange={(e) => {
+              const { from, to } = clampRange(dateFrom, dateTo, 'from', e.target.value)
+              onDateRangeChange(from, to)
+            }}
+            aria-label="시작일"
+          />
+          <span className="text-xs text-gray-400">~</span>
+          <input
+            type="date"
+            className={`${dateInputCls} border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-900`}
+            value={dateTo}
+            onChange={(e) => {
+              const { from, to } = clampRange(dateFrom, dateTo, 'to', e.target.value)
+              onDateRangeChange(from, to)
+            }}
+            aria-label="종료일"
+          />
+        </div>
         <div className="flex flex-wrap items-center gap-1.5">
           {presets.map(([label, fn]) => (
             <Button
@@ -181,10 +205,6 @@ export function ListPageFilters({
           <option value="active">활성</option>
           <option value="inactive">비활성</option>
         </select>
-
-        <p className="w-full text-sm leading-snug text-gray-500 min-[40rem]:ml-auto min-[40rem]:max-w-md min-[40rem]:text-right dark:text-gray-400">
-          {toolbarCaption}
-        </p>
       </div>
     </div>
   )

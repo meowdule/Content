@@ -92,13 +92,10 @@ export function PostsPage() {
         roots={roots}
         childrenCats={childrenCats}
         dateFrom={dateFrom}
-        onDateFromChange={(v) => {
-          setDateFrom(v)
-          setPage(1)
-        }}
         dateTo={dateTo}
-        onDateToChange={(v) => {
-          setDateTo(v)
+        onDateRangeChange={(from, to) => {
+          setDateFrom(from)
+          setDateTo(to)
           setPage(1)
         }}
         onDatePreset={(r) => {
@@ -116,7 +113,6 @@ export function PostsPage() {
           setActiveFilter(v)
           setPage(1)
         }}
-        toolbarCaption="등록된 게시글을 검색하고 관리합니다."
       />
 
       {error ? (
@@ -131,8 +127,8 @@ export function PostsPage() {
         <>
           <div className="overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm dark:border-gray-800 dark:bg-gray-900">
             <div className="hidden border-b border-gray-100 bg-gray-50/90 px-4 py-2.5 text-xs font-medium tracking-wide text-gray-500 min-[40rem]:grid min-[40rem]:grid-cols-12 dark:border-gray-800 dark:bg-gray-950/60 dark:text-gray-400">
-              <div className="min-[40rem]:col-span-7">제목 · 분류 · 요약</div>
-              <div className="text-right min-[40rem]:col-span-5">등록일 · 상태</div>
+              <div className="min-[40rem]:col-span-8">제목 · 분류 · 요약</div>
+              <div className="text-right min-[40rem]:col-span-4">등록일 · 상태</div>
             </div>
             {slice.map((p) => (
               <PostListRow
