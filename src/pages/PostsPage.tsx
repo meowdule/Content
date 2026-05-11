@@ -59,10 +59,9 @@ export function PostsPage() {
         <div>
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white">게시글</h1>
         </div>
-        <Link to="/posts/new">
-          <Button className="shadow-sm">
-            <Plus className="h-4 w-4" />
-            등록
+        <Link to="/posts/new" title="등록" aria-label="등록">
+          <Button className="h-10 w-10 min-w-0 p-0 shadow-sm" aria-label="등록">
+            <Plus className="h-5 w-5" strokeWidth={2.25} />
           </Button>
         </Link>
       </div>

@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { fetchPostById, deletePost } from '../api/posts'
 import { fetchReferencesByIds } from '../api/references'
 import type { Post, Reference } from '../types'
-import { getCategoryBreadcrumb, useCategoryStore } from '../store/categoryStore'
+import { getCategoryBreadcrumb, getCategoryIconEmoji, useCategoryStore } from '../store/categoryStore'
 import { PostDetailView } from '../components/post/PostDetail'
 import { Modal } from '../components/common/Modal'
 import { Button } from '../components/common/Button'
@@ -80,6 +80,7 @@ export function PostDetailPage() {
       <PostDetailView
         post={post}
         categoryLabel={getCategoryBreadcrumb(categories, post.category_id)}
+        categoryIcon={getCategoryIconEmoji(categories, post.category_id)}
         related={related}
         onDelete={() => setConfirmOpen(true)}
       />

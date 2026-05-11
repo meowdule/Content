@@ -40,38 +40,38 @@ function MonthGrid({
   const weeks = useMemo(() => monthWeeks(visibleMonth), [visibleMonth])
 
   return (
-    <div className="w-[min(100%,17.5rem)] shrink-0">
-      <div className="mb-2 flex items-center justify-between gap-1">
+    <div className="w-[min(100%,11.75rem)] shrink-0">
+      <div className="mb-1.5 flex items-center justify-between gap-0.5">
         <button
           type="button"
           onClick={onPrev}
-          className="inline-flex h-8 w-8 items-center justify-center rounded-lg text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
+          className="inline-flex h-6 w-6 items-center justify-center rounded-md text-xs text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
           aria-label="이전 달"
         >
           ‹
         </button>
-        <span className="min-w-0 flex-1 text-center text-sm font-semibold text-gray-900 dark:text-white">
+        <span className="min-w-0 flex-1 text-center text-[11px] font-semibold leading-tight text-gray-900 dark:text-white">
           {format(visibleMonth, 'yyyy년 M월', { locale: ko })}
         </span>
         <button
           type="button"
           onClick={onNext}
-          className="inline-flex h-8 w-8 items-center justify-center rounded-lg text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
+          className="inline-flex h-6 w-6 items-center justify-center rounded-md text-xs text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
           aria-label="다음 달"
         >
           ›
         </button>
       </div>
-      <div className="mb-1 grid grid-cols-7 gap-0.5 text-center text-[10px] font-medium uppercase tracking-wide text-gray-400 dark:text-gray-500">
+      <div className="mb-0.5 grid grid-cols-7 gap-px text-center text-[8px] font-medium tracking-tight text-gray-400 dark:text-gray-500">
         {WEEKDAYS.map((d) => (
-          <div key={d} className="py-1">
+          <div key={d} className="py-0.5">
             {d}
           </div>
         ))}
       </div>
-      <div className="space-y-0.5">
+      <div className="space-y-px">
         {weeks.map((week, wi) => (
-          <div key={wi} className="grid grid-cols-7 gap-0.5">
+          <div key={wi} className="grid grid-cols-7 gap-px">
             {week.map((day) => {
               const d = ymd(day)
               const outside = !isSameMonth(day, visibleMonth)
@@ -82,7 +82,7 @@ function MonthGrid({
               const today = isToday(day)
 
               let tone =
-                'relative flex h-9 items-center justify-center rounded-lg text-xs tabular-nums transition text-gray-900 dark:text-gray-100'
+                'relative flex h-6 min-w-0 items-center justify-center rounded-md text-[10px] tabular-nums leading-none transition text-gray-900 dark:text-gray-100'
               if (!outside) {
                 if (onlyFrom && isStart) {
                   tone +=
@@ -109,7 +109,7 @@ function MonthGrid({
                   onClick={() => !outside && onPickDay(d)}
                   className={
                     outside
-                      ? 'flex h-9 cursor-default items-center justify-center rounded-lg text-transparent'
+                      ? 'flex h-6 min-w-0 cursor-default items-center justify-center rounded-md text-transparent'
                       : tone
                   }
                 >
@@ -210,14 +210,14 @@ export function DateRangeControl({
 
       {open ? (
         <div
-          className="absolute left-0 top-full z-30 mt-1 w-[min(100vw-1rem,38rem)] rounded-xl border border-gray-200 bg-white p-3 shadow-xl dark:border-gray-700 dark:bg-gray-900"
+          className="absolute left-0 top-full z-30 mt-1 w-[min(100vw-1rem,26rem)] rounded-xl border border-gray-200 bg-white p-2.5 shadow-xl dark:border-gray-700 dark:bg-gray-900 sm:w-[min(100vw-1rem,28rem)]"
           role="dialog"
           aria-label="등록일 기간 선택"
         >
-          <p className="mb-3 text-xs text-gray-500 dark:text-gray-400">
+          <p className="mb-2 text-[11px] leading-snug text-gray-500 dark:text-gray-400">
             달력에서 시작일·종료일을 차례로 누르면 기간이 잡힙니다. 두 달력을 함께 사용할 수 있습니다.
           </p>
-          <div className="flex flex-col items-stretch gap-4 sm:flex-row sm:justify-center">
+          <div className="flex flex-col items-stretch gap-2 sm:flex-row sm:justify-center sm:gap-3">
             <MonthGrid
               visibleMonth={monthLeft}
               onPrev={() => setMonthLeft((m) => addMonths(m, -1))}
