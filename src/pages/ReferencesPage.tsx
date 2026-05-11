@@ -131,8 +131,8 @@ export function ReferencesPage() {
         <>
           <div className="overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm dark:border-gray-800 dark:bg-gray-900">
             <div className="hidden border-b border-gray-100 bg-gray-50/90 px-4 py-2.5 text-xs font-medium tracking-wide text-gray-500 min-[40rem]:grid min-[40rem]:grid-cols-12 dark:border-gray-800 dark:bg-gray-950/60 dark:text-gray-400">
-              <div className="min-[40rem]:col-span-6">제목 · 분류 · 링크</div>
-              <div className="text-right min-[40rem]:col-span-6">원문일 · 등록일 · 상태</div>
+              <div className="min-[40rem]:col-span-7">제목 · 분류 · 요약</div>
+              <div className="text-right min-[40rem]:col-span-5">원문일 · 상태 · 작업</div>
             </div>
             {slice.map((r) => (
               <ReferenceListRow

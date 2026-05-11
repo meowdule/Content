@@ -8,6 +8,7 @@ import { Button } from '../common/Button'
 import { Input } from '../common/Input'
 import { Toggle } from '../common/Toggle'
 import { isValidHttpUrl } from '../../utils/validateUrl'
+import { formatDateTime } from '../../utils/formatDate'
 
 export function ReferenceForm({ initial }: { initial: Reference | null }) {
   const navigate = useNavigate()
@@ -75,6 +76,13 @@ export function ReferenceForm({ initial }: { initial: Reference | null }) {
       <h1 className="text-xl font-bold text-gray-900 dark:text-white">
         {initial ? '해외 참고 링크 수정' : '해외 참고 링크 등록'}
       </h1>
+      {initial ? (
+        <p className="text-sm text-gray-500 dark:text-gray-400">
+          등록일 <span className="tabular-nums">{formatDateTime(initial.created_at)}</span>
+          <span className="mx-1.5 text-gray-300 dark:text-gray-600">·</span>
+          목록에는 원문 작성일만 표시됩니다.
+        </p>
+      ) : null}
 
       {error ? (
         <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800 dark:border-red-900 dark:bg-red-950 dark:text-red-100">
