@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Plus, Search } from 'lucide-react'
+import { Plus } from 'lucide-react'
 import { useReferences } from '../hooks/useReferences'
 import {
   getCategoryBreadcrumb,
@@ -9,10 +9,9 @@ import {
   useCategoryStore,
 } from '../store/categoryStore'
 import { collectDescendantIds } from '../utils/categoryFilter'
-import { presetLastMonths, presetThisMonth, presetYesterday } from '../utils/datePresets'
-import { ReferenceCard } from '../components/reference/ReferenceCard'
+import { ListPageFilters } from '../components/list/ListPageFilters'
+import { ReferenceListRow } from '../components/reference/ReferenceListRow'
 import { Button } from '../components/common/Button'
-import { Input } from '../components/common/Input'
 import { Pagination } from '../components/common/Pagination'
 
 const PAGE_SIZE = 12
@@ -47,7 +46,7 @@ export function ReferencesPage() {
   })
 
   const roots = useMemo(() => selectRootCategories(categories), [categories])
-  const children = useMemo(
+  const childrenCats = useMemo(
     () => (parentFilter ? selectChildren(categories, parentFilter) : []),
     [categories, parentFilter]
   )
@@ -76,127 +75,50 @@ export function ReferencesPage() {
         </Link>
       </div>
 
-      <div className="rounded-2xl border border-gray-100 bg-white p-4 shadow-sm dark:border-gray-800 dark:bg-gray-900">
-        <div className="grid gap-4 lg:grid-cols-12">
-          <div className="lg:col-span-5">
-            <div className="flex gap-2">
-              <Input
-                value={keyword}
-                onChange={(e) => setKeyword(e.target.value)}
-                placeholder="제목·요약 검색…"
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter') applySearch()
-                }}
-              />
-              <Button type="button" variant="outline" className="shrink-0" onClick={applySearch}>
-                <Search className="h-4 w-4" />
-              </Button>
-            </div>
-          </div>
-          <div className="grid gap-3 sm:grid-cols-2 lg:col-span-7">
-            <div className="flex flex-col gap-1">
-              <span className="text-xs font-medium text-gray-500 dark:text-gray-400">상위 카테고리</span>
-              <select
-                className="rounded-xl border border-gray-200 bg-white px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-950 dark:text-white"
-                value={parentFilter}
-                onChange={(e) => {
-                  setParentFilter(e.target.value)
-                  setChildFilter('')
-                  setPage(1)
-                }}
-              >
-                <option value="">전체</option>
-                {roots.map((c) => (
-                  <option key={c.id} value={c.id}>
-                    {c.name}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div className="flex flex-col gap-1">
-              <span className="text-xs font-medium text-gray-500 dark:text-gray-400">하위 카테고리</span>
-              <select
-                className="rounded-xl border border-gray-200 bg-white px-3 py-2 text-sm disabled:opacity-50 dark:border-gray-700 dark:bg-gray-950 dark:text-white"
-                disabled={!parentFilter || children.length === 0}
-                value={childFilter}
-                onChange={(e) => {
-                  setChildFilter(e.target.value)
-                  setPage(1)
-                }}
-              >
-                <option value="">전체</option>
-                {children.map((c) => (
-                  <option key={c.id} value={c.id}>
-                    {c.name}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
-        </div>
-
-        <div className="mt-4 flex flex-wrap items-center gap-3">
-          <span className="text-xs font-medium text-gray-500 dark:text-gray-400">등록일</span>
-          <Input type="date" value={dateFrom} onChange={(e) => { setDateFrom(e.target.value); setPage(1) }} />
-          <span className="text-gray-400">~</span>
-          <Input type="date" value={dateTo} onChange={(e) => { setDateTo(e.target.value); setPage(1) }} />
-          <div className="flex flex-wrap gap-2">
-            {(
-              [
-                ['전일', presetYesterday],
-                ['당월', presetThisMonth],
-                ['1개월', () => presetLastMonths(1)],
-                ['6개월', () => presetLastMonths(6)],
-                ['1년', () => presetLastMonths(12)],
-              ] as const
-            ).map(([label, fn]) => (
-              <Button
-                key={label}
-                type="button"
-                variant="outline"
-                className="px-3 py-1 text-xs"
-                onClick={() => {
-                  const r = fn()
-                  setDateFrom(r.from)
-                  setDateTo(r.to)
-                  setPage(1)
-                }}
-              >
-                {label}
-              </Button>
-            ))}
-            <Button
-              type="button"
-              variant="ghost"
-              className="px-3 py-1 text-xs"
-              onClick={() => {
-                setDateFrom('')
-                setDateTo('')
-                setPage(1)
-              }}
-            >
-              초기화
-            </Button>
-          </div>
-        </div>
-
-        <div className="mt-4 flex flex-wrap items-center gap-3">
-          <span className="text-xs font-medium text-gray-500 dark:text-gray-400">상태</span>
-          <select
-            className="rounded-xl border border-gray-200 bg-white px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-950 dark:text-white"
-            value={activeFilter}
-            onChange={(e) => {
-              setActiveFilter(e.target.value as typeof activeFilter)
-              setPage(1)
-            }}
-          >
-            <option value="all">전체</option>
-            <option value="active">활성</option>
-            <option value="inactive">비활성</option>
-          </select>
-          <span className="ml-auto text-sm text-gray-500 dark:text-gray-400">표시 중: {total}개</span>
-        </div>
-      </div>
+      <ListPageFilters
+        keyword={keyword}
+        onKeywordChange={setKeyword}
+        onSearch={applySearch}
+        parentFilter={parentFilter}
+        onParentChange={(id) => {
+          setParentFilter(id)
+          setChildFilter('')
+          setPage(1)
+        }}
+        childFilter={childFilter}
+        onChildChange={(id) => {
+          setChildFilter(id)
+          setPage(1)
+        }}
+        roots={roots}
+        childrenCats={childrenCats}
+        dateFrom={dateFrom}
+        onDateFromChange={(v) => {
+          setDateFrom(v)
+          setPage(1)
+        }}
+        dateTo={dateTo}
+        onDateToChange={(v) => {
+          setDateTo(v)
+          setPage(1)
+        }}
+        onDatePreset={(r) => {
+          setDateFrom(r.from)
+          setDateTo(r.to)
+          setPage(1)
+        }}
+        onDateReset={() => {
+          setDateFrom('')
+          setDateTo('')
+          setPage(1)
+        }}
+        activeFilter={activeFilter}
+        onActiveChange={(v) => {
+          setActiveFilter(v)
+          setPage(1)
+        }}
+        total={total}
+      />
 
       {error ? (
         <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800 dark:border-red-900 dark:bg-red-950 dark:text-red-100">
@@ -208,18 +130,24 @@ export function ReferencesPage() {
         <p className="text-sm text-gray-500 dark:text-gray-400">불러오는 중…</p>
       ) : (
         <>
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm dark:border-gray-800 dark:bg-gray-900">
+            <div className="hidden border-b border-gray-100 bg-gray-50/90 px-4 py-2.5 text-xs font-medium tracking-wide text-gray-500 sm:grid sm:grid-cols-12 dark:border-gray-800 dark:bg-gray-950/60 dark:text-gray-400">
+              <div className="sm:col-span-6">제목 · 분류 · 링크</div>
+              <div className="text-right sm:col-span-6">원문일 · 등록일 · 상태</div>
+            </div>
             {slice.map((r) => (
-              <ReferenceCard
+              <ReferenceListRow
                 key={r.id}
                 refItem={r}
                 categoryLabel={getCategoryBreadcrumb(categories, r.category_id)}
               />
             ))}
+            {!slice.length ? (
+              <p className="px-4 py-8 text-center text-sm text-gray-500 dark:text-gray-400">
+                조건에 맞는 링크가 없습니다.
+              </p>
+            ) : null}
           </div>
-          {!slice.length ? (
-            <p className="text-sm text-gray-500 dark:text-gray-400">조건에 맞는 링크가 없습니다.</p>
-          ) : null}
           <Pagination
             page={currentPage}
             pageSize={PAGE_SIZE}
