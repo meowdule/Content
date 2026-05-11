@@ -31,11 +31,10 @@ jobs:
       - name: Install
         run: npm ci
 
+      # Secrets가 비어 있으면 빈 문자열로 .env.production 을 덮어써 URL 오류가 납니다.
+      # 기본값은 커밋된 .env.production 을 쓰고, 필요 시 로컬에서만 secrets 로 덮어쓰세요.
       - name: Build
         run: npm run build
-        env:
-          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
-          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
