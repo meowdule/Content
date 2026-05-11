@@ -2,11 +2,12 @@
 -- PostgreSQL 예약어 충돌을 피하기 위해 해외 링크 테이블명은 foreign_references 를 사용합니다.
 
 CREATE TABLE IF NOT EXISTS categories (
-  id         UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  name       TEXT NOT NULL,
-  parent_id  UUID REFERENCES categories(id) ON DELETE SET NULL,
-  order_num  INTEGER DEFAULT 0,
-  created_at TIMESTAMPTZ DEFAULT now()
+  id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  name        TEXT NOT NULL,
+  parent_id   UUID REFERENCES categories(id) ON DELETE SET NULL,
+  order_num   INTEGER DEFAULT 0,
+  icon_emoji  TEXT,
+  created_at  TIMESTAMPTZ DEFAULT now()
 );
 
 ALTER TABLE categories ENABLE ROW LEVEL SECURITY;

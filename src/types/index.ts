@@ -3,6 +3,8 @@ export interface Category {
   name: string
   parent_id: string | null
   order_num: number
+  /** 목록 등에 표시 (카테고리 관리에서 지정) */
+  icon_emoji: string | null
   created_at: string
 }
 

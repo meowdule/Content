@@ -2,13 +2,14 @@ import type { ReactNode } from 'react'
 import { Search } from 'lucide-react'
 import type { Category } from '../../types'
 import { Button } from '../common/Button'
+import { DateRangeControl } from './DateRangeControl'
 import { presetLastMonths, presetThisMonth, presetYesterday } from '../../utils/datePresets'
 
 const selectCls =
   'min-w-[7.5rem] rounded-lg border border-gray-200 bg-white px-2.5 py-2 text-sm text-gray-900 outline-none focus:border-[#FF8A50] focus:ring-1 focus:ring-[#FF8A50]/30 dark:border-gray-700 dark:bg-gray-950 dark:text-white'
 
-const dateInputCls =
-  'w-[9.5rem] rounded-lg border border-gray-200 bg-white px-2 py-2 text-sm text-gray-900 outline-none focus:border-[#FF8A50] focus:ring-1 focus:ring-[#FF8A50]/30 dark:border-gray-700 dark:bg-gray-950 dark:text-white'
+const groupedSelectCls =
+  'min-w-0 flex-1 min-w-[5.5rem] rounded-lg border-0 bg-transparent py-2 pl-2 pr-1 text-sm text-gray-900 outline-none focus:ring-0 dark:text-white'
 
 function FieldLabel({ children }: { children: ReactNode }) {
   return (
@@ -16,24 +17,6 @@ function FieldLabel({ children }: { children: ReactNode }) {
       {children}
     </span>
   )
-}
-
-function clampRange(
-  from: string,
-  to: string,
-  which: 'from' | 'to',
-  next: string
-): { from: string; to: string } {
-  if (!next) {
-    return which === 'from' ? { from: '', to } : { from, to: '' }
-  }
-  let f = which === 'from' ? next : from
-  let t = which === 'to' ? next : to
-  if (f && t && f > t) {
-    if (which === 'from') t = f
-    else f = t
-  }
-  return { from: f, to: t }
 }
 
 export function ListPageFilters({
@@ -90,36 +73,45 @@ export function ListPageFilters({
       <div className="flex flex-col gap-3 min-[40rem]:flex-row min-[40rem]:items-stretch min-[40rem]:gap-3">
         <div className="flex flex-wrap items-center gap-x-2 gap-y-2 min-[40rem]:shrink-0">
           <FieldLabel>분류</FieldLabel>
-          <select
-            className={selectCls}
-            value={parentFilter}
-            onChange={(e) => onParentChange(e.target.value)}
-            aria-label="상위 카테고리"
+          <div
+            className="inline-flex min-w-0 max-w-[min(100vw-6rem,28rem)] flex-1 items-stretch rounded-xl border border-gray-200 bg-white shadow-sm min-[40rem]:max-w-none min-[40rem]:flex-none dark:border-gray-700 dark:bg-gray-950 sm:min-w-[18rem]"
+            role="group"
+            aria-label="상위·하위 분류"
           >
-            <option value="">상위: 전체</option>
-            {roots.map((c) => (
-              <option key={c.id} value={c.id}>
-                {c.name}
-              </option>
-            ))}
-          </select>
-          <span className="text-gray-300 dark:text-gray-600" aria-hidden>
-            /
-          </span>
-          <select
-            className={`${selectCls} disabled:opacity-45`}
-            disabled={!parentFilter || childrenCats.length === 0}
-            value={childFilter}
-            onChange={(e) => onChildChange(e.target.value)}
-            aria-label="하위 카테고리"
-          >
-            <option value="">{childPlaceholder}</option>
-            {childrenCats.map((c) => (
-              <option key={c.id} value={c.id}>
-                {c.name}
-              </option>
-            ))}
-          </select>
+            <select
+              className={groupedSelectCls}
+              value={parentFilter}
+              onChange={(e) => onParentChange(e.target.value)}
+              aria-label="상위 카테고리"
+            >
+              <option value="">상위: 전체</option>
+              {roots.map((c) => (
+                <option key={c.id} value={c.id}>
+                  {c.name}
+                </option>
+              ))}
+            </select>
+            <span
+              className="flex shrink-0 select-none items-center px-0.5 text-sm font-medium text-gray-400 dark:text-gray-500"
+              aria-hidden
+            >
+              ›
+            </span>
+            <select
+              className={`${groupedSelectCls} disabled:cursor-not-allowed disabled:opacity-45`}
+              disabled={!parentFilter || childrenCats.length === 0}
+              value={childFilter}
+              onChange={(e) => onChildChange(e.target.value)}
+              aria-label="하위 카테고리"
+            >
+              <option value="">{childPlaceholder}</option>
+              {childrenCats.map((c) => (
+                <option key={c.id} value={c.id}>
+                  {c.name}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
 
         <div className="relative min-h-[42px] min-w-0 flex-1">
@@ -149,29 +141,12 @@ export function ListPageFilters({
 
       <div className="flex flex-wrap items-center gap-x-2 gap-y-2">
         <FieldLabel>기간</FieldLabel>
-        <div className="inline-flex flex-wrap items-center gap-2 rounded-xl border border-gray-100 bg-gray-50/80 px-2 py-1.5 dark:border-gray-800 dark:bg-gray-950/50">
-          <input
-            type="date"
-            className={`${dateInputCls} border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-900`}
-            value={dateFrom}
-            onChange={(e) => {
-              const { from, to } = clampRange(dateFrom, dateTo, 'from', e.target.value)
-              onDateRangeChange(from, to)
-            }}
-            aria-label="시작일"
-          />
-          <span className="text-xs text-gray-400">~</span>
-          <input
-            type="date"
-            className={`${dateInputCls} border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-900`}
-            value={dateTo}
-            onChange={(e) => {
-              const { from, to } = clampRange(dateFrom, dateTo, 'to', e.target.value)
-              onDateRangeChange(from, to)
-            }}
-            aria-label="종료일"
-          />
-        </div>
+        <DateRangeControl
+          dateFrom={dateFrom}
+          dateTo={dateTo}
+          onApply={onDateRangeChange}
+          onClear={onDateReset}
+        />
         <div className="flex flex-wrap items-center gap-1.5">
           {presets.map(([label, fn]) => (
             <Button

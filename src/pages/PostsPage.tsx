@@ -4,6 +4,7 @@ import { Plus } from 'lucide-react'
 import { usePosts } from '../hooks/usePosts'
 import {
   getCategoryBreadcrumb,
+  getCategoryIconEmoji,
   selectChildren,
   selectRootCategories,
   useCategoryStore,
@@ -127,7 +128,7 @@ export function PostsPage() {
         <>
           <div className="overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm dark:border-gray-800 dark:bg-gray-900">
             <div className="hidden border-b border-gray-100 bg-gray-50/90 px-4 py-2.5 text-xs font-medium tracking-wide text-gray-500 min-[40rem]:grid min-[40rem]:grid-cols-12 dark:border-gray-800 dark:bg-gray-950/60 dark:text-gray-400">
-              <div className="min-[40rem]:col-span-8">제목 · 분류 · 요약</div>
+              <div className="min-[40rem]:col-span-8">분류 · 제목 · 요약</div>
               <div className="text-right min-[40rem]:col-span-4">등록일 · 상태</div>
             </div>
             {slice.map((p) => (
@@ -135,6 +136,7 @@ export function PostsPage() {
                 key={p.id}
                 post={p}
                 categoryLabel={getCategoryBreadcrumb(categories, p.category_id)}
+                categoryIcon={getCategoryIconEmoji(categories, p.category_id)}
               />
             ))}
             {!slice.length ? (

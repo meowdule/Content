@@ -59,42 +59,62 @@ export function FormCategorySelect({
     !childSelectValue &&
     !isRootSelfAssigned
 
+  const selectCls =
+    'min-w-0 flex-1 rounded-lg border-0 bg-transparent py-2 pl-2 pr-1 text-sm text-gray-900 outline-none focus:ring-0 dark:text-gray-100'
+
   return (
-    <div className="grid gap-3 sm:grid-cols-2">
+    <div className="space-y-2">
       <div className="flex flex-col gap-1">
-        <label className="text-sm font-medium text-gray-700 dark:text-gray-200">상위 카테고리</label>
-        <select
-          className="rounded-xl border border-gray-200 bg-white px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100"
-          value={parentSelectValue}
-          onChange={(e) => onParentChange(e.target.value)}
-          required={required}
+        <label className="text-sm font-medium text-gray-700 dark:text-gray-200">카테고리</label>
+        <div
+          className="flex min-w-0 flex-wrap items-stretch gap-0 rounded-xl border border-gray-200 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-900 sm:flex-nowrap"
+          role="group"
+          aria-label="상위·하위 카테고리"
         >
-          <option value="">{required ? '선택' : '선택 안 함'}</option>
-          {roots.map((c) => (
-            <option key={c.id} value={c.id}>
-              {c.name}
+          <select
+            className={selectCls}
+            value={parentSelectValue}
+            onChange={(e) => onParentChange(e.target.value)}
+            required={required}
+            aria-label="상위 카테고리"
+          >
+            <option value="">{required ? '상위 선택' : '상위 없음'}</option>
+            {roots.map((c) => (
+              <option key={c.id} value={c.id}>
+                {c.name}
+              </option>
+            ))}
+          </select>
+          <span
+            className="flex shrink-0 select-none items-center px-1 text-sm font-medium text-gray-400 dark:text-gray-500"
+            aria-hidden
+          >
+            ›
+          </span>
+          <select
+            className={`${selectCls} disabled:cursor-not-allowed disabled:opacity-45`}
+            disabled={!parentSelectValue || children.length === 0}
+            value={childSelectValue}
+            onChange={(e) => onChildChange(e.target.value)}
+            aria-label="하위 카테고리"
+          >
+            <option value="">
+              {!parentSelectValue
+                ? '상위 먼저'
+                : children.length === 0
+                  ? '하위 없음'
+                  : '하위 선택'}
             </option>
-          ))}
-        </select>
-      </div>
-      <div className="flex flex-col gap-1">
-        <label className="text-sm font-medium text-gray-700 dark:text-gray-200">하위 카테고리</label>
-        <select
-          className="rounded-xl border border-gray-200 bg-white px-3 py-2 text-sm disabled:opacity-50 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100"
-          disabled={!parentSelectValue || children.length === 0}
-          value={childSelectValue}
-          onChange={(e) => onChildChange(e.target.value)}
-        >
-          <option value="">{children.length ? '선택' : '하위 없음'}</option>
-          {children.map((c) => (
-            <option key={c.id} value={c.id}>
-              {c.name}
-            </option>
-          ))}
-        </select>
+            {children.map((c) => (
+              <option key={c.id} value={c.id}>
+                {c.name}
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
       {showChildHint ? (
-        <p className="text-xs text-amber-700 sm:col-span-2 dark:text-amber-300">
+        <p className="text-xs text-amber-700 dark:text-amber-300">
           하위 카테고리가 있으면 하위까지 선택해 주세요.
         </p>
       ) : null}

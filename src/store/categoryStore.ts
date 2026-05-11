@@ -57,3 +57,11 @@ export function getCategoryBreadcrumb(
   }
   return parts.length ? parts.join(' > ') : '미분류'
 }
+
+/** DB에 저장된 icon_emoji, 없으면 기본 칩 */
+export function getCategoryIconEmoji(categories: Category[], categoryId: string | null): string {
+  if (!categoryId) return '📋'
+  const c = categories.find((x) => x.id === categoryId)
+  const raw = c?.icon_emoji?.trim()
+  return raw || '📋'
+}

@@ -3,31 +3,31 @@ import { Link } from 'react-router-dom'
 import type { Reference } from '../../types'
 import { ActiveBadge } from '../common/Badge'
 import { formatDateOnly } from '../../utils/formatDate'
-import { categoryEmoji } from '../../utils/categoryEmoji'
 
 export function ReferenceListRow({
   refItem,
   categoryLabel,
+  categoryIcon,
 }: {
   refItem: Reference
   categoryLabel: string
+  categoryIcon: string
 }) {
-  const emoji = categoryEmoji(refItem.category_id)
 
   return (
     <div className="grid grid-cols-1 gap-3 border-b border-gray-100 px-3 py-3.5 last:border-b-0 min-[40rem]:grid-cols-12 min-[40rem]:items-center min-[40rem]:gap-4 min-[40rem]:px-4 dark:border-gray-800">
       <div className="min-w-0 min-[40rem]:col-span-8">
-        <div className="flex items-start justify-between gap-3">
-          <h3 className="min-w-0 flex-1 text-[15px] font-semibold leading-snug text-gray-900 dark:text-white">
-            {refItem.title}
-          </h3>
+        <div className="flex items-start gap-2">
           <span
-            className="shrink-0 select-none text-xl leading-none"
+            className="mt-0.5 shrink-0 select-none text-xl leading-none"
             title={categoryLabel}
             aria-label={categoryLabel}
           >
-            {emoji}
+            {categoryIcon}
           </span>
+          <h3 className="min-w-0 flex-1 text-[15px] font-semibold leading-snug text-gray-900 dark:text-white">
+            {refItem.title}
+          </h3>
         </div>
         {refItem.summary ? (
           <p className="mt-1.5 line-clamp-2 text-sm text-gray-600 min-[40rem]:line-clamp-1 dark:text-gray-300">

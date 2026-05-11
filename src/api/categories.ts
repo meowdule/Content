@@ -19,6 +19,7 @@ export async function createCategory(input: {
   name: string
   parent_id: string | null
   order_num?: number
+  icon_emoji?: string | null
 }): Promise<Category> {
   let order_num = input.order_num
   if (order_num === undefined) {
@@ -35,6 +36,7 @@ export async function createCategory(input: {
       name: input.name,
       parent_id: input.parent_id,
       order_num,
+      icon_emoji: input.icon_emoji?.trim() || null,
     })
     .select()
     .single()
@@ -45,9 +47,14 @@ export async function createCategory(input: {
 
 export async function updateCategory(
   id: string,
-  patch: Partial<Pick<Category, 'name' | 'parent_id' | 'order_num'>>
+  patch: Partial<Pick<Category, 'name' | 'parent_id' | 'order_num' | 'icon_emoji'>>
 ): Promise<void> {
-  const { error } = await supabase.from('categories').update(patch).eq('id', id)
+  const payload: typeof patch = { ...patch }
+  if ('icon_emoji' in payload && payload.icon_emoji !== undefined) {
+    const t = payload.icon_emoji?.trim()
+    payload.icon_emoji = t ? t : null
+  }
+  const { error } = await supabase.from('categories').update(payload).eq('id', id)
   if (error) throw error
 }
 

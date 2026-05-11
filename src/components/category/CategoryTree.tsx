@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { ArrowDown, ArrowUp, Pencil, Plus, Trash2 } from 'lucide-react'
 import type { Category } from '../../types'
 import { selectChildren, selectRootCategories } from '../../store/categoryStore'
@@ -9,7 +9,7 @@ function Row({
   all,
   depth,
   onAddChild,
-  onRename,
+  onSaveCategory,
   onDelete,
   onMove,
 }: {
@@ -17,12 +17,21 @@ function Row({
   all: Category[]
   depth: number
   onAddChild: (parentId: string) => void
-  onRename: (id: string, name: string) => void
+  onSaveCategory: (
+    id: string,
+    patch: { name: string; icon_emoji: string | null }
+  ) => Promise<void> | void
   onDelete: (id: string) => void
   onMove: (id: string, dir: 'up' | 'down') => void
 }) {
   const [editing, setEditing] = useState(false)
   const [name, setName] = useState(category.name)
+  const [iconEmoji, setIconEmoji] = useState(category.icon_emoji ?? '')
+
+  useEffect(() => {
+    setName(category.name)
+    setIconEmoji(category.icon_emoji ?? '')
+  }, [category.id, category.name, category.icon_emoji])
 
   const children = selectChildren(all, category.id)
   const siblings = selectChildren(all, category.parent_id).sort(
@@ -33,9 +42,14 @@ function Row({
   const save = async () => {
     const trimmed = name.trim()
     if (!trimmed) return
-    await onRename(category.id, trimmed)
+    await onSaveCategory(category.id, {
+      name: trimmed,
+      icon_emoji: iconEmoji.trim() || null,
+    })
     setEditing(false)
   }
+
+  const displayEmoji = category.icon_emoji?.trim() || '📋'
 
   return (
     <div className="space-y-2">
@@ -46,9 +60,21 @@ function Row({
         {editing ? (
           <>
             <input
+              type="text"
+              inputMode="text"
+              maxLength={16}
+              placeholder="📋"
+              title="목록에 쓰일 이모지"
+              className="w-12 shrink-0 rounded-lg border border-gray-200 px-1 py-1 text-center text-base leading-tight dark:border-gray-700 dark:bg-gray-950 dark:text-white"
+              value={iconEmoji}
+              onChange={(e) => setIconEmoji(e.target.value)}
+              aria-label="표시 이모지"
+            />
+            <input
               className="min-w-[8rem] flex-1 rounded-lg border border-gray-200 px-2 py-1 text-sm dark:border-gray-700 dark:bg-gray-950 dark:text-white"
               value={name}
               onChange={(e) => setName(e.target.value)}
+              aria-label="카테고리 이름"
             />
             <Button type="button" className="px-2 py-1 text-xs" onClick={() => void save()}>
               저장
@@ -59,6 +85,7 @@ function Row({
               className="px-2 py-1 text-xs"
               onClick={() => {
                 setName(category.name)
+                setIconEmoji(category.icon_emoji ?? '')
                 setEditing(false)
               }}
             >
@@ -67,14 +94,22 @@ function Row({
           </>
         ) : (
           <>
+            <span
+              className="inline-flex min-w-[1.75rem] shrink-0 select-none items-center justify-center text-lg leading-none"
+              title="목록 표시 아이콘"
+              aria-hidden
+            >
+              {displayEmoji}
+            </span>
             <span className="flex-1 text-sm font-medium text-gray-900 dark:text-white">{category.name}</span>
             <Button
               type="button"
               variant="ghost"
               className="px-2 py-1"
-              aria-label="이름 수정"
+              aria-label="이름·이모지 수정"
               onClick={() => {
                 setName(category.name)
+                setIconEmoji(category.icon_emoji ?? '')
                 setEditing(true)
               }}
             >
@@ -128,7 +163,7 @@ function Row({
           all={all}
           depth={depth + 1}
           onAddChild={onAddChild}
-          onRename={onRename}
+          onSaveCategory={onSaveCategory}
           onDelete={onDelete}
           onMove={onMove}
         />
@@ -140,13 +175,16 @@ function Row({
 export function CategoryTree({
   categories,
   onAddChild,
-  onRename,
+  onSaveCategory,
   onDelete,
   onMove,
 }: {
   categories: Category[]
   onAddChild: (parentId: string) => void
-  onRename: (id: string, name: string) => Promise<void> | void
+  onSaveCategory: (
+    id: string,
+    patch: { name: string; icon_emoji: string | null }
+  ) => Promise<void> | void
   onDelete: (id: string) => void
   onMove: (id: string, dir: 'up' | 'down') => Promise<void> | void
 }) {
@@ -160,7 +198,7 @@ export function CategoryTree({
           all={categories}
           depth={0}
           onAddChild={onAddChild}
-          onRename={onRename}
+          onSaveCategory={onSaveCategory}
           onDelete={onDelete}
           onMove={onMove}
         />

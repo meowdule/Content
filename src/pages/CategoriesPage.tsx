@@ -24,23 +24,26 @@ export function CategoriesPage() {
 
   const [nameModal, setNameModal] = useState<NameModal>(null)
   const [draftName, setDraftName] = useState('')
+  const [draftEmoji, setDraftEmoji] = useState('')
   const [deleteModal, setDeleteModal] = useState<{ id: string; count: number } | null>(null)
   const [busy, setBusy] = useState(false)
 
   const closeNameModal = () => {
     setNameModal(null)
     setDraftName('')
+    setDraftEmoji('')
   }
 
   const submitName = async () => {
     const name = draftName.trim()
     if (!name || !nameModal) return
+    const icon_emoji = draftEmoji.trim() || null
     setBusy(true)
     try {
       if (nameModal.mode === 'root') {
-        await createCategory({ name, parent_id: null })
+        await createCategory({ name, parent_id: null, icon_emoji })
       } else {
-        await createCategory({ name, parent_id: nameModal.parentId })
+        await createCategory({ name, parent_id: nameModal.parentId, icon_emoji })
       }
       await reload()
       closeNameModal()
@@ -49,13 +52,17 @@ export function CategoriesPage() {
     }
   }
 
-  const onRename = async (id: string, name: string) => {
-    await updateCategory(id, { name })
+  const onSaveCategory = async (
+    id: string,
+    patch: { name: string; icon_emoji: string | null }
+  ) => {
+    await updateCategory(id, patch)
     await reload()
   }
 
   const onAddChild = (parentId: string) => {
     setDraftName('')
+    setDraftEmoji('')
     setNameModal({ mode: 'child', parentId })
   }
 
@@ -93,6 +100,7 @@ export function CategoriesPage() {
         <Button
           onClick={() => {
             setDraftName('')
+            setDraftEmoji('')
             setNameModal({ mode: 'root' })
           }}
         >
@@ -105,7 +113,7 @@ export function CategoriesPage() {
         <CategoryTree
           categories={categories}
           onAddChild={onAddChild}
-          onRename={onRename}
+          onSaveCategory={onSaveCategory}
           onDelete={onDeleteRequest}
           onMove={onMove}
         />
@@ -131,6 +139,13 @@ export function CategoriesPage() {
           value={draftName}
           onChange={(e) => setDraftName(e.target.value)}
           autoFocus
+        />
+        <Input
+          label="목록 표시 이모지 (선택)"
+          value={draftEmoji}
+          onChange={(e) => setDraftEmoji(e.target.value)}
+          placeholder="예: 📁"
+          maxLength={16}
         />
       </Modal>
 
