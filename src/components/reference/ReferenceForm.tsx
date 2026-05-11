@@ -93,15 +93,12 @@ export function ReferenceForm({ initial }: { initial: Reference | null }) {
       <Input label="제목" value={title} onChange={(e) => setTitle(e.target.value)} required />
       <Input label="링크 URL" value={link} onChange={(e) => setLink(e.target.value)} required />
 
-      <div className="flex flex-col gap-2">
-        <span className="text-sm font-medium text-gray-700 dark:text-gray-200">카테고리</span>
-        <FormCategorySelect
-          categories={categories}
-          value={categoryId}
-          onChange={setCategoryId}
-          required
-        />
-      </div>
+      <FormCategorySelect
+        categories={categories}
+        value={categoryId}
+        onChange={setCategoryId}
+        required
+      />
 
       <Input
         label="원문 작성일"

@@ -1,11 +1,127 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { CalendarRange } from 'lucide-react'
+import { format } from 'date-fns'
+import { ko } from 'date-fns/locale'
 import { Button } from '../common/Button'
 import { formatDateOnly } from '../../utils/formatDate'
+import {
+  addMonths,
+  inRangeInclusive,
+  isSameMonth,
+  isToday,
+  monthWeeks,
+  parseYmd,
+  startOfMonth,
+  ymd,
+} from './calendarRangeUtils'
+
+const WEEKDAYS = ['월', '화', '수', '목', '금', '토', '일'] as const
 
 function clamp(from: string, to: string): { from: string; to: string } {
   if (from && to && from > to) return { from, to: from }
   return { from, to }
+}
+
+function MonthGrid({
+  visibleMonth,
+  onPrev,
+  onNext,
+  draftFrom,
+  draftTo,
+  onPickDay,
+}: {
+  visibleMonth: Date
+  onPrev: () => void
+  onNext: () => void
+  draftFrom: string
+  draftTo: string
+  onPickDay: (ymd: string) => void
+}) {
+  const weeks = useMemo(() => monthWeeks(visibleMonth), [visibleMonth])
+
+  return (
+    <div className="w-[min(100%,17.5rem)] shrink-0">
+      <div className="mb-2 flex items-center justify-between gap-1">
+        <button
+          type="button"
+          onClick={onPrev}
+          className="inline-flex h-8 w-8 items-center justify-center rounded-lg text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
+          aria-label="이전 달"
+        >
+          ‹
+        </button>
+        <span className="min-w-0 flex-1 text-center text-sm font-semibold text-gray-900 dark:text-white">
+          {format(visibleMonth, 'yyyy년 M월', { locale: ko })}
+        </span>
+        <button
+          type="button"
+          onClick={onNext}
+          className="inline-flex h-8 w-8 items-center justify-center rounded-lg text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
+          aria-label="다음 달"
+        >
+          ›
+        </button>
+      </div>
+      <div className="mb-1 grid grid-cols-7 gap-0.5 text-center text-[10px] font-medium uppercase tracking-wide text-gray-400 dark:text-gray-500">
+        {WEEKDAYS.map((d) => (
+          <div key={d} className="py-1">
+            {d}
+          </div>
+        ))}
+      </div>
+      <div className="space-y-0.5">
+        {weeks.map((week, wi) => (
+          <div key={wi} className="grid grid-cols-7 gap-0.5">
+            {week.map((day) => {
+              const d = ymd(day)
+              const outside = !isSameMonth(day, visibleMonth)
+              const inSel = inRangeInclusive(d, draftFrom, draftTo)
+              const onlyFrom = Boolean(draftFrom && !draftTo)
+              const isStart = Boolean(draftFrom && d === draftFrom)
+              const isEnd = Boolean(draftTo && d === draftTo)
+              const today = isToday(day)
+
+              let tone =
+                'relative flex h-9 items-center justify-center rounded-lg text-xs tabular-nums transition text-gray-900 dark:text-gray-100'
+              if (!outside) {
+                if (onlyFrom && isStart) {
+                  tone +=
+                    ' bg-[#FF8A50] font-semibold text-white shadow-sm ring-2 ring-[#FF8A50]/40 ring-offset-1 dark:ring-offset-gray-900'
+                } else if (draftFrom && draftTo && inSel) {
+                  if (isStart || isEnd) {
+                    tone += ' bg-[#FF8A50] font-semibold text-white'
+                  } else {
+                    tone +=
+                      ' bg-[#FF8A50]/18 font-medium text-[#9a4510] dark:bg-orange-500/25 dark:text-orange-100'
+                  }
+                } else if (today) {
+                  tone += ' ring-1 ring-gray-300 dark:ring-gray-600'
+                } else {
+                  tone += ' hover:bg-gray-100 dark:hover:bg-gray-800'
+                }
+              }
+
+              return (
+                <button
+                  key={d}
+                  type="button"
+                  disabled={outside}
+                  onClick={() => !outside && onPickDay(d)}
+                  className={
+                    outside
+                      ? 'flex h-9 cursor-default items-center justify-center rounded-lg text-transparent'
+                      : tone
+                  }
+                >
+                  {!outside ? format(day, 'd') : ''}
+                </button>
+              )
+            })}
+          </div>
+        ))}
+      </div>
+    </div>
+  )
 }
 
 export function DateRangeControl({
@@ -22,12 +138,18 @@ export function DateRangeControl({
   const [open, setOpen] = useState(false)
   const [draftFrom, setDraftFrom] = useState(dateFrom)
   const [draftTo, setDraftTo] = useState(dateTo)
+  const [monthLeft, setMonthLeft] = useState(() => startOfMonth(new Date()))
+  const [monthRight, setMonthRight] = useState(() => addMonths(startOfMonth(new Date()), 1))
   const rootRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     if (!open) return
     setDraftFrom(dateFrom)
     setDraftTo(dateTo)
+    const base = dateFrom ? parseYmd(dateFrom) : new Date()
+    const left = startOfMonth(base)
+    setMonthLeft(left)
+    setMonthRight(dateTo ? startOfMonth(parseYmd(dateTo)) : addMonths(left, 1))
   }, [open, dateFrom, dateTo])
 
   useEffect(() => {
@@ -40,6 +162,20 @@ export function DateRangeControl({
     document.addEventListener('mousedown', onDoc)
     return () => document.removeEventListener('mousedown', onDoc)
   }, [open])
+
+  const pickDay = (d: string) => {
+    if (!draftFrom || (draftFrom && draftTo)) {
+      setDraftFrom(d)
+      setDraftTo('')
+      return
+    }
+    if (d < draftFrom) {
+      setDraftTo(draftFrom)
+      setDraftFrom(d)
+    } else {
+      setDraftTo(d)
+    }
+  }
 
   const summary =
     dateFrom || dateTo
@@ -74,39 +210,34 @@ export function DateRangeControl({
 
       {open ? (
         <div
-          className="absolute left-0 top-full z-30 mt-1 w-[min(100vw-2rem,20rem)] rounded-xl border border-gray-200 bg-white p-3 shadow-lg dark:border-gray-700 dark:bg-gray-900"
+          className="absolute left-0 top-full z-30 mt-1 w-[min(100vw-1rem,38rem)] rounded-xl border border-gray-200 bg-white p-3 shadow-xl dark:border-gray-700 dark:bg-gray-900"
           role="dialog"
           aria-label="등록일 기간 선택"
         >
-          <p className="mb-2 text-xs text-gray-500 dark:text-gray-400">시작일과 종료일을 함께 지정합니다.</p>
-          <div className="flex flex-col gap-2">
-            <label className="text-xs font-medium text-gray-600 dark:text-gray-300">시작</label>
-            <input
-              type="date"
-              className="w-full rounded-lg border border-gray-200 px-2 py-2 text-sm dark:border-gray-700 dark:bg-gray-950 dark:text-white"
-              value={draftFrom}
-              onChange={(e) => {
-                const v = e.target.value
-                const next = clamp(v, draftTo)
-                setDraftFrom(next.from)
-                setDraftTo(next.to)
-              }}
+          <p className="mb-3 text-xs text-gray-500 dark:text-gray-400">
+            달력에서 시작일·종료일을 차례로 누르면 기간이 잡힙니다. 두 달력을 함께 사용할 수 있습니다.
+          </p>
+          <div className="flex flex-col items-stretch gap-4 sm:flex-row sm:justify-center">
+            <MonthGrid
+              visibleMonth={monthLeft}
+              onPrev={() => setMonthLeft((m) => addMonths(m, -1))}
+              onNext={() => setMonthLeft((m) => addMonths(m, 1))}
+              draftFrom={draftFrom}
+              draftTo={draftTo}
+              onPickDay={pickDay}
             />
-            <label className="text-xs font-medium text-gray-600 dark:text-gray-300">종료</label>
-            <input
-              type="date"
-              className="w-full rounded-lg border border-gray-200 px-2 py-2 text-sm dark:border-gray-700 dark:bg-gray-950 dark:text-white"
-              value={draftTo}
-              onChange={(e) => {
-                const v = e.target.value
-                const next = clamp(draftFrom, v)
-                setDraftFrom(next.from)
-                setDraftTo(next.to)
-              }}
+            <div className="hidden w-px shrink-0 bg-gray-200 sm:block dark:bg-gray-700" aria-hidden />
+            <MonthGrid
+              visibleMonth={monthRight}
+              onPrev={() => setMonthRight((m) => addMonths(m, -1))}
+              onNext={() => setMonthRight((m) => addMonths(m, 1))}
+              draftFrom={draftFrom}
+              draftTo={draftTo}
+              onPickDay={pickDay}
             />
           </div>
-          <div className="mt-3 flex flex-wrap gap-2">
-            <Button type="button" className="text-xs" onClick={apply}>
+          <div className="mt-3 flex flex-wrap gap-2 border-t border-gray-100 pt-3 dark:border-gray-800">
+            <Button type="button" className="text-xs" onClick={apply} disabled={!draftFrom}>
               적용
             </Button>
             <Button type="button" variant="outline" className="text-xs" onClick={clearAndClose}>

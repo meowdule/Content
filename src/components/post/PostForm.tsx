@@ -141,15 +141,12 @@ export function PostForm({
 
       <Input label="제목" value={title} onChange={(e) => setTitle(e.target.value)} required />
 
-      <div className="flex flex-col gap-2">
-        <span className="text-sm font-medium text-gray-700 dark:text-gray-200">카테고리</span>
-        <FormCategorySelect
-          categories={categories}
-          value={categoryId}
-          onChange={setCategoryId}
-          required
-        />
-      </div>
+      <FormCategorySelect
+        categories={categories}
+        value={categoryId}
+        onChange={setCategoryId}
+        required
+      />
 
       <Input label="한줄요약" value={summary} onChange={(e) => setSummary(e.target.value)} />
 

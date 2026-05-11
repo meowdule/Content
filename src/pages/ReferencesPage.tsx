@@ -5,8 +5,6 @@ import { useReferences } from '../hooks/useReferences'
 import {
   getCategoryBreadcrumb,
   getCategoryIconEmoji,
-  selectChildren,
-  selectRootCategories,
   useCategoryStore,
 } from '../store/categoryStore'
 import { collectDescendantIds } from '../utils/categoryFilter'
@@ -46,12 +44,6 @@ export function ReferencesPage() {
     dateTo,
   })
 
-  const roots = useMemo(() => selectRootCategories(categories), [categories])
-  const childrenCats = useMemo(
-    () => (parentFilter ? selectChildren(categories, parentFilter) : []),
-    [categories, parentFilter]
-  )
-
   const total = data.length
   const currentPage = Math.min(page, Math.max(1, Math.ceil(total / PAGE_SIZE)))
   const slice = data.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE)
@@ -79,19 +71,14 @@ export function ReferencesPage() {
         keyword={keyword}
         onKeywordChange={setKeyword}
         onSearch={applySearch}
+        categories={categories}
         parentFilter={parentFilter}
-        onParentChange={(id) => {
-          setParentFilter(id)
-          setChildFilter('')
-          setPage(1)
-        }}
         childFilter={childFilter}
-        onChildChange={(id) => {
-          setChildFilter(id)
+        onCategoryFilterApply={(parentId, childId) => {
+          setParentFilter(parentId)
+          setChildFilter(childId)
           setPage(1)
         }}
-        roots={roots}
-        childrenCats={childrenCats}
         dateFrom={dateFrom}
         dateTo={dateTo}
         onDateRangeChange={(from, to) => {
