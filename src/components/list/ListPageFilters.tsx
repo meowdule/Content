@@ -36,7 +36,7 @@ export function ListPageFilters({
   onDateReset,
   activeFilter,
   onActiveChange,
-  total,
+  toolbarCaption,
 }: {
   keyword: string
   onKeywordChange: (v: string) => void
@@ -55,7 +55,8 @@ export function ListPageFilters({
   onDateReset: () => void
   activeFilter: 'all' | 'active' | 'inactive'
   onActiveChange: (v: 'all' | 'active' | 'inactive') => void
-  total: number
+  /** 필터 패널 우측(넓은 화면)에 표시할 페이지 설명 문구 */
+  toolbarCaption: string
 }) {
   const presets = [
     ['전일', presetYesterday],
@@ -67,64 +68,67 @@ export function ListPageFilters({
 
   return (
     <div className="space-y-4 rounded-2xl border border-gray-100 bg-white p-4 shadow-sm dark:border-gray-800 dark:bg-gray-900">
-      <div className="relative">
-        <Search
-          className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400"
-          aria-hidden
-        />
-        <input
-          type="search"
-          value={keyword}
-          onChange={(e) => onKeywordChange(e.target.value)}
-          onKeyDown={(e) => e.key === 'Enter' && onSearch()}
-          placeholder="제목·요약 검색…"
-          className="w-full rounded-xl border border-gray-200 bg-white py-2.5 pl-10 pr-24 text-sm text-gray-900 outline-none placeholder:text-gray-400 focus:border-[#FF8A50] focus:ring-2 focus:ring-[#FF8A50]/25 dark:border-gray-700 dark:bg-gray-950 dark:text-white"
-          aria-label="키워드 검색"
-        />
-        <Button
-          type="button"
-          variant="outline"
-          className="absolute right-1.5 top-1/2 -translate-y-1/2 px-3 py-1.5 text-xs"
-          onClick={onSearch}
-        >
-          검색
-        </Button>
-      </div>
+      {/* 분류(좌) + 키워드 검색(우). 40rem 미만에서는 세로 스택 */}
+      <div className="flex flex-col gap-3 min-[40rem]:flex-row min-[40rem]:items-stretch min-[40rem]:gap-3">
+        <div className="flex flex-wrap items-center gap-x-2 gap-y-2 min-[40rem]:shrink-0">
+          <FieldLabel>분류</FieldLabel>
+          <select
+            className={selectCls}
+            value={parentFilter}
+            onChange={(e) => onParentChange(e.target.value)}
+            aria-label="상위 카테고리"
+          >
+            <option value="">전체 · 상위</option>
+            {roots.map((c) => (
+              <option key={c.id} value={c.id}>
+                {c.name}
+              </option>
+            ))}
+          </select>
+          <span className="text-gray-300 dark:text-gray-600" aria-hidden>
+            /
+          </span>
+          <select
+            className={`${selectCls} disabled:opacity-45`}
+            disabled={!parentFilter || childrenCats.length === 0}
+            value={childFilter}
+            onChange={(e) => onChildChange(e.target.value)}
+            aria-label="하위 카테고리"
+          >
+            <option value="">
+              {!parentFilter ? '상위 선택 후' : childrenCats.length ? '전체 · 하위' : '하위 없음'}
+            </option>
+            {childrenCats.map((c) => (
+              <option key={c.id} value={c.id}>
+                {c.name}
+              </option>
+            ))}
+          </select>
+        </div>
 
-      <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
-        <FieldLabel>분류</FieldLabel>
-        <select
-          className={selectCls}
-          value={parentFilter}
-          onChange={(e) => onParentChange(e.target.value)}
-          aria-label="상위 카테고리"
-        >
-          <option value="">전체 · 상위</option>
-          {roots.map((c) => (
-            <option key={c.id} value={c.id}>
-              {c.name}
-            </option>
-          ))}
-        </select>
-        <span className="text-gray-300 dark:text-gray-600" aria-hidden>
-          /
-        </span>
-        <select
-          className={`${selectCls} disabled:opacity-45`}
-          disabled={!parentFilter || childrenCats.length === 0}
-          value={childFilter}
-          onChange={(e) => onChildChange(e.target.value)}
-          aria-label="하위 카테고리"
-        >
-          <option value="">
-            {!parentFilter ? '상위 선택 후' : childrenCats.length ? '전체 · 하위' : '하위 없음'}
-          </option>
-          {childrenCats.map((c) => (
-            <option key={c.id} value={c.id}>
-              {c.name}
-            </option>
-          ))}
-        </select>
+        <div className="relative min-h-[42px] min-w-0 flex-1">
+          <Search
+            className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400"
+            aria-hidden
+          />
+          <input
+            type="search"
+            value={keyword}
+            onChange={(e) => onKeywordChange(e.target.value)}
+            onKeyDown={(e) => e.key === 'Enter' && onSearch()}
+            placeholder="제목·요약 검색…"
+            className="h-full min-h-[42px] w-full rounded-xl border border-gray-200 bg-white py-2.5 pl-10 pr-24 text-sm text-gray-900 outline-none placeholder:text-gray-400 focus:border-[#FF8A50] focus:ring-2 focus:ring-[#FF8A50]/25 dark:border-gray-700 dark:bg-gray-950 dark:text-white"
+            aria-label="키워드 검색"
+          />
+          <Button
+            type="button"
+            variant="outline"
+            className="absolute right-1.5 top-1/2 -translate-y-1/2 px-3 py-1.5 text-xs"
+            onClick={onSearch}
+          >
+            검색
+          </Button>
+        </div>
       </div>
 
       <div className="flex flex-wrap items-center gap-x-2 gap-y-2">
@@ -162,7 +166,7 @@ export function ListPageFilters({
         </div>
 
         <span
-          className="mx-1 hidden h-5 w-px shrink-0 bg-gray-200 sm:block dark:bg-gray-700"
+          className="mx-1 hidden h-5 w-px shrink-0 bg-gray-200 min-[40rem]:block dark:bg-gray-700"
           aria-hidden
         />
 
@@ -178,9 +182,9 @@ export function ListPageFilters({
           <option value="inactive">비활성</option>
         </select>
 
-        <span className="w-full text-sm tabular-nums text-gray-500 sm:ml-auto sm:w-auto dark:text-gray-400">
-          표시 중: {total}개
-        </span>
+        <p className="w-full text-sm leading-snug text-gray-500 min-[40rem]:ml-auto min-[40rem]:max-w-md min-[40rem]:text-right dark:text-gray-400">
+          {toolbarCaption}
+        </p>
       </div>
     </div>
   )

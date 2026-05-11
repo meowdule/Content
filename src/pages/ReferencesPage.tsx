@@ -65,7 +65,6 @@ export function ReferencesPage() {
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white">해외 참고 링크</h1>
-          <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">해외 자료 링크를 모아 둡니다.</p>
         </div>
         <Link to="/references/new">
           <Button className="shadow-sm">
@@ -117,7 +116,7 @@ export function ReferencesPage() {
           setActiveFilter(v)
           setPage(1)
         }}
-        total={total}
+        toolbarCaption="해외 자료 링크를 모아 둡니다."
       />
 
       {error ? (
@@ -131,9 +130,9 @@ export function ReferencesPage() {
       ) : (
         <>
           <div className="overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm dark:border-gray-800 dark:bg-gray-900">
-            <div className="hidden border-b border-gray-100 bg-gray-50/90 px-4 py-2.5 text-xs font-medium tracking-wide text-gray-500 sm:grid sm:grid-cols-12 dark:border-gray-800 dark:bg-gray-950/60 dark:text-gray-400">
-              <div className="sm:col-span-6">제목 · 분류 · 링크</div>
-              <div className="text-right sm:col-span-6">원문일 · 등록일 · 상태</div>
+            <div className="hidden border-b border-gray-100 bg-gray-50/90 px-4 py-2.5 text-xs font-medium tracking-wide text-gray-500 min-[40rem]:grid min-[40rem]:grid-cols-12 dark:border-gray-800 dark:bg-gray-950/60 dark:text-gray-400">
+              <div className="min-[40rem]:col-span-6">제목 · 분류 · 링크</div>
+              <div className="text-right min-[40rem]:col-span-6">원문일 · 등록일 · 상태</div>
             </div>
             {slice.map((r) => (
               <ReferenceListRow

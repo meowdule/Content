@@ -65,7 +65,6 @@ export function PostsPage() {
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white">게시글</h1>
-          <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">등록된 게시글을 검색하고 관리합니다.</p>
         </div>
         <Link to="/posts/new">
           <Button className="shadow-sm">
@@ -117,7 +116,7 @@ export function PostsPage() {
           setActiveFilter(v)
           setPage(1)
         }}
-        total={total}
+        toolbarCaption="등록된 게시글을 검색하고 관리합니다."
       />
 
       {error ? (
@@ -131,9 +130,9 @@ export function PostsPage() {
       ) : (
         <>
           <div className="overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm dark:border-gray-800 dark:bg-gray-900">
-            <div className="hidden border-b border-gray-100 bg-gray-50/90 px-4 py-2.5 text-xs font-medium tracking-wide text-gray-500 sm:grid sm:grid-cols-12 dark:border-gray-800 dark:bg-gray-950/60 dark:text-gray-400">
-              <div className="sm:col-span-7">제목 · 분류 · 요약</div>
-              <div className="text-right sm:col-span-5">등록일 · 상태</div>
+            <div className="hidden border-b border-gray-100 bg-gray-50/90 px-4 py-2.5 text-xs font-medium tracking-wide text-gray-500 min-[40rem]:grid min-[40rem]:grid-cols-12 dark:border-gray-800 dark:bg-gray-950/60 dark:text-gray-400">
+              <div className="min-[40rem]:col-span-7">제목 · 분류 · 요약</div>
+              <div className="text-right min-[40rem]:col-span-5">등록일 · 상태</div>
             </div>
             {slice.map((p) => (
               <PostListRow
