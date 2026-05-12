@@ -1,0 +1,790 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>게시글 초안 모음집</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+/* Override strong tags inside headings to maintain consistent weight */
+h1 strong,
+h2 strong,
+h3 strong {
+	font-weight: 600;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 10px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+
+	table.collection-content {
+		width: 100%;
+		table-layout: fixed;
+	}
+
+	table.collection-content th,
+	table.collection-content td {
+		overflow-wrap: anywhere;
+	}
+
+	table.collection-content td > .user,
+	table.collection-content td > time {
+		white-space: pre-wrap;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content-wrapper {
+	overflow-x: auto;
+}
+
+@media only print {
+	.collection-content-wrapper {
+		overflow-x: visible;
+	}
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.collection-content td {
+	white-space: pre-wrap;
+	word-break: break-word;
+}
+
+.column-list {
+	display: flex;
+	gap: 46px;
+}
+
+.column {
+	min-width: 0;
+	overflow: hidden;
+}
+
+.column > *:first-child {
+	margin-top: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+table {
+	border-collapse: collapse;
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol.numbered-list.numbered-list-digits-2 {
+	padding-inline-start: 2em;
+}
+
+ol.numbered-list.numbered-list-digits-3plus {
+	padding-inline-start: 2.4em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+	margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.callout img.notion-static-icon {
+	width: 1em;
+	height: 1em;
+}
+
+.callout p {
+	margin: 0;
+}
+
+.callout h1,
+.callout h2,
+.callout h3 {
+	margin: 0 0 0.6rem;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+blockquote.quote-large {
+	font-size: 1.25em;
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.highlight-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.highlight-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.highlight-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.highlight-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.highlight-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.highlight-default_background {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray_background {
+	background: rgba(42, 28, 0, 0.07);
+}
+.highlight-brown_background {
+	background: rgba(139, 46, 0, 0.086);
+}
+.highlight-orange_background {
+	background: rgba(224, 101, 1, 0.129);
+}
+.highlight-yellow_background {
+	background: rgba(211, 168, 0, 0.137);
+}
+.highlight-teal_background {
+	background: rgba(0, 100, 45, 0.09);
+}
+.highlight-blue_background {
+	background: rgba(0, 124, 215, 0.094);
+}
+.highlight-purple_background {
+	background: rgba(102, 0, 178, 0.078);
+}
+.highlight-pink_background {
+	background: rgba(197, 0, 93, 0.086);
+}
+.highlight-red_background {
+	background: rgba(223, 22, 0, 0.094);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.block-color-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.block-color-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.block-color-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.block-color-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.block-color-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.block-color-default_background {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray_background {
+	background: rgba(240, 239, 237, 1);
+}
+.block-color-brown_background {
+	background: rgba(245, 237, 233, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 235, 222, 1);
+}
+.block-color-yellow_background {
+	background: rgba(249, 243, 220, 1);
+}
+.block-color-teal_background {
+	background: rgba(232, 241, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(229, 242, 252, 1);
+}
+.block-color-purple_background {
+	background: rgba(243, 235, 249, 1);
+}
+.block-color-pink_background {
+	background: rgba(250, 233, 241, 1);
+}
+.block-color-red_background {
+	background: rgba(252, 233, 231, 1);
+}
+.select-value-color-default { background-color: rgba(42, 28, 0, 0.07); }
+.select-value-color-gray { background-color: rgba(28, 19, 1, 0.11); }
+.select-value-color-brown { background-color: rgba(127, 51, 0, 0.156); }
+.select-value-color-orange { background-color: rgba(196, 88, 0, 0.203); }
+.select-value-color-yellow { background-color: rgba(209, 156, 0, 0.282); }
+.select-value-color-green { background-color: rgba(0, 96, 38, 0.156); }
+.select-value-color-blue { background-color: rgba(0, 118, 217, 0.203); }
+.select-value-color-purple { background-color: rgba(92, 0, 163, 0.141); }
+.select-value-color-pink { background-color: rgba(183, 0, 78, 0.152); }
+.select-value-color-red { background-color: rgba(206, 24, 0, 0.164); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="359c60fd-e0e4-803e-867a-efd659dd3207" class="page sans"><header><div class="page-header-icon undefined"><span class="icon">🖊️</span></div><h1 class="page-title" dir="auto">게시글 초안 모음집</h1><p class="page-description" dir="auto"></p></header><div class="page-body"><div style="display:contents" dir="auto"><details open=""><summary style="font-weight:600;font-size:1.5em;line-height:1.3;margin:0">게시글 작성 가이드 초안</summary><div class="indented"><div style="display:contents" dir="auto"><ul id="35dc60fd-e0e4-8074-bacb-c0d845a97f47" class="toggle"><li><details open=""><summary><a href="https://meowdule.github.io/Cursor_report/guide/writing-style-guide.html">https://meowdule.github.io/Cursor_report/guide/writing-style-guide.html</a></summary><div style="display:contents" dir="ltr"><figure id="35dc60fd-e0e4-801e-954f-fbf0f69740e7" class="image"><a href="%EA%B2%8C%EC%8B%9C%EA%B8%80%20%EC%B4%88%EC%95%88%20%EB%AA%A8%EC%9D%8C%EC%A7%91/image.png"><img style="width:672px" src="%EA%B2%8C%EC%8B%9C%EA%B8%80%20%EC%B4%88%EC%95%88%20%EB%AA%A8%EC%9D%8C%EC%A7%91/image.png"/></a></figure></div></details></li></ul></div><div style="display:contents" dir="auto"><h2 id="35dc60fd-e0e4-8042-85d7-d9ff227b4057" class="">📐 게시글 구조 (필수 양식)</h2></div><div style="display:contents" dir="auto"><h3 id="35dc60fd-e0e4-804f-a26d-c0fbecee046a" class="">① 제목 — 후킹 공식</h3></div><div style="display:contents" dir="auto"><p id="35dc60fd-e0e4-80ba-ad78-f8c055684bb8" class=""><strong>형식:</strong> <code>&quot;[충격적 문장/현장 발언]&quot; — [맥락 한 줄]</code></p></div><div style="display:contents" dir="ltr"><table id="35dc60fd-e0e4-80b6-bec8-e78c776cdea6" class="simple-table"><thead class="simple-table-header"><div style="display:contents" dir="ltr"><tr id="35dc60fd-e0e4-8011-9214-d884f66a752f"><th id="z=]g" class="simple-table-header-color simple-table-header">패턴</th><th id="YmNT" class="simple-table-header-color simple-table-header">공식</th><th id="PvRz" class="simple-table-header-color simple-table-header">예시</th></tr></div></thead><tbody><div style="display:contents" dir="ltr"><tr id="35dc60fd-e0e4-8038-b2d0-faeaa92f5715"><td id="z=]g" class="">충격 발언형</td><td id="YmNT" class="">&quot;놀라운 현상&quot; — 이유/맥락</td><td id="PvRz" class="">&quot;신입보다 AI가 더 빠르다&quot; — 기업들이 조용히 채용 줄이는 진짜 이유</td></tr></div><div style="display:contents" dir="ltr"><tr id="35dc60fd-e0e4-8071-a1fa-c75f2f392dc2"><td id="z=]g" class="">결과 발언형</td><td id="YmNT" class="">&quot;행동했더니 결과&quot; — 분야에서 일어나는 변화</td><td id="PvRz" class="">&quot;AI한테 일 맡겼더니 팀장이 사라졌다&quot; — 실리콘밸리에서 진짜 벌어지는 AX 조직 개편</td></tr></div><div style="display:contents" dir="ltr"><tr id="35dc60fd-e0e4-805b-b1cb-d803b8343c1b"><td id="z=]g" class="">반전 물음형</td><td id="YmNT" class="">&quot;상식과 다른 현실?&quot; — 왜 이런 일이 벌어지는지</td><td id="PvRz" class="">&quot;AI 도입했더니 직원들이 더 바빠졌다?&quot; — 회사들이 겪는 현실적인 부작용</td></tr></div></tbody></table></div><div style="display:contents" dir="auto"><hr id="35dc60fd-e0e4-8034-95cb-e374f4ac6b03"/></div><div style="display:contents" dir="auto"><h3 id="35dc60fd-e0e4-80cc-ac17-efcf7f0d11a0" class="">② 요약 블록 — 상단 3줄</h3></div><div style="display:contents" dir="auto"><p id="35dc60fd-e0e4-800f-aaad-f09c2f5444cd" class="">독자가 읽을지 말지 결정하는 스캔용 요약. 본문 핵심 챕터와 일치시킬 것.</p></div><div style="display:contents" dir="auto"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="35dc60fd-e0e4-801e-a509-d642a56ba2c7" class="code code-wrap"><code style="white-space:pre-wrap;word-break:break-all">요약:
+• 키워드 1 (3~5단어)
+• 키워드 2 (3~5단어)
+• 키워드 3 (3~5단어)</code></pre></div><div style="display:contents" dir="auto"><hr id="35dc60fd-e0e4-801c-8e66-c22d2f8529ed"/></div><div style="display:contents" dir="auto"><h3 id="35dc60fd-e0e4-8060-b56f-cbf277a7399a" class="">③ 도입부 — 공감 유도 (150~250자)</h3></div><div style="display:contents" dir="auto"><p id="35dc60fd-e0e4-8010-b103-d87c1d923cea" class="">독자가 이미 느끼는 상황을 짧게 제시 → 반전 질문으로 마무리</p></div><div style="display:contents" dir="auto"><p id="35dc60fd-e0e4-80db-a28c-fff580e2432d" class=""><strong>흐름:</strong> 기대/상식 제시 → &quot;그런데&quot; → 현실 반전 → 핵심 질문 던지기</p></div><div style="display:contents" dir="auto"><blockquote id="35dc60fd-e0e4-80ff-aa8c-fc4d079d2774" class="">예시: &quot;많은 회사들이 AI를 도입하면 일이 줄어들 거라 기대했습니다. <br/>     그런데 최근 현업에서는 오히려 &#x27;왜 더 바빠졌지?&#x27;라는 이야기가 나오기 시작했습니다.&quot;</blockquote></div><div style="display:contents" dir="auto"><hr id="35dc60fd-e0e4-8019-967a-d0fee0ab18c8"/></div><div style="display:contents" dir="auto"><h3 id="35dc60fd-e0e4-809a-a5a8-cca8951c2eb8" class="">④ 본문 — H2 챕터 4~7개</h3></div><div style="display:contents" dir="auto"><ul id="35dc60fd-e0e4-80db-bd3a-d85a71a74638" class="bulleted-list"><li style="list-style-type:disc">챕터당 분량: 200~350자</li></ul></div><div style="display:contents" dir="auto"><ul id="35dc60fd-e0e4-8072-8fad-f2693677af38" class="bulleted-list"><li style="list-style-type:disc">챕터 사이: <code>--</code> 구분선 삽입</li></ul></div><div style="display:contents" dir="auto"><ul id="35dc60fd-e0e4-803e-bff9-e5f37cd5bc3b" class="bulleted-list"><li style="list-style-type:disc">각 챕터 구성: 제목 → 짧은 문장 열거 → 구체 예시 → 핵심 인사이트 인용구</li></ul></div><div style="display:contents" dir="auto"><p id="35dc60fd-e0e4-8002-b1ac-f05381efaa47" class=""><strong>챕터 제목 유형</strong></p></div><div style="display:contents" dir="ltr"><table id="35dc60fd-e0e4-802f-ab9e-f2dea4006500" class="simple-table"><thead class="simple-table-header"><div style="display:contents" dir="ltr"><tr id="35dc60fd-e0e4-805a-b800-f0b34ab78bfb"><th id="^&lt;[@" class="simple-table-header-color simple-table-header">유형</th><th id="sk\E" class="simple-table-header-color simple-table-header">형식</th><th id="|uBi" class="simple-table-header-color simple-table-header">예시</th></tr></div></thead><tbody><div style="display:contents" dir="ltr"><tr id="35dc60fd-e0e4-8060-86ec-efc5e9bd9975"><td id="^&lt;[@" class="">이유형</td><td id="sk\E" class="">이유 N. &quot;소제목&quot;</td><td id="|uBi" class="">이유 1. &quot;일이 빨라지니까 일이 더 늘어난다&quot;</td></tr></div><div style="display:contents" dir="ltr"><tr id="35dc60fd-e0e4-8045-bd73-fe6989f7b16f"><td id="^&lt;[@" class="">현상형</td><td id="sk\E" class="">현상 설명</td><td id="|uBi" class="">중간 관리자 역할이 줄어드는 이유</td></tr></div><div style="display:contents" dir="ltr"><tr id="35dc60fd-e0e4-8087-b223-d9dd39752e23"><td id="^&lt;[@" class="">질문형</td><td id="sk\E" class="">~는 걸까? / ~한다면?</td><td id="|uBi" class="">그래서 사람은 필요 없어지는 걸까?</td></tr></div></tbody></table></div><div style="display:contents" dir="auto"><hr id="35dc60fd-e0e4-806c-a312-e4fc9b25540e"/></div><div style="display:contents" dir="auto"><h3 id="35dc60fd-e0e4-80e1-aa99-e0495d06a40f" class="">⑤ 마무리 — 미래 전망형 (100~200자)</h3></div><div style="display:contents" dir="auto"><p id="35dc60fd-e0e4-802b-81df-f061ab80ffc4" class="">결론은 단정 짓지 않고 열린 질문으로 끝낼 것.</p></div><div style="display:contents" dir="auto"><p id="35dc60fd-e0e4-80c6-8a76-e663db2cb1cc" class=""><strong>금지:</strong> &quot;~합니다&quot;, &quot;~입니다&quot; (단정)<br/><strong>권장:</strong> &quot;~될 가능성이 크다&quot;, &quot;~인지도 모른다&quot;, &quot;~하는 시대가 올지도 모릅니다&quot;</p></div><div style="display:contents" dir="auto"><hr id="35dc60fd-e0e4-80c6-90bc-ff0d51971404"/></div><div style="display:contents" dir="auto"><h2 id="35dc60fd-e0e4-803c-b7e9-d98076cf1fd0" class="">✍️ 문장 스타일 기준</h2></div><div style="display:contents" dir="auto"><div id="35dc60fd-e0e4-8054-aa3a-c3e10827c361" class="column-list"><div style="display:contents" dir="auto"><div id="35dc60fd-e0e4-8080-8769-d713ed28c6c5" style="width:50%" class="column"><div style="display:contents" dir="auto"><h3 id="35dc60fd-e0e4-80ee-94ec-edba7a67c931" class="">써야 하는 것 ✅</h3></div><div style="display:contents" dir="auto"><ul id="35dc60fd-e0e4-80b7-9ba1-c23d57c99e93" class="bulleted-list"><li style="list-style-type:disc">한 문장 = 한 줄 (개행 많이 사용)</li></ul></div><div style="display:contents" dir="auto"><ul id="35dc60fd-e0e4-805f-b51a-cbb1a2875385" class="bulleted-list"><li style="list-style-type:disc">짧은 문장 + 충분한 여백</li></ul></div><div style="display:contents" dir="auto"><ul id="35dc60fd-e0e4-801f-a96a-dacc79e6d3cf" class="bulleted-list"><li style="list-style-type:disc">핵심 메시지는 <code>&gt;</code> 블록쿼트 처리</li></ul></div><div style="display:contents" dir="auto"><ul id="35dc60fd-e0e4-80ce-8156-f2c5dd8f19f2" class="bulleted-list"><li style="list-style-type:disc">숫자/비율/통계 적극 활용</li></ul></div><div style="display:contents" dir="auto"><ul id="35dc60fd-e0e4-80d0-bbc4-cf27c58aed4f" class="bulleted-list"><li style="list-style-type:disc"><code>예:</code> 라벨로 구체 사례 제시</li></ul></div><div style="display:contents" dir="auto"><ul id="35dc60fd-e0e4-80c4-a629-f4d086c83aab" class="bulleted-list"><li style="list-style-type:disc">&quot;즉,&quot;, &quot;결국,&quot;, &quot;그런데&quot; 등 연결어로 흐름 유지</li></ul></div><div style="display:contents" dir="auto"><p id="35dc60fd-e0e4-8028-a35f-f37158db8a4a" class="">
+</p></div></div></div><div style="display:contents" dir="auto"><div id="35dc60fd-e0e4-80cb-9017-c48db09d6384" style="width:50%" class="column"><div style="display:contents" dir="auto"><h3 id="35dc60fd-e0e4-8047-8b02-f0618dbdc282" class="">피해야 하는 것 ❌</h3></div><div style="display:contents" dir="auto"><ul id="35dc60fd-e0e4-8000-81aa-f4333ab80469" class="bulleted-list"><li style="list-style-type:disc">5줄 이상 이어지는 긴 문단</li></ul></div><div style="display:contents" dir="auto"><ul id="35dc60fd-e0e4-8004-a11b-ea9e5a29ed3b" class="bulleted-list"><li style="list-style-type:disc">설명 없이 쓰는 전문용어</li></ul></div><div style="display:contents" dir="auto"><ul id="35dc60fd-e0e4-80f4-b5e5-fa9d2c2659c0" class="bulleted-list"><li style="list-style-type:disc">결론을 너무 확정적으로 마무리</li></ul></div><div style="display:contents" dir="auto"><ul id="35dc60fd-e0e4-80a6-a68e-f942a1655e8a" class="bulleted-list"><li style="list-style-type:disc">챕터 없이 흘러가는 구조</li></ul></div><div style="display:contents" dir="auto"><ul id="35dc60fd-e0e4-80b5-b1e5-de2c025a4d46" class="bulleted-list"><li style="list-style-type:disc">링크/근거 없는 해외 사례 단독 인용</li></ul></div><div style="display:contents" dir="auto"><p id="35dc60fd-e0e4-808d-9ede-fd13e90a248f" class="">
+</p></div></div></div></div></div><div style="display:contents" dir="auto"><hr id="35dc60fd-e0e4-802d-92ed-ddb9983acb57"/></div><div style="display:contents" dir="auto"><h2 id="35dc60fd-e0e4-80f0-a67e-ea3042442296" class="">🎯 주제 선정 기준</h2></div><div style="display:contents" dir="auto"><h3 id="35dc60fd-e0e4-80a3-8234-f90e1bcf02b5" class="">다루는 주제 카테고리</h3></div><div style="display:contents" dir="auto"><ul id="35dc60fd-e0e4-80aa-8a48-cfdbb3054310" class="bulleted-list"><li style="list-style-type:disc">조직 / 직무 변화</li></ul></div><div style="display:contents" dir="auto"><ul id="35dc60fd-e0e4-80f3-b023-d09c75cafb0c" class="bulleted-list"><li style="list-style-type:disc">AI 툴 실사용 사례</li></ul></div><div style="display:contents" dir="auto"><ul id="35dc60fd-e0e4-806c-ba5e-e8ac68d7f559" class="bulleted-list"><li style="list-style-type:disc">채용 / 커리어 트렌드</li></ul></div><div style="display:contents" dir="auto"><ul id="35dc60fd-e0e4-801c-aae9-c1c46ebae380" class="bulleted-list"><li style="list-style-type:disc">해외(실리콘밸리) 사례 분석</li></ul></div><div style="display:contents" dir="auto"><ul id="35dc60fd-e0e4-8053-909c-f8ac535e2fa8" class="bulleted-list"><li style="list-style-type:disc">일하는 방식의 변화</li></ul></div><div style="display:contents" dir="auto"><ul id="35dc60fd-e0e4-8076-8841-ed238dd323be" class="bulleted-list"><li style="list-style-type:disc">AI 도입 부작용 / 현실적 문제</li></ul></div><div style="display:contents" dir="auto"><ul id="35dc60fd-e0e4-8098-a34e-ce478bbb1eea" class="bulleted-list"><li style="list-style-type:disc">1인 창업 / 소규모 팀 트렌드</li></ul></div><div style="display:contents" dir="auto"><ul id="35dc60fd-e0e4-80ae-b0c4-d5c4ad33f41d" class="bulleted-list"><li style="list-style-type:disc">생산성 자동화 도구</li></ul></div><div style="display:contents" dir="auto"><blockquote id="35dc60fd-e0e4-80f0-baaa-d3d42b440e7c" class="">공통점: 지금 실제로 벌어지고 있는 변화를 다룬다. 미래 예측보다 현재진행형 트렌드.</blockquote></div><div style="display:contents" dir="auto"><h3 id="35dc60fd-e0e4-8048-bf87-cf641eb33a98" class="">주제 선정 체크리스트</h3></div><div style="display:contents" dir="auto"><ul id="35dc60fd-e0e4-80bc-87ff-e8bccfe02ea9" class="to-do-list"><li><div class="checkbox checkbox-off"></div> <span class="to-do-children-unchecked">독자가 이미 어렴풋이 느끼는 변화인가? (공감 가능성)</span><div class="indented"></div></li></ul></div><div style="display:contents" dir="auto"><ul id="35dc60fd-e0e4-803f-8e7b-dfeed585b875" class="to-do-list"><li><div class="checkbox checkbox-off"></div> <span class="to-do-children-unchecked">해외 실사례나 데이터로 뒷받침 가능한가?</span><div class="indented"></div></li></ul></div><div style="display:contents" dir="auto"><ul id="35dc60fd-e0e4-804d-b38b-da898282cd98" class="to-do-list"><li><div class="checkbox checkbox-off"></div> <span class="to-do-children-unchecked">직장인 / 창업자 / 개발자 중 한 그룹에 직접 관련된 주제인가?</span><div class="indented"></div></li></ul></div><div style="display:contents" dir="auto"><ul id="35dc60fd-e0e4-8018-851c-f70488f973a8" class="to-do-list"><li><div class="checkbox checkbox-off"></div> <span class="to-do-children-unchecked">제목만 봐도 &quot;나 얘기네&quot;라고 느낄 수 있는가?</span><div class="indented"></div></li></ul></div><div style="display:contents" dir="auto"><ul id="35dc60fd-e0e4-808b-b864-ed090332ff80" class="to-do-list"><li><div class="checkbox checkbox-off"></div> <span class="to-do-children-unchecked">AI와 연결되는가? (AI가 원인이거나 해결책이거나)</span><div class="indented"></div></li></ul></div><div style="display:contents" dir="auto"><hr id="35dc60fd-e0e4-8022-8eab-d5614710fd0a"/></div><div style="display:contents" dir="auto"><h2 id="35dc60fd-e0e4-8062-afb1-c19061ba8e89" class="">📏 분량 &amp; 포맷 가이드</h2></div><div style="display:contents" dir="auto"><div id="35dc60fd-e0e4-802b-8220-c866b24642ac" class="column-list"><div style="display:contents" dir="auto"><div id="35dc60fd-e0e4-8000-ae11-fd6e64611c80" style="width:50%" class="column"><div style="display:contents" dir="auto"><h3 id="35dc60fd-e0e4-80c2-b2de-f7053604a75b" class="">분량 기준</h3></div><div style="display:contents" dir="ltr"><table id="35dc60fd-e0e4-8071-9a4b-fe9f5cb25e98" class="simple-table"><thead class="simple-table-header"><div style="display:contents" dir="ltr"><tr id="35dc60fd-e0e4-80eb-8aa0-dad72617bd68"><th id="RzGy" class="simple-table-header-color simple-table-header">구성 요소</th><th id="XT=S" class="simple-table-header-color simple-table-header">권장 분량</th></tr></div></thead><tbody><div style="display:contents" dir="ltr"><tr id="35dc60fd-e0e4-80e5-a084-f250fff102c2"><td id="RzGy" class="">전체</td><td id="XT=S" class="">1,500 ~ 2,500자</td></tr></div><div style="display:contents" dir="ltr"><tr id="35dc60fd-e0e4-806b-918f-d98928cef6f2"><td id="RzGy" class="">도입부</td><td id="XT=S" class="">150 ~ 250자</td></tr></div><div style="display:contents" dir="ltr"><tr id="35dc60fd-e0e4-8052-bae3-df128e062d2f"><td id="RzGy" class="">챕터당</td><td id="XT=S" class="">200 ~ 350자</td></tr></div><div style="display:contents" dir="ltr"><tr id="35dc60fd-e0e4-80b3-822d-dbc0ffb25bb2"><td id="RzGy" class="">챕터 수</td><td id="XT=S" class="">4 ~ 7개</td></tr></div><div style="display:contents" dir="ltr"><tr id="35dc60fd-e0e4-803b-827c-d42493a13523"><td id="RzGy" class="">마무리</td><td id="XT=S" class="">100 ~ 200자</td></tr></div></tbody></table></div><div style="display:contents" dir="auto"><p id="35dc60fd-e0e4-803f-90c5-e0ff04f1faef" class="">
+</p></div></div></div><div style="display:contents" dir="auto"><div id="35dc60fd-e0e4-802b-9df5-fc71b5225be8" style="width:50%" class="column"><div style="display:contents" dir="auto"><h3 id="35dc60fd-e0e4-80b8-b84f-c2b52a744ad3" class="">포맷 요소</h3></div><div style="display:contents" dir="ltr"><table id="35dc60fd-e0e4-80f3-bb02-c1b6b7341d5c" class="simple-table"><thead class="simple-table-header"><div style="display:contents" dir="ltr"><tr id="35dc60fd-e0e4-8079-841f-d42c8a01f785"><th id="M|JH" class="simple-table-header-color simple-table-header">요소</th><th id="OJeK" class="simple-table-header-color simple-table-header">마크다운</th><th id="Tisl" class="simple-table-header-color simple-table-header">용도</th></tr></div></thead><tbody><div style="display:contents" dir="ltr"><tr id="35dc60fd-e0e4-802e-a5b4-d086c0b88f81"><td id="M|JH" class="">챕터 제목</td><td id="OJeK" class=""><code>##</code></td><td id="Tisl" class="">본문 섹션 구분</td></tr></div><div style="display:contents" dir="ltr"><tr id="35dc60fd-e0e4-8094-ae4a-d778e5363ceb"><td id="M|JH" class="">구분선</td><td id="OJeK" class=""><code>---</code></td><td id="Tisl" class="">챕터 사이 구분</td></tr></div><div style="display:contents" dir="ltr"><tr id="35dc60fd-e0e4-807c-be77-e40f91eeeb66"><td id="M|JH" class="">핵심 인용</td><td id="OJeK" class=""><code>&gt;</code></td><td id="Tisl" class="">강조할 메시지</td></tr></div><div style="display:contents" dir="ltr"><tr id="35dc60fd-e0e4-80cb-9cf0-f9589a92b2bf"><td id="M|JH" class="">나열</td><td id="OJeK" class=""><code>-</code></td><td id="Tisl" class="">항목 열거</td></tr></div><div style="display:contents" dir="ltr"><tr id="35dc60fd-e0e4-807e-bf74-ed0005fa2720"><td id="M|JH" class="">구체 예시</td><td id="OJeK" class=""><code>예:</code> 라벨</td><td id="Tisl" class="">사례 제시</td></tr></div></tbody></table></div><div style="display:contents" dir="auto"><p id="35dc60fd-e0e4-8051-981b-ea795dc68919" class="">
+</p></div></div></div></div></div><div style="display:contents" dir="auto"><hr id="35dc60fd-e0e4-8094-8d8a-c2878e6d2c44"/></div><div style="display:contents" dir="auto"><h2 id="35dc60fd-e0e4-80e9-8b16-de2db93a12e2" class="">🔑 반드시 지켜야 할 3가지 원칙</h2></div><div style="display:contents" dir="auto"><h3 id="35dc60fd-e0e4-80fa-8720-f7cad42d4dff" class="">원칙 1 — 현재진행형 언어</h3></div><div style="display:contents" dir="auto"><p id="35dc60fd-e0e4-80f6-b373-edd20f46f6c8" class="">&quot;~하기 시작했다&quot;, &quot;~하고 있다&quot;, &quot;~벌어지고 있다&quot;</p></div><div style="display:contents" dir="auto"><p id="35dc60fd-e0e4-80d8-9a4c-f9735cb32665" class="">과거형/확정형을 피하고, 독자도 지금 이 변화 안에 있다는 느낌을 줄 것.</p></div><div style="display:contents" dir="auto"><h3 id="35dc60fd-e0e4-80e3-9055-fbe6832c531e" class="">원칙 2 — 균형 잡힌 시각</h3></div><div style="display:contents" dir="auto"><p id="35dc60fd-e0e4-8031-9ada-cb6ad179ecee" class="">긍정적 트렌드 소개 후 반드시 &quot;하지만&quot; 또는 &quot;물론 한계도 있다&quot; 챕터를 포함할 것.</p></div><div style="display:contents" dir="auto"><p id="35dc60fd-e0e4-8056-afb1-ed209c04291d" class="">일방적 주장보다 양면을 보여줘야 신뢰도가 올라간다.</p></div><div style="display:contents" dir="auto"><h3 id="35dc60fd-e0e4-80b7-9e91-f4f0c900331f" class="">원칙 3 — 열린 결말</h3></div><div style="display:contents" dir="auto"><p id="35dc60fd-e0e4-8002-87cd-f199d4c85191" class="">&quot;~될 가능성이 크다&quot;, &quot;~인지도 모른다&quot;로 마무리.</p></div><div style="display:contents" dir="auto"><p id="35dc60fd-e0e4-805d-b0ac-efa46a2fb74e" class="">단정 짓지 말고 독자 스스로 생각할 여지를 남길 것.</p></div><div style="display:contents" dir="auto"><hr id="35dc60fd-e0e4-800a-84d5-e4f40c43b3f8"/></div><div style="display:contents" dir="auto"><h2 id="35dc60fd-e0e4-804b-be97-e8c9334d841c" class="">📝 게시글 템플릿 (복사용)</h2></div><div style="display:contents" dir="auto"><pre id="35dc60fd-e0e4-8058-bea6-f9a645d7926f" class="code code-wrap"><code style="white-space:pre-wrap;word-break:break-all"># &quot;[ ]&quot; — [ ]
+
+요약:
+•
+•
+•
+
+[ 도입부: 공감 상황 제시 + 반전 질문 ]
+
+---
+
+## [ 챕터 제목 1 ]
+
+[ 내용 ]
+
+&gt; &quot;[ 핵심 인사이트 ]&quot;
+
+---
+
+## [ 챕터 제목 2 ]
+
+[ 내용 ]
+
+예:
+-
+-
+
+&gt; &quot;[ 핵심 인사이트 ]&quot;
+
+---
+
+## 하지만 [ 반론/한계 ]
+
+[ 내용 ]
+
+---
+
+## 앞으로 [ 전망 ]
+
+[ 열린 결말 마무리 ]</code></pre></div></div></details></div><div style="display:contents" dir="ltr"><div id="35ac60fd-e0e4-80f9-a945-dc7a54fc227c" class="collection-content"><h4 class="collection-title">게시글 초안</h4><div class="collection-content-wrapper"><table class="collection-content"><thead><tr><th><span class="icon property-icon"><img src="https://www.notion.so/icons/font_gray.svg" style="width:14px;height:14px;display:block"/></span>제목</th><th><span class="icon property-icon"><img src="https://www.notion.so/icons/description_gray.svg" style="width:14px;height:14px;display:block"/></span>요약</th></tr></thead><tbody><tr id="35ec60fd-e0e4-8085-ba48-face25cf8900"><td class="cell-title"><a href="%EA%B2%8C%EC%8B%9C%EA%B8%80%20%EC%B4%88%EC%95%88%20%EB%AA%A8%EC%9D%8C%EC%A7%91/%EA%B2%8C%EC%8B%9C%EA%B8%80%20%EC%B4%88%EC%95%88/AI%20%EC%9E%90%EB%8F%99%ED%99%94%20%EB%B0%8F%20%EA%B8%B0%ED%9A%8D%EC%9E%90%20%EC%9E%85%EC%9E%A5%20%EA%B2%8C%EC%8B%9C%EA%B8%80%2035ec60fde0e48085ba48face25cf8900.html"><span class="icon">📚</span>AI 자동화 및 기획자 입장 게시글</a></td><td class="cell-`&lt;:k">기획자의  AX 관련 수집된 정보 기반 흥미 유발 게시글</td></tr><tr id="35ec60fd-e0e4-80d7-b641-dcee7abf83e7"><td class="cell-title"><a href="%EA%B2%8C%EC%8B%9C%EA%B8%80%20%EC%B4%88%EC%95%88%20%EB%AA%A8%EC%9D%8C%EC%A7%91/%EA%B2%8C%EC%8B%9C%EA%B8%80%20%EC%B4%88%EC%95%88/%EC%9E%90%EB%8F%99%ED%99%94%20%EA%B5%AC%ED%98%84%20%EA%B8%B0%EB%B0%98%20%EA%B2%8C%EC%8B%9C%EA%B8%80%2035ec60fde0e480d7b641dcee7abf83e7.html"><span class="icon">📚</span>자동화 구현 기반 게시글</a></td><td class="cell-`&lt;:k">실제 구현한 자동화 일부 공개 및 흥미 유발 게시글</td></tr><tr id="35ec60fd-e0e4-802a-b264-c1801d46419a"><td class="cell-title"><a href="%EA%B2%8C%EC%8B%9C%EA%B8%80%20%EC%B4%88%EC%95%88%20%EB%AA%A8%EC%9D%8C%EC%A7%91/%EA%B2%8C%EC%8B%9C%EA%B8%80%20%EC%B4%88%EC%95%88/%EC%A0%9C%EB%AA%A9%20%EC%97%86%EC%9D%8C%2035ec60fde0e4802ab264c1801d46419a.html">제목 없음</a></td><td class="cell-`&lt;:k"></td></tr><tr id="35ac60fd-e0e4-8036-890d-f8da428e2d8d"><td class="cell-title"><a href="%EA%B2%8C%EC%8B%9C%EA%B8%80%20%EC%B4%88%EC%95%88%20%EB%AA%A8%EC%9D%8C%EC%A7%91/%EA%B2%8C%EC%8B%9C%EA%B8%80%20%EC%B4%88%EC%95%88/%E2%80%9CAI%ED%95%9C%ED%85%8C%20%EC%9D%BC%20%EB%A7%A1%EA%B2%BC%EB%8D%94%EB%8B%88%20%ED%8C%80%EC%9E%A5%EC%9D%B4%20%EC%82%AC%EB%9D%BC%EC%A1%8C%EB%8B%A4%E2%80%9D%20%E2%80%94%20%EC%8B%A4%EB%A6%AC%EC%BD%98%EB%B0%B8%EB%A6%AC%EC%97%90%EC%84%9C%20%EC%A7%84%EC%A7%9C%20%EB%B2%8C%EC%96%B4%EC%A7%80%EB%8A%94%20AX%20%EC%A1%B0%EC%A7%81%20%EA%B0%9C%ED%8E%B8%2035ac60fde0e48036890df8da428e2d8d.html"><span class="icon">🖊️</span>“AI한테 일 맡겼더니 팀장이 사라졌다” — 실리콘밸리에서 진짜 벌어지는 AX 조직 개편</a></td><td class="cell-`&lt;:k">• AI Agent 도입 이후 PM·기획·운영 직무 변화<br/>• 해외 기업들의 실제 업무 자동화 사례<br/>• “사람이 할 일”이 어떻게 재정의되는지 분석</td></tr><tr id="35ac60fd-e0e4-807b-9183-c726a1e6bb1d"><td class="cell-title"><a href="%EA%B2%8C%EC%8B%9C%EA%B8%80%20%EC%B4%88%EC%95%88%20%EB%AA%A8%EC%9D%8C%EC%A7%91/%EA%B2%8C%EC%8B%9C%EA%B8%80%20%EC%B4%88%EC%95%88/%E2%80%9C%ED%9A%8C%EC%9D%98%2030%EB%B6%84%20%ED%96%88%EB%8A%94%EB%8D%B0%20%EA%B2%B0%EA%B3%BC%EB%AC%BC%EC%9D%80%20AI%EA%B0%80%20%EB%A7%8C%EB%93%A4%EC%97%88%EB%8B%A4%E2%80%9D%20%E2%80%94%20%EC%9A%94%EC%A6%98%20%EC%8A%A4%ED%83%80%ED%8A%B8%EC%97%85%20%EC%9D%BC%ED%95%98%EB%8A%94%20%EB%B0%A9%EC%8B%9D%20%EC%B6%A9%EA%B2%A9%2035ac60fde0e4807b9183c726a1e6bb1d.html"><span class="icon">🖊️</span>“회의 30분 했는데 결과물은 AI가 만들었다” — 요즘 스타트업 일하는 방식 충격</a></td><td class="cell-`&lt;:k">• Cursor, Claude, GPT 기반 협업 문화<br/>• 기획자·개발자·디자이너 역할 경계 붕괴<br/>• 해외 SaaS 회사들의 AI 워크플로우 정리</td></tr><tr id="35ac60fd-e0e4-80a4-812c-f6f45e139d11"><td class="cell-title"><a href="%EA%B2%8C%EC%8B%9C%EA%B8%80%20%EC%B4%88%EC%95%88%20%EB%AA%A8%EC%9D%8C%EC%A7%91/%EA%B2%8C%EC%8B%9C%EA%B8%80%20%EC%B4%88%EC%95%88/%E2%80%9C%EA%B2%80%EC%83%89%20%EC%95%88%20%ED%95%9C%EB%8B%A4,%20AI%ED%95%9C%ED%85%8C%20%EB%AC%BC%EC%96%B4%EB%B3%B8%EB%8B%A4%E2%80%9D%20%E2%80%94%20%EA%B5%AC%EA%B8%80%20%EC%8B%9C%EB%8C%80%20%EB%81%9D%EB%82%AC%EB%8B%A4%EB%8A%94%20%EB%A7%90%20%EB%82%98%EC%98%A4%EB%8A%94%20%EC%9D%B4%EC%9C%A0%2035ac60fde0e480a4812cf6f45e139d11.html"><span class="icon">🖊️</span>“검색 안 한다, AI한테 물어본다” — 구글 시대 끝났다는 말 나오는 이유</a></td><td class="cell-`&lt;:k">• ChatGPT·Perplexity·Agent형 검색 급성장<br/>• SEO → AEO(AI Engine Optimization) 흐름<br/>• 기업들이 콘텐츠 전략을 바꾸는 이유</td></tr><tr id="35ac60fd-e0e4-809a-a466-edd4054c3258"><td class="cell-title"><a href="%EA%B2%8C%EC%8B%9C%EA%B8%80%20%EC%B4%88%EC%95%88%20%EB%AA%A8%EC%9D%8C%EC%A7%91/%EA%B2%8C%EC%8B%9C%EA%B8%80%20%EC%B4%88%EC%95%88/%E2%80%9C%EA%B8%B0%ED%9A%8D%EC%84%9C%20100%EC%9E%A5%20%EC%9D%BD%EC%9D%80%20AI%EA%B0%80%20%EB%8D%94%20%EC%9E%98%20%EA%B8%B0%ED%9A%8D%ED%95%9C%EB%8B%A4%20%E2%80%9D%20%E2%80%94%20AX%20%EC%8B%9C%EB%8C%80%20%EA%B8%B0%ED%9A%8D%EC%9E%90%EC%9D%98%20%EC%83%9D%EC%A1%B4%20%EC%A0%84%EB%9E%B5%2035ac60fde0e4809aa466edd4054c3258.html"><span class="icon">🖊️</span>“기획서 100장 읽은 AI가 더 잘 기획한다?” — AX 시대 기획자의 생존 전략</a></td><td class="cell-`&lt;:k">• 해외 Product Team의 AI 활용 방식<br/>• AI 시대에 살아남는 기획자의 핵심 역량<br/>• 단순 문서 작성보다 중요한 역할 변화</td></tr><tr id="35ac60fd-e0e4-80cc-8277-c771a01c66c5"><td class="cell-title"><a href="%EA%B2%8C%EC%8B%9C%EA%B8%80%20%EC%B4%88%EC%95%88%20%EB%AA%A8%EC%9D%8C%EC%A7%91/%EA%B2%8C%EC%8B%9C%EA%B8%80%20%EC%B4%88%EC%95%88/%E2%80%9C%EA%B0%9C%EB%B0%9C%20%EB%AA%B0%EB%9D%BC%EB%8F%84%20%EC%84%9C%EB%B9%84%EC%8A%A4%20%EB%A7%8C%EB%93%A0%EB%8B%A4%E2%80%9D%20%E2%80%94%20%EB%B9%84%EA%B0%9C%EB%B0%9C%EC%9E%90%20%EC%B0%BD%EC%97%85%20%EB%B6%90%20%EB%A7%8C%EB%93%A0%20AI%20%ED%88%B4%20TOP5%2035ac60fde0e480cc8277c771a01c66c5.html"><span class="icon">🖊️</span>“개발 몰라도 서비스 만든다” — 비개발자 창업 붐 만든 AI 툴 TOP5</a></td><td class="cell-`&lt;:k">• Bolt, Lovable, Replit Agent, Cursor 등 소개<br/>• ‘1인 SaaS’ 해외 사례<br/>• 실제 몇 시간 만에 MVP 만드는 흐름 설명</td></tr><tr id="35ac60fd-e0e4-80a3-a59a-eadf22b6d0b5"><td class="cell-title"><a href="%EA%B2%8C%EC%8B%9C%EA%B8%80%20%EC%B4%88%EC%95%88%20%EB%AA%A8%EC%9D%8C%EC%A7%91/%EA%B2%8C%EC%8B%9C%EA%B8%80%20%EC%B4%88%EC%95%88/%E2%80%9C%EC%8B%A0%EC%9E%85%EB%B3%B4%EB%8B%A4%20AI%EA%B0%80%20%EB%8D%94%20%EB%B9%A0%EB%A5%B4%EB%8B%A4%E2%80%9D%20%E2%80%94%20%EA%B8%B0%EC%97%85%EB%93%A4%EC%9D%B4%20%EC%A1%B0%EC%9A%A9%ED%9E%88%20%EC%B1%84%EC%9A%A9%20%EC%A4%84%EC%9D%B4%EB%8A%94%20%EC%A7%84%EC%A7%9C%20%EC%9D%B4%EC%9C%A0%2035ac60fde0e480a3a59aeadf22b6d0b5.html"><span class="icon">🖊️</span>“신입보다 AI가 더 빠르다” — 기업들이 조용히 채용 줄이는 진짜 이유</a></td><td class="cell-`&lt;:k">• 반복 업무 자동화<br/>• 주니어 포지션 감소 현상<br/>• 해외 빅테크 채용 변화 분석</td></tr><tr id="35ac60fd-e0e4-809d-abef-eb4c2a9a5522"><td class="cell-title"><a href="%EA%B2%8C%EC%8B%9C%EA%B8%80%20%EC%B4%88%EC%95%88%20%EB%AA%A8%EC%9D%8C%EC%A7%91/%EA%B2%8C%EC%8B%9C%EA%B8%80%20%EC%B4%88%EC%95%88/%E2%80%9CAI%20%EB%8F%84%EC%9E%85%ED%96%88%EB%8D%94%EB%8B%88%20%EC%A7%81%EC%9B%90%EB%93%A4%EC%9D%B4%20%EB%8D%94%20%EB%B0%94%EB%B9%A0%EC%A1%8C%EB%8B%A4%20%E2%80%9D%20%E2%80%94%20%ED%9A%8C%EC%82%AC%EB%93%A4%EC%9D%B4%20%EA%B2%AA%EB%8A%94%20%ED%98%84%EC%8B%A4%EC%A0%81%EC%9D%B8%20%EB%B6%80%EC%9E%91%EC%9A%A9%2035ac60fde0e4809dabefeb4c2a9a5522.html"><span class="icon">🖊️</span>“AI 도입했더니 직원들이 더 바빠졌다?” — 회사들이 겪는 현실적인 부작용</a></td><td class="cell-`&lt;:k">• AI 업무 전환 실패 사례<br/>• 관리 포인트 증가 문제<br/>• ‘AI 피로감’ 이야기</td></tr><tr id="35ac60fd-e0e4-809b-a56c-e8fe6b26ad63"><td class="cell-title"><a href="%EA%B2%8C%EC%8B%9C%EA%B8%80%20%EC%B4%88%EC%95%88%20%EB%AA%A8%EC%9D%8C%EC%A7%91/%EA%B2%8C%EC%8B%9C%EA%B8%80%20%EC%B4%88%EC%95%88/%E2%80%9C%EC%9D%B4%EC%A0%9C%20PPT%EB%8F%84%20%EC%95%88%20%EB%A7%8C%EB%93%A0%EB%8B%A4%E2%80%9D%20%E2%80%94%20%EB%B3%B4%EA%B3%A0%20%EB%AC%B8%ED%99%94%EA%B9%8C%EC%A7%80%20%EB%B0%94%EA%BE%B8%EB%8A%94%20%EC%83%9D%EC%84%B1%ED%98%95%20AI%2035ac60fde0e4809ba56ce8fe6b26ad63.html"><span class="icon">🖊️</span>“이제 PPT도 안 만든다” — 보고 문화까지 바꾸는 생성형 AI</a></td><td class="cell-`&lt;:k">• 문서·보고 자동화 흐름<br/>• 실시간 요약/리포트 문화<br/>• 해외 기업들의 업무 변화</td></tr><tr id="35ac60fd-e0e4-8037-bd6f-e7c317e4a47e"><td class="cell-title"><a href="%EA%B2%8C%EC%8B%9C%EA%B8%80%20%EC%B4%88%EC%95%88%20%EB%AA%A8%EC%9D%8C%EC%A7%91/%EA%B2%8C%EC%8B%9C%EA%B8%80%20%EC%B4%88%EC%95%88/%E2%80%9C%EC%9B%94%EA%B8%89%EB%B3%B4%EB%8B%A4%20%EC%A4%91%EC%9A%94%ED%95%9C%20%EA%B1%B4%20AI%20%ED%99%9C%EC%9A%A9%20%EB%8A%A5%EB%A0%A5%E2%80%9D%20%E2%80%94%20%EC%9A%94%EC%A6%98%20%EC%B1%84%EC%9A%A9%20%EC%8B%9C%EC%9E%A5%EC%97%90%EC%84%9C%20%EB%B2%8C%EC%96%B4%EC%A7%80%EB%8A%94%20%EB%B3%80%ED%99%94%2035ac60fde0e48037bd6fe7c317e4a47e.html"><span class="icon">🖊️</span>“월급보다 중요한 건 AI 활용 능력” — 요즘 채용 시장에서 벌어지는 변화</a></td><td class="cell-`&lt;:k">• AI 활용 경험 우대 사례<br/>• 프롬프트 역량 등장<br/>• 직무 경계 붕괴 흐름</td></tr><tr id="35ac60fd-e0e4-80fe-92d5-f0d0bbdd81b3"><td class="cell-title"><a href="%EA%B2%8C%EC%8B%9C%EA%B8%80%20%EC%B4%88%EC%95%88%20%EB%AA%A8%EC%9D%8C%EC%A7%91/%EA%B2%8C%EC%8B%9C%EA%B8%80%20%EC%B4%88%EC%95%88/%E2%80%9C%EC%82%AC%EB%9E%8C%2010%EB%AA%85%20%ED%95%98%EB%8D%98%20%EC%9D%BC%EC%9D%84%202%EB%AA%85%EC%9D%B4%20%ED%95%9C%EB%8B%A4%E2%80%9D%20%E2%80%94%20AI%20Agent%20%EC%8B%9C%EB%8C%80%20%EC%9A%B4%EC%98%81%ED%8C%80%EC%9D%98%20%EB%AF%B8%EB%9E%98%2035ac60fde0e480fe92d5f0d0bbdd81b3.html"><span class="icon">🖊️</span>“사람 10명 하던 일을 2명이 한다” — AI Agent 시대 운영팀의 미래</a></td><td class="cell-`&lt;:k">• 운영 자동화 사례<br/>• 고객 응대·QA·데이터 정리 자동화<br/>• 조직 슬림화 흐름</td></tr><tr id="35ac60fd-e0e4-806e-ae89-f8265329007c"><td class="cell-title"><a href="%EA%B2%8C%EC%8B%9C%EA%B8%80%20%EC%B4%88%EC%95%88%20%EB%AA%A8%EC%9D%8C%EC%A7%91/%EA%B2%8C%EC%8B%9C%EA%B8%80%20%EC%B4%88%EC%95%88/%E2%80%9C%ED%9A%8C%EC%82%AC%EB%B3%B4%EB%8B%A4%20%EA%B0%9C%EC%9D%B8%EC%9D%B4%20%EB%8D%94%20%EA%B0%95%ED%95%B4%EC%A7%84%EB%8B%A4%E2%80%9D%20%E2%80%94%20AI%20%EC%8B%9C%EB%8C%80%EC%97%90%20%EB%9C%A8%EB%8A%94%201%EC%9D%B8%20%EA%B8%B0%EC%97%85%20%ED%8A%B8%EB%A0%8C%EB%93%9C%2035ac60fde0e4806eae89f8265329007c.html"><span class="icon">🖊️</span>“회사보다 개인이 더 강해진다” — AI 시대에 뜨는 1인 기업 트렌드</a></td><td class="cell-`&lt;:k">• 솔로프리너 증가<br/>• AI 기반 자동 수익 구조<br/>• 해외 Creator Economy 변화</td></tr><tr id="35ac60fd-e0e4-8027-85c6-f5c07c76854b"><td class="cell-title"><a href="%EA%B2%8C%EC%8B%9C%EA%B8%80%20%EC%B4%88%EC%95%88%20%EB%AA%A8%EC%9D%8C%EC%A7%91/%EA%B2%8C%EC%8B%9C%EA%B8%80%20%EC%B4%88%EC%95%88/%E2%80%9CAI%20%EB%95%8C%EB%AC%B8%EC%97%90%20%EA%B0%9C%EB%B0%9C%20%EA%B3%B5%EB%B6%80%20%EB%A7%9D%ED%96%88%EB%8B%A4%20%E2%80%9D%20%E2%80%94%20%EA%B0%9C%EB%B0%9C%EC%9E%90%EB%93%A4%20%EC%82%AC%EC%9D%B4%EC%97%90%EC%84%9C%20%EC%A7%84%EC%A7%9C%20%EA%B0%88%EB%A6%AC%EB%8A%94%20%EC%9D%98%EA%B2%AC%2035ac60fde0e4802785c6f5c07c76854b.html"><span class="icon">🖊️</span>“AI 때문에 개발 공부 망했다?” — 개발자들 사이에서 진짜 갈리는 의견</a></td><td class="cell-`&lt;:k">• AI 코딩 툴 확산<br/>• 주니어 개발자 위기론<br/>• 오히려 중요해지는 역량</td></tr><tr id="35ac60fd-e0e4-80b6-aef4-f2fd539a1b38"><td class="cell-title"><a href="%EA%B2%8C%EC%8B%9C%EA%B8%80%20%EC%B4%88%EC%95%88%20%EB%AA%A8%EC%9D%8C%EC%A7%91/%EA%B2%8C%EC%8B%9C%EA%B8%80%20%EC%B4%88%EC%95%88/%E2%80%9C%EC%9D%B4%EC%A0%9C%20%EC%95%B1%EB%B3%B4%EB%8B%A4%20Agent%20%EB%A7%8C%EB%93%A0%EB%8B%A4%E2%80%9D%20%E2%80%94%20%EC%8B%A4%EB%A6%AC%EC%BD%98%EB%B0%B8%EB%A6%AC%20%EC%B5%9C%EC%8B%A0%20%ED%8A%B8%EB%A0%8C%EB%93%9C%20%EC%A0%95%EB%A6%AC%2035ac60fde0e480b6aef4f2fd539a1b38.html"><span class="icon">🖊️</span>“이제 앱보다 Agent 만든다” — 실리콘밸리 최신 트렌드 정리</a></td><td class="cell-`&lt;:k">• 단순 서비스 → AI 에이전트 전환<br/>• MCP·멀티 Agent 흐름<br/>• AI 자동 실행 구조 설명</td></tr><tr id="35ac60fd-e0e4-8057-b182-ef1dd6bc199f"><td class="cell-title"><a href="%EA%B2%8C%EC%8B%9C%EA%B8%80%20%EC%B4%88%EC%95%88%20%EB%AA%A8%EC%9D%8C%EC%A7%91/%EA%B2%8C%EC%8B%9C%EA%B8%80%20%EC%B4%88%EC%95%88/%E2%80%9C%EC%97%85%EB%AC%B4%20%EB%B3%B4%EA%B3%A0%203%EC%8B%9C%EA%B0%84%20%E2%86%92%2010%EB%B6%84%E2%80%9D%20%E2%80%94%20%EC%A7%81%EC%9E%A5%EC%9D%B8%EB%93%A4%EC%9D%B4%20%EB%AA%B0%EB%9E%98%20%EC%93%B0%EB%8A%94%20AI%20%EC%9E%90%EB%8F%99%ED%99%94%20%EC%A1%B0%ED%95%A9%2035ac60fde0e48057b182ef1dd6bc199f.html"><span class="icon">🖊️</span>“업무 보고 3시간 → 10분” — 직장인들이 몰래 쓰는 AI 자동화 조합</a></td><td class="cell-`&lt;:k">• Notion AI + GPT + Slack 자동화<br/>• 회의록 자동 생성<br/>• 실무자 활용 사례 중심</td></tr><tr id="35ac60fd-e0e4-807e-885f-e1be994b8177"><td class="cell-title"><a href="%EA%B2%8C%EC%8B%9C%EA%B8%80%20%EC%B4%88%EC%95%88%20%EB%AA%A8%EC%9D%8C%EC%A7%91/%EA%B2%8C%EC%8B%9C%EA%B8%80%20%EC%B4%88%EC%95%88/%E2%80%9CAI%EA%B0%80%20%EB%A7%8C%EB%93%A0%20%EC%84%9C%EB%B9%84%EC%8A%A4%EC%9D%B8%EC%A7%80%20%EC%95%84%EB%AC%B4%EB%8F%84%20%EB%AA%A8%EB%A5%B8%EB%8B%A4%E2%80%9D%20%E2%80%94%20%EC%9D%B4%EB%AF%B8%20%EC%8B%9C%EC%9E%91%EB%90%9C%20%E2%80%98AI%20%EB%84%A4%EC%9D%B4%ED%8B%B0%EB%B8%8C%20%ED%9A%8C%EC%82%AC%E2%80%99%20%EC%8B%9C%EB%8C%80%2035ac60fde0e4807e885fe1be994b8177.html"><span class="icon">🖊️</span>“AI가 만든 서비스인지 아무도 모른다” — 이미 시작된 ‘AI 네이티브 회사’ 시대</a></td><td class="cell-`&lt;:k">• AI 중심 조직 구조<br/>• 최소 인원 운영 사례<br/>• 해외 스타트업 방식 분석</td></tr></tbody></table></div><br/><br/></div></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80b9-a7c9-ee519ae54677" class="">
+</p></div></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>

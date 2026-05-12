@@ -22,7 +22,7 @@ export function ReferencesPage() {
   const [appliedKeyword, setAppliedKeyword] = useState('')
   const [parentFilter, setParentFilter] = useState('')
   const [childFilter, setChildFilter] = useState('')
-  const [activeFilter, setActiveFilter] = useState<'all' | 'active' | 'inactive'>('all')
+  const [activeFilter, setActiveFilter] = useState<'all' | 'active' | 'inactive'>('active')
   const [dateFrom, setDateFrom] = useState('')
   const [dateTo, setDateTo] = useState('')
   const [page, setPage] = useState(1)

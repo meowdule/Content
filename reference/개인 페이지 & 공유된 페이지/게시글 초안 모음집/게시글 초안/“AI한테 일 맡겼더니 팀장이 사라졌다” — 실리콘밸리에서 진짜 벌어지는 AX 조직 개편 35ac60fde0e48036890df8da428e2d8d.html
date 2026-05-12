@@ -1,0 +1,747 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>“AI한테 일 맡겼더니 팀장이 사라졌다” — 실리콘밸리에서 진짜 벌어지는 AX 조직 개편</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+/* Override strong tags inside headings to maintain consistent weight */
+h1 strong,
+h2 strong,
+h3 strong {
+	font-weight: 600;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 10px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+
+	table.collection-content {
+		width: 100%;
+		table-layout: fixed;
+	}
+
+	table.collection-content th,
+	table.collection-content td {
+		overflow-wrap: anywhere;
+	}
+
+	table.collection-content td > .user,
+	table.collection-content td > time {
+		white-space: pre-wrap;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content-wrapper {
+	overflow-x: auto;
+}
+
+@media only print {
+	.collection-content-wrapper {
+		overflow-x: visible;
+	}
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.collection-content td {
+	white-space: pre-wrap;
+	word-break: break-word;
+}
+
+.column-list {
+	display: flex;
+	gap: 46px;
+}
+
+.column {
+	min-width: 0;
+	overflow: hidden;
+}
+
+.column > *:first-child {
+	margin-top: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+table {
+	border-collapse: collapse;
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol.numbered-list.numbered-list-digits-2 {
+	padding-inline-start: 2em;
+}
+
+ol.numbered-list.numbered-list-digits-3plus {
+	padding-inline-start: 2.4em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+	margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.callout img.notion-static-icon {
+	width: 1em;
+	height: 1em;
+}
+
+.callout p {
+	margin: 0;
+}
+
+.callout h1,
+.callout h2,
+.callout h3 {
+	margin: 0 0 0.6rem;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+blockquote.quote-large {
+	font-size: 1.25em;
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.highlight-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.highlight-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.highlight-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.highlight-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.highlight-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.highlight-default_background {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray_background {
+	background: rgba(42, 28, 0, 0.07);
+}
+.highlight-brown_background {
+	background: rgba(139, 46, 0, 0.086);
+}
+.highlight-orange_background {
+	background: rgba(224, 101, 1, 0.129);
+}
+.highlight-yellow_background {
+	background: rgba(211, 168, 0, 0.137);
+}
+.highlight-teal_background {
+	background: rgba(0, 100, 45, 0.09);
+}
+.highlight-blue_background {
+	background: rgba(0, 124, 215, 0.094);
+}
+.highlight-purple_background {
+	background: rgba(102, 0, 178, 0.078);
+}
+.highlight-pink_background {
+	background: rgba(197, 0, 93, 0.086);
+}
+.highlight-red_background {
+	background: rgba(223, 22, 0, 0.094);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.block-color-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.block-color-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.block-color-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.block-color-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.block-color-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.block-color-default_background {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray_background {
+	background: rgba(240, 239, 237, 1);
+}
+.block-color-brown_background {
+	background: rgba(245, 237, 233, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 235, 222, 1);
+}
+.block-color-yellow_background {
+	background: rgba(249, 243, 220, 1);
+}
+.block-color-teal_background {
+	background: rgba(232, 241, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(229, 242, 252, 1);
+}
+.block-color-purple_background {
+	background: rgba(243, 235, 249, 1);
+}
+.block-color-pink_background {
+	background: rgba(250, 233, 241, 1);
+}
+.block-color-red_background {
+	background: rgba(252, 233, 231, 1);
+}
+.select-value-color-default { background-color: rgba(42, 28, 0, 0.07); }
+.select-value-color-gray { background-color: rgba(28, 19, 1, 0.11); }
+.select-value-color-brown { background-color: rgba(127, 51, 0, 0.156); }
+.select-value-color-orange { background-color: rgba(196, 88, 0, 0.203); }
+.select-value-color-yellow { background-color: rgba(209, 156, 0, 0.282); }
+.select-value-color-green { background-color: rgba(0, 96, 38, 0.156); }
+.select-value-color-blue { background-color: rgba(0, 118, 217, 0.203); }
+.select-value-color-purple { background-color: rgba(92, 0, 163, 0.141); }
+.select-value-color-pink { background-color: rgba(183, 0, 78, 0.152); }
+.select-value-color-red { background-color: rgba(206, 24, 0, 0.164); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="35ac60fd-e0e4-8036-890d-f8da428e2d8d" class="page sans"><header><div class="page-header-icon undefined"><span class="icon">🖊️</span></div><h1 class="page-title" dir="auto"><strong>“AI한테 일 맡겼더니 팀장이 사라졌다” — 실리콘밸리에서 진짜 벌어지는 AX 조직 개편</strong></h1><p class="page-description" dir="auto"></p><table class="properties"><tbody><tr class="property-row property-row-relation"><th><span class="icon property-icon"><img src="https://www.notion.so/icons/arrow-northeast_gray.svg" style="width:14px;height:14px;display:block"/></span>상위 항목</th><td><a href="AI%20%EC%9E%90%EB%8F%99%ED%99%94%20%EB%B0%8F%20%EA%B8%B0%ED%9A%8D%EC%9E%90%20%EC%9E%85%EC%9E%A5%20%EA%B2%8C%EC%8B%9C%EA%B8%80%2035ec60fde0e48085ba48face25cf8900.html"><span class="icon">📚</span>AI 자동화 및 기획자 입장 게시글</a></td></tr><tr class="property-row property-row-text"><th><span class="icon property-icon"><img src="https://www.notion.so/icons/description_gray.svg" style="width:14px;height:14px;display:block"/></span>요약</th><td>• AI Agent 도입 이후 PM·기획·운영 직무 변화<br/>• 해외 기업들의 실제 업무 자동화 사례<br/>• “사람이 할 일”이 어떻게 재정의되는지 분석</td></tr></tbody></table></header><div class="page-body"><div style="display:contents" dir="auto"><p id="35dc60fd-e0e4-80bd-9f60-ef8cda5c4e87" class="">요즘 실리콘밸리에서는 AI가 단순히 업무를 도와주는 수준을 넘어서,</p></div><div style="display:contents" dir="auto"><p id="35dc60fd-e0e4-8027-a5bd-ebcec3a3c82e" class="">아예 “팀장 역할” 자체를 대체하기 시작했다는 이야기가 나오고 있습니다.</p></div><div style="display:contents" dir="auto"><p id="35dc60fd-e0e4-8073-8c18-f542d2fcd5b4" class="">실제로 일부 스타트업들은<br/>회의 정리, 업무 분배, 문서 작성까지<br/>사람보다 AI에게 먼저 맡기고 있다고 합니다.</p></div><div style="display:contents" dir="auto"><p id="35dc60fd-e0e4-803d-9c03-ea5ca2da549f" class="">그런데 더 충격적인 건,<br/>AI를 가장 적극적으로 도입한 조직일수록<br/>오히려 사람 역할이 더 빠르게 사라지고 있다는 점입니다.</p></div><div style="display:contents" dir="auto"><p id="35dc60fd-e0e4-8027-8065-e6d8e81f4e52" class="">과연 지금 해외 기업들은<br/>조직을 어떻게 바꾸고 있을까요?</p></div><div style="display:contents" dir="auto"><p id="35dc60fd-e0e4-801a-97ba-c62deb3eca30" class="">
+</p></div><div style="display:contents" dir="auto"><p id="35dc60fd-e0e4-8077-abcd-d2395a8a66bb" class="">
+</p></div><div style="display:contents" dir="ltr"><nav id="35ac60fd-e0e4-806c-946a-cd538f602961" class="block-color-gray table_of_contents"><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#35ac60fd-e0e4-80d0-998e-ef16abe45ca4">AI한테 일 맡겼더니 팀장이 사라졌다</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#35ac60fd-e0e4-806c-9c39-f07d98897d79">실리콘밸리에서 실제로 벌어지는 AX 조직 변화</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#35ac60fd-e0e4-804d-815e-d5d022885dd2">“일단 AI에게 먼저 시킨다”</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#35ac60fd-e0e4-804a-ace6-f9dbfd011f7e">중간 관리자 역할이 줄어드는 이유</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#35ac60fd-e0e4-8014-a436-e31b0071b47f">요즘 해외 기업들이 더 중요하게 보는 능력</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#35ac60fd-e0e4-8014-96be-d12b9e2f284f">그래서 사람은 필요 없어지는 걸까?</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#35ac60fd-e0e4-809b-a0bb-c22d058808db">앞으로 가장 위험한 직무는?</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#35ac60fd-e0e4-8015-bdfe-fb0eb950282d">결국 AX 시대의 핵심은</a></div></nav></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8091-a37c-e989539fb055" class="">
+</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8075-9f1b-fb9804cc1bd9" class="">
+</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80b5-93e3-dc78bc5d55cb" class="">요즘 실리콘밸리에서는</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8043-bec7-f0625e4fbfa3" class="">“AI를 얼마나 잘 쓰냐”보다 더 중요한 질문이 생겼습니다.</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80c4-8963-cb659a6a85e1" class="">바로</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8064-af3f-d4d8dbbb69e1" class=""><strong>“이 업무, 사람 팀장이 꼭 필요한가?”</strong> 입니다.</p></div><div style="display:contents" dir="auto"><hr id="35ac60fd-e0e4-8047-8dbf-d0606414dd58"/></div><div style="display:contents" dir="auto"><h1 id="35ac60fd-e0e4-80d0-998e-ef16abe45ca4" class="">AI한테 일 맡겼더니 팀장이 사라졌다</h1></div><div style="display:contents" dir="auto"><h2 id="35ac60fd-e0e4-806c-9c39-f07d98897d79" class="">실리콘밸리에서 실제로 벌어지는 AX 조직 변화</h2></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80b2-89a2-d5d2c110a520" class="">예전에는 일이 이렇게 흘러갔습니다.</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-806a-8334-d1e6344d5b45" class="">기획자가 문서 작성 → 팀장이 검토 → 개발 전달 → 수정 요청 → 다시 회의</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80a3-964e-f8dbb6c2211d" class="">하지만 요즘 AI를 적극적으로 도입한 팀들은</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-807a-9d5e-e0fea4752aa0" class="">중간 과정 자체를 없애고 있습니다.</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-803c-9c8a-c3f4d7d1bbb8" class="">회의를 줄이는 수준이 아니라</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80d1-92f8-ef15116faf1e" class="">“관리” 역할 자체가 AI로 대체되기 시작한 겁니다.</p></div><div style="display:contents" dir="auto"><hr id="35ac60fd-e0e4-800f-adbe-f26e38c42b15"/></div><div style="display:contents" dir="auto"><h2 id="35ac60fd-e0e4-804d-815e-d5d022885dd2" class="">“일단 AI에게 먼저 시킨다”</h2></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8039-9f6b-cca3a8052460" class="">최근 해외 스타트업들의 공통적인 업무 방식은 단순합니다.</p></div><div style="display:contents" dir="auto"><blockquote id="35ac60fd-e0e4-8093-98ac-e06c268800ec" class="">사람이 하기 전에 AI에게 먼저 맡겨본다.</blockquote></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-80e2-91aa-d456bc0be6f4" class="bulleted-list"><li style="list-style-type:disc">회의 내용 정리</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-805d-aa5b-eabeb878c9bd" class="bulleted-list"><li style="list-style-type:disc">일정 생성</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-8016-8a30-eda0ab65bf3a" class="bulleted-list"><li style="list-style-type:disc">Jira 티켓 작성</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-8079-be50-fcf601468703" class="bulleted-list"><li style="list-style-type:disc">요구사항 문서화</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-8047-9033-d5dce8609d1e" class="bulleted-list"><li style="list-style-type:disc">QA 테스트 시나리오 생성</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-8003-9be3-d20d6499b85f" class="bulleted-list"><li style="list-style-type:disc">코드 리뷰 초안</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-80a0-b8ea-f49f1c6ebfb7" class="bulleted-list"><li style="list-style-type:disc">고객 응대 초안</li></ul></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-809d-bf7a-cf8186e25bd2" class="">이런 작업들은 이미 AI가 상당 부분 처리하고 있습니다.</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-801e-ae1d-ed687f3c295e" class="">실제로 많은 팀들이</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8030-b6e7-d60c335a50df" class="">“문서를 잘 쓰는 사람”보다</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8033-8f32-fd271376a5ef" class="">“AI에게 원하는 결과를 정확히 요청하는 사람”을 더 높게 평가하기 시작했습니다.</p></div><div style="display:contents" dir="auto"><hr id="35ac60fd-e0e4-8074-8074-cc216174c4ea"/></div><div style="display:contents" dir="auto"><h2 id="35ac60fd-e0e4-804a-ace6-f9dbfd011f7e" class="">중간 관리자 역할이 줄어드는 이유</h2></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-800b-830b-c371d1432808" class="">기존 팀장의 핵심 역할은 크게 3가지였습니다.</p></div><div style="display:contents" dir="auto"><ol type="1" id="35ac60fd-e0e4-8078-a241-e3b66f40ab6d" class="numbered-list" start="1"><li>업무 정리</li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="35ac60fd-e0e4-801c-9c75-fe9948e0b58e" class="numbered-list" start="2"><li>작업 분배</li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="35ac60fd-e0e4-809e-92cd-f08cb0ee02d7" class="numbered-list" start="3"><li>진행 상황 관리</li></ol></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80df-a4c3-f3ef4e5d77d4" class="">그런데 AI Agent가 등장하면서 이 흐름이 바뀌고 있습니다.</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8001-8557-e5f9bbc5e831" class="">예를 들어:</p></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-8019-bd4a-d0663070c10d" class="bulleted-list"><li style="list-style-type:disc">회의 내용을 자동으로 요약하고</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-804d-a94a-d49df3f5435c" class="bulleted-list"><li style="list-style-type:disc">해야 할 작업을 추출하고</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-8024-bf3c-c98f2947a52b" class="bulleted-list"><li style="list-style-type:disc">담당자별로 태스크를 생성하고</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-8007-a576-d5273defa8c8" class="bulleted-list"><li style="list-style-type:disc">일정까지 자동 연결합니다.</li></ul></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8048-a8a7-c7444ce679e3" class="">즉,</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80eb-ae26-ca54d109a454" class="">“사람이 전달하던 과정”이 사라지는 중입니다.</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8047-b2ae-cc13bae7acb7" class="">특히 Cursor, Notion AI, Linear, Atlassian Intelligence 같은 툴을 쓰는 조직에서는</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8087-b65a-e0e89d3b02ae" class="">관리보다 “의사결정”만 사람이 담당하는 구조가 빠르게 늘어나고 있습니다.</p></div><div style="display:contents" dir="auto"><hr id="35ac60fd-e0e4-8087-a9ee-efbfaf236d6a"/></div><div style="display:contents" dir="auto"><h2 id="35ac60fd-e0e4-8014-a436-e31b0071b47f" class="">요즘 해외 기업들이 더 중요하게 보는 능력</h2></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8007-8eda-c804101b93b1" class="">흥미로운 건</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8010-a674-ca072c6c94fa" class="">AI 시대가 오면서 오히려 “기획력”의 기준이 달라졌다는 점입니다.</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8012-8b03-ffcc23fb59e5" class="">예전:</p></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-8021-8203-fc084875105d" class="bulleted-list"><li style="list-style-type:disc">문서를 얼마나 잘 쓰는가</li></ul></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80e4-828c-e3a7341d9b78" class="">지금:</p></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-80b6-9226-de29d392ae94" class="bulleted-list"><li style="list-style-type:disc">AI에게 얼마나 정확하게 문제를 설명하는가</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-809c-9e17-cf82b9d98167" class="bulleted-list"><li style="list-style-type:disc">결과를 검증할 수 있는가</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-80be-8bb7-e2a3dce2dc9b" class="bulleted-list"><li style="list-style-type:disc">빠르게 방향을 수정할 수 있는가</li></ul></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-806c-b66d-c572b21e065b" class="">즉,</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-803a-8f9a-e400aaf057b4" class="">“직접 만드는 능력”보다</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8046-a4df-f90fd61d7c18" class="">“AI를 통해 결과를 만드는 능력”이 중요해지고 있습니다.</p></div><div style="display:contents" dir="auto"><hr id="35ac60fd-e0e4-80c4-9202-c18675106a0b"/></div><div style="display:contents" dir="auto"><h2 id="35ac60fd-e0e4-8014-96be-d12b9e2f284f" class="">그래서 사람은 필요 없어지는 걸까?</h2></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80e9-9b6e-e7b2e1b6b43d" class="">오히려 반대입니다.</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80db-9ae2-ea9464a2ec31" class="">단순 관리 역할은 줄어들 가능성이 높지만,</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80bb-912c-f04aee2774a2" class="">문제를 정의하고 방향을 결정하는 역할은 더 중요해지고 있습니다.</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-808c-b41c-d2dbec6a91b9" class="">AI는 빠르게 실행하지만</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80b4-8d0b-efecfda03c12" class="">“무엇을 해야 하는지”까지 완벽하게 정하진 못합니다.</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-809d-b730-e8d2aafebea7" class="">결국 남는 사람은:</p></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-8077-b666-d14bdebdce62" class="bulleted-list"><li style="list-style-type:disc">문제를 구조화하는 사람</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-80b6-882d-e171b107fe30" class="bulleted-list"><li style="list-style-type:disc">AI 결과를 검증하는 사람</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-80cc-8f13-d65cdcd61604" class="bulleted-list"><li style="list-style-type:disc">의사결정을 내리는 사람</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-800f-ae85-f9bb09e2327b" class="bulleted-list"><li style="list-style-type:disc">고객 관점을 이해하는 사람</li></ul></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8092-b394-c3b91377ce71" class="">입니다.</p></div><div style="display:contents" dir="auto"><hr id="35ac60fd-e0e4-80db-acfc-ee04a1ba55c5"/></div><div style="display:contents" dir="auto"><h2 id="35ac60fd-e0e4-809b-a0bb-c22d058808db" class="">앞으로 가장 위험한 직무는?</h2></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8026-9fbc-f86948400249" class="">해외에서는 이미 이런 이야기가 나옵니다.</p></div><div style="display:contents" dir="auto"><blockquote id="35ac60fd-e0e4-808d-9fc1-ddcc920ca930" class="">“반복적으로 전달만 하는 역할은 가장 먼저 줄어든다.”</blockquote></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80db-b6dc-c65d1cbbb10c" class="">단순 보고,</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80ff-a224-fea37a3d415e" class="">중간 전달,</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80ab-82e6-e4c735712239" class="">형식적인 문서 작성만 하는 업무는 AI 대체 속도가 매우 빠릅니다.</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8096-8461-c6903141a77d" class="">반면:</p></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-80b0-b5de-d6b10bec6615" class="bulleted-list"><li style="list-style-type:disc">전략</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-800b-b58f-c7469f59a606" class="bulleted-list"><li style="list-style-type:disc">설계</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-8062-8b43-da1c68ad8998" class="bulleted-list"><li style="list-style-type:disc">판단</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-8024-b69b-ec426f68d5fb" class="bulleted-list"><li style="list-style-type:disc">고객 이해</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-80c5-9a9b-e2b2b441e861" class="bulleted-list"><li style="list-style-type:disc">커뮤니케이션</li></ul></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8037-845f-e55ba8333871" class="">영역은 오히려 더 중요해지고 있습니다.</p></div><div style="display:contents" dir="auto"><hr id="35ac60fd-e0e4-8046-8afc-f2d3161ab1ae"/></div><div style="display:contents" dir="auto"><h2 id="35ac60fd-e0e4-8015-bdfe-fb0eb950282d" class="">결국 AX 시대의 핵심은</h2></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8093-b177-c37654ad9df5" class="">AI를 쓰느냐 마느냐가 아닙니다.</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8052-b836-dc2e61b3d615" class="">이미 대부분의 회사는</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-809b-b5a0-e6bb31de2441" class="">“어떻게 조직 전체를 AI 중심으로 바꿀 것인가”를 고민하기 시작했습니다.</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80a6-8fb6-ea0da4681971" class="">그리고 그 변화는 생각보다 훨씬 빠르게 진행되고 있습니다.</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8061-a3b7-db8c9e2b5bc2" class="">몇 년 뒤에는</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8096-8c3c-dcaccac8094e" class="">“AI를 활용하는 팀”이 아니라</p></div><div style="display:contents" dir="auto"><blockquote id="35ac60fd-e0e4-807e-8a68-d301e83c2958" class="">“AI 없이 어떻게 일했지?”</blockquote></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-801c-a0a3-febe5332c3dd" class="">라고 말하는 시대가 올지도 모릅니다.</p></div></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>

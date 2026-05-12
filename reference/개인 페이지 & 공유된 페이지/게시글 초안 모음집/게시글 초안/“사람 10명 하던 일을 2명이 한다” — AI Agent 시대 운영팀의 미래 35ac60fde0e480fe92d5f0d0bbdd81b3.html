@@ -1,0 +1,745 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>“사람 10명 하던 일을 2명이 한다” — AI Agent 시대 운영팀의 미래</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+/* Override strong tags inside headings to maintain consistent weight */
+h1 strong,
+h2 strong,
+h3 strong {
+	font-weight: 600;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 10px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+
+	table.collection-content {
+		width: 100%;
+		table-layout: fixed;
+	}
+
+	table.collection-content th,
+	table.collection-content td {
+		overflow-wrap: anywhere;
+	}
+
+	table.collection-content td > .user,
+	table.collection-content td > time {
+		white-space: pre-wrap;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content-wrapper {
+	overflow-x: auto;
+}
+
+@media only print {
+	.collection-content-wrapper {
+		overflow-x: visible;
+	}
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.collection-content td {
+	white-space: pre-wrap;
+	word-break: break-word;
+}
+
+.column-list {
+	display: flex;
+	gap: 46px;
+}
+
+.column {
+	min-width: 0;
+	overflow: hidden;
+}
+
+.column > *:first-child {
+	margin-top: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+table {
+	border-collapse: collapse;
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol.numbered-list.numbered-list-digits-2 {
+	padding-inline-start: 2em;
+}
+
+ol.numbered-list.numbered-list-digits-3plus {
+	padding-inline-start: 2.4em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+	margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.callout img.notion-static-icon {
+	width: 1em;
+	height: 1em;
+}
+
+.callout p {
+	margin: 0;
+}
+
+.callout h1,
+.callout h2,
+.callout h3 {
+	margin: 0 0 0.6rem;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+blockquote.quote-large {
+	font-size: 1.25em;
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.highlight-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.highlight-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.highlight-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.highlight-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.highlight-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.highlight-default_background {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray_background {
+	background: rgba(42, 28, 0, 0.07);
+}
+.highlight-brown_background {
+	background: rgba(139, 46, 0, 0.086);
+}
+.highlight-orange_background {
+	background: rgba(224, 101, 1, 0.129);
+}
+.highlight-yellow_background {
+	background: rgba(211, 168, 0, 0.137);
+}
+.highlight-teal_background {
+	background: rgba(0, 100, 45, 0.09);
+}
+.highlight-blue_background {
+	background: rgba(0, 124, 215, 0.094);
+}
+.highlight-purple_background {
+	background: rgba(102, 0, 178, 0.078);
+}
+.highlight-pink_background {
+	background: rgba(197, 0, 93, 0.086);
+}
+.highlight-red_background {
+	background: rgba(223, 22, 0, 0.094);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.block-color-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.block-color-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.block-color-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.block-color-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.block-color-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.block-color-default_background {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray_background {
+	background: rgba(240, 239, 237, 1);
+}
+.block-color-brown_background {
+	background: rgba(245, 237, 233, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 235, 222, 1);
+}
+.block-color-yellow_background {
+	background: rgba(249, 243, 220, 1);
+}
+.block-color-teal_background {
+	background: rgba(232, 241, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(229, 242, 252, 1);
+}
+.block-color-purple_background {
+	background: rgba(243, 235, 249, 1);
+}
+.block-color-pink_background {
+	background: rgba(250, 233, 241, 1);
+}
+.block-color-red_background {
+	background: rgba(252, 233, 231, 1);
+}
+.select-value-color-default { background-color: rgba(42, 28, 0, 0.07); }
+.select-value-color-gray { background-color: rgba(28, 19, 1, 0.11); }
+.select-value-color-brown { background-color: rgba(127, 51, 0, 0.156); }
+.select-value-color-orange { background-color: rgba(196, 88, 0, 0.203); }
+.select-value-color-yellow { background-color: rgba(209, 156, 0, 0.282); }
+.select-value-color-green { background-color: rgba(0, 96, 38, 0.156); }
+.select-value-color-blue { background-color: rgba(0, 118, 217, 0.203); }
+.select-value-color-purple { background-color: rgba(92, 0, 163, 0.141); }
+.select-value-color-pink { background-color: rgba(183, 0, 78, 0.152); }
+.select-value-color-red { background-color: rgba(206, 24, 0, 0.164); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="35ac60fd-e0e4-80fe-92d5-f0d0bbdd81b3" class="page sans"><header><div class="page-header-icon undefined"><span class="icon">🖊️</span></div><h1 class="page-title" dir="auto"><strong>“사람 10명 하던 일을 2명이 한다” — AI Agent 시대 운영팀의 미래</strong></h1><p class="page-description" dir="auto"></p><table class="properties"><tbody><tr class="property-row property-row-relation"><th><span class="icon property-icon"><img src="https://www.notion.so/icons/arrow-northeast_gray.svg" style="width:14px;height:14px;display:block"/></span>상위 항목</th><td><a href="AI%20%EC%9E%90%EB%8F%99%ED%99%94%20%EB%B0%8F%20%EA%B8%B0%ED%9A%8D%EC%9E%90%20%EC%9E%85%EC%9E%A5%20%EA%B2%8C%EC%8B%9C%EA%B8%80%2035ec60fde0e48085ba48face25cf8900.html"><span class="icon">📚</span>AI 자동화 및 기획자 입장 게시글</a></td></tr><tr class="property-row property-row-text"><th><span class="icon property-icon"><img src="https://www.notion.so/icons/description_gray.svg" style="width:14px;height:14px;display:block"/></span>요약</th><td>• 운영 자동화 사례<br/>• 고객 응대·QA·데이터 정리 자동화<br/>• 조직 슬림화 흐름</td></tr></tbody></table></header><div class="page-body"><div style="display:contents" dir="auto"><p id="35dc60fd-e0e4-8050-8072-c202790253e3" class="">요즘 기업들은</p></div><div style="display:contents" dir="auto"><p id="35dc60fd-e0e4-8043-9905-c4963ee3d567" class="">운영팀을 더 뽑기보다:</p></div><div style="display:contents" dir="auto"><blockquote id="35dc60fd-e0e4-8055-81c2-e731d4707f89" class="">“이 업무, AI가 대신할 수 없을까?”</blockquote></div><div style="display:contents" dir="auto"><p id="35dc60fd-e0e4-80a7-94e4-f2c5d16c513d" class="">를 먼저 고민하기 시작했습니다.</p></div><div style="display:contents" dir="auto"><p id="35dc60fd-e0e4-80a6-a050-f4db101e0b75" class="">실제로 최근 AI Agent는:</p></div><div style="display:contents" dir="auto"><ul id="35dc60fd-e0e4-8017-b33b-c4bde057108b" class="bulleted-list"><li style="list-style-type:disc">고객 문의 응답</li></ul></div><div style="display:contents" dir="auto"><ul id="35dc60fd-e0e4-8030-9a8b-c3bb0122a5ad" class="bulleted-list"><li style="list-style-type:disc">QA 체크</li></ul></div><div style="display:contents" dir="auto"><ul id="35dc60fd-e0e4-8069-bec6-e9a35da7432b" class="bulleted-list"><li style="list-style-type:disc">로그 분석</li></ul></div><div style="display:contents" dir="auto"><ul id="35dc60fd-e0e4-80bc-885a-dd4107b92ef1" class="bulleted-list"><li style="list-style-type:disc">리포트 정리</li></ul></div><div style="display:contents" dir="auto"><p id="35dc60fd-e0e4-8091-ad9d-e7780401da88" class="">같은 반복 운영 업무를 빠르게 가져오고 있습니다.</p></div><div style="display:contents" dir="auto"><p id="35dc60fd-e0e4-80c2-abe3-d8f9f2523a44" class="">흥미로운 건,<br/>AI를 적극 도입한 조직일수록<br/>운영팀 역할 자체가 완전히 달라지고 있다는 점입니다.</p></div><div style="display:contents" dir="auto"><p id="35dc60fd-e0e4-8000-b425-c48ec9ccda17" class="">과연 앞으로 운영팀은<br/>어떤 모습으로 바뀌게 될까요?</p></div><div style="display:contents" dir="auto"><p id="35dc60fd-e0e4-803d-ac26-d4ed2a87386d" class="">
+</p></div><div style="display:contents" dir="ltr"><nav id="35ac60fd-e0e4-8013-abf4-c05ea0e061a8" class="block-color-gray table_of_contents"><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#35ac60fd-e0e4-80c4-b982-d6b20b2d5944">운영 업무는 원래 AI가 가장 잘하는 영역이었다</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#35ac60fd-e0e4-80be-aafb-f1ac84e1e853">최근 기업들이 가장 먼저 줄이는 업무</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#35ac60fd-e0e4-801e-a459-fe449a75be10">고객 응대</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#35ac60fd-e0e4-8056-92a6-cc2568ff2922">QA 운영</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#35ac60fd-e0e4-80ee-879f-cf784813e232">데이터 정리</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#35ac60fd-e0e4-80a0-84bb-ed402f640306">내부 운영</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#35ac60fd-e0e4-800d-a23b-e6879d4e58ba">그래서 실제 조직 구조도 달라지고 있다</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#35ac60fd-e0e4-80b0-bc58-da04255241c2">특히 “야간 운영” 영역 변화가 크다</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#35ac60fd-e0e4-807f-a4cd-eae0bce50fc5">그런데 운영팀이 완전히 없어질까?</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#35ac60fd-e0e4-8002-bac8-e5960b7930e0">그래서 더 중요해지는 사람 역량</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#35ac60fd-e0e4-80ec-ad1f-f6cbf713ce49">실제 현업에서는 벌써 이런 변화가 나온다</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#35ac60fd-e0e4-80c6-a1c4-f3ac9784a7db">하지만 부작용도 있다</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#35ac60fd-e0e4-8031-be04-c0a13f1e36e8">결국 핵심은 “사람 없는 운영”이 아니다</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#35ac60fd-e0e4-80f5-998d-cca09ff91b50">앞으로 운영팀은 더 작아질 가능성이 크다</a></div></nav></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80f7-8815-ff7a5fa0f701" class="">
+</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80e7-b0dd-c70e137cbd15" class="">예전 운영팀은 늘 사람이 부족했습니다.</p></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-80d0-a2d9-e5dc00e0bdee" class="bulleted-list"><li style="list-style-type:disc">문의 대응</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-80e9-b486-c15c0984cf86" class="bulleted-list"><li style="list-style-type:disc">데이터 정리</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-80ff-8014-fb0acd92ccad" class="bulleted-list"><li style="list-style-type:disc">모니터링</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-8043-9d7b-cf9ed381372c" class="bulleted-list"><li style="list-style-type:disc">공지 작성</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-804b-b27c-db16804bfe95" class="bulleted-list"><li style="list-style-type:disc">QA 체크</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-8067-bbb5-e365f6584071" class="bulleted-list"><li style="list-style-type:disc">반복 업무 처리</li></ul></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-800f-99ec-e181d421d3d8" class="">서비스가 커질수록</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8042-be5d-c3837b83d2ab" class="">운영 인력도 같이 늘어나는 구조였습니다.</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-807d-ad45-c98274211582" class="">그런데 최근 AI Agent가 등장하면서</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80ab-83b9-c438591ea6f6" class="">이 공식이 빠르게 바뀌고 있습니다.</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-802d-ba06-f2294666d123" class="">실제로 요즘 기업들이 가장 많이 고민하는 건:</p></div><div style="display:contents" dir="auto"><blockquote id="35ac60fd-e0e4-8097-975e-c61d133578f9" class="">“운영 업무를 어디까지 AI가 대신할 수 있을까?”</blockquote></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8031-b6ef-ced188f527e6" class="">입니다.</p></div><div style="display:contents" dir="auto"><hr id="35ac60fd-e0e4-8057-b2b3-d4e22aaa485c"/></div><div style="display:contents" dir="auto"><h2 id="35ac60fd-e0e4-80c4-b982-d6b20b2d5944" class="">운영 업무는 원래 AI가 가장 잘하는 영역이었다</h2></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8082-9d05-f276fd510365" class="">AI가 특히 강한 업무는 공통점이 있습니다.</p></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-8087-9310-f64d4daf2562" class="bulleted-list"><li style="list-style-type:disc">반복적이고</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-802d-8ef0-e25fc4ecb5e2" class="bulleted-list"><li style="list-style-type:disc">규칙이 있고</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-80c5-b818-da040d13f9b3" class="bulleted-list"><li style="list-style-type:disc">패턴이 존재하는 업무</li></ul></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80c0-996c-c1e138f64c44" class="">입니다.</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8046-b094-ff7fb3fe7d1c" class="">생각해보면 운영 업무 상당수가 여기에 해당합니다.</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-805b-853f-c1a76a14e04c" class="">예:</p></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-805b-aa20-c6ba84a2fdf3" class="bulleted-list"><li style="list-style-type:disc">고객 문의 분류</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-80d6-8931-c7ca1c6c9dcc" class="bulleted-list"><li style="list-style-type:disc">FAQ 응답</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-80b4-ab9e-e107e45c7214" class="bulleted-list"><li style="list-style-type:disc">로그 분석</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-8034-b27f-d442f8b33044" class="bulleted-list"><li style="list-style-type:disc">보고서 정리</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-80b0-9ecd-f3dd13826e07" class="bulleted-list"><li style="list-style-type:disc">이상 탐지</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-800b-adcb-dd03871df013" class="bulleted-list"><li style="list-style-type:disc">단순 승인 프로세스</li></ul></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80b1-b0db-c3396d843efd" class="">즉,</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80e6-a21c-fc57d9597f97" class="">운영팀은 원래부터</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-805c-b741-c2c00bcc313c" class="">AI 자동화와 궁합이 좋은 영역이었던 겁니다.</p></div><div style="display:contents" dir="auto"><hr id="35ac60fd-e0e4-80e5-a1f3-cce18e03ec8e"/></div><div style="display:contents" dir="auto"><h2 id="35ac60fd-e0e4-80be-aafb-f1ac84e1e853" class="">최근 기업들이 가장 먼저 줄이는 업무</h2></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80a9-92ae-ea54f1ee9c17" class="">AI Agent 도입 이후</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80e8-a783-e816d5a20e81" class="">가장 빠르게 자동화되는 업무는 이런 것들입니다.</p></div><div style="display:contents" dir="auto"><h3 id="35ac60fd-e0e4-801e-a459-fe449a75be10" class="">고객 응대</h3></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-8042-97f3-f29fa3cc82d8" class="bulleted-list"><li style="list-style-type:disc">문의 자동 분류</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-8065-8f9f-d0e310fb5ca8" class="bulleted-list"><li style="list-style-type:disc">답변 초안 생성</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-806b-bf99-f947052c6f8d" class="bulleted-list"><li style="list-style-type:disc">반복 문의 자동 처리</li></ul></div><div style="display:contents" dir="auto"><h3 id="35ac60fd-e0e4-8056-92a6-cc2568ff2922" class="">QA 운영</h3></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-8075-9b9b-cc9ec6400ba7" class="bulleted-list"><li style="list-style-type:disc">테스트 시나리오 생성</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-80a4-8adc-e25ba20c7fc1" class="bulleted-list"><li style="list-style-type:disc">에러 패턴 분석</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-8088-80a7-c871c76ae1ac" class="bulleted-list"><li style="list-style-type:disc">로그 요약</li></ul></div><div style="display:contents" dir="auto"><h3 id="35ac60fd-e0e4-80ee-879f-cf784813e232" class="">데이터 정리</h3></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-80f2-8036-c4a9e7478558" class="bulleted-list"><li style="list-style-type:disc">리포트 생성</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-80e0-b964-d44f2f46d8a8" class="bulleted-list"><li style="list-style-type:disc">통계 정리</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-8020-bb74-fa01d5dcf6c2" class="bulleted-list"><li style="list-style-type:disc">이상 데이터 탐지</li></ul></div><div style="display:contents" dir="auto"><h3 id="35ac60fd-e0e4-80a0-84bb-ed402f640306" class="">내부 운영</h3></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-8092-8bbf-f328e3a8e7f4" class="bulleted-list"><li style="list-style-type:disc">회의록 정리</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-809b-a22c-f79cd30b288c" class="bulleted-list"><li style="list-style-type:disc">일정 관리</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-80bb-b41d-f2d275c0a528" class="bulleted-list"><li style="list-style-type:disc">업무 할당 자동화</li></ul></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80cd-96d2-c20dc448a3d6" class="">예전에는 사람이 계속 붙어 있어야 했던 업무들이</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-809d-a156-d3b6213ea778" class="">점점 AI 중심으로 이동하고 있습니다.</p></div><div style="display:contents" dir="auto"><hr id="35ac60fd-e0e4-80e2-92d2-d5a3fb54e76a"/></div><div style="display:contents" dir="auto"><h2 id="35ac60fd-e0e4-800d-a23b-e6879d4e58ba" class="">그래서 실제 조직 구조도 달라지고 있다</h2></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80f1-828a-cb2d0dcb39ce" class="">과거 운영팀:</p></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-800f-937f-cbc10946b530" class="bulleted-list"><li style="list-style-type:disc">사람 많이 필요</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-8092-9507-ed381f82e96f" class="bulleted-list"><li style="list-style-type:disc">업무 분배 중심</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-80d6-a015-f9f241d6e9ce" class="bulleted-list"><li style="list-style-type:disc">반복 작업 비중 큼</li></ul></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8047-b69e-ecd691d60b21" class="">최근 변화하는 운영팀:</p></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-80ae-a9c6-f95877401b4b" class="bulleted-list"><li style="list-style-type:disc">소수 인원</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-8084-b335-f80dcb5ba05d" class="bulleted-list"><li style="list-style-type:disc">AI 관리 중심</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-80da-bba7-f6527bed76ab" class="bulleted-list"><li style="list-style-type:disc">예외 상황 대응 중심</li></ul></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-807b-9267-f4d75bf626af" class="">즉,</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-801e-81a0-f5345b7d68b2" class="">사람이 직접 처리하는 조직에서:</p></div><div style="display:contents" dir="auto"><blockquote id="35ac60fd-e0e4-80b8-9529-d552175f2f44" class="">“AI가 처리하고 사람이 관리하는 조직”</blockquote></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80ad-8171-c5e6995384ad" class="">으로 구조가 바뀌고 있는 겁니다.</p></div><div style="display:contents" dir="auto"><hr id="35ac60fd-e0e4-80ba-9645-cb6af939d1d0"/></div><div style="display:contents" dir="auto"><h2 id="35ac60fd-e0e4-80b0-bc58-da04255241c2" class="">특히 “야간 운영” 영역 변화가 크다</h2></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8074-8441-ebb3961ef52d" class="">예전에는:</p></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-809e-adfa-d5014f086b70" class="bulleted-list"><li style="list-style-type:disc">24시간 모니터링</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-8064-81da-d83e12363d22" class="bulleted-list"><li style="list-style-type:disc">장애 대응 대기</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-80c9-91fe-ee5aadae12c1" class="bulleted-list"><li style="list-style-type:disc">야간 CS 처리</li></ul></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8050-b053-f17b459a8f39" class="">때문에 인력이 많이 필요했습니다.</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80f9-ba1b-e0bd90b1fbf5" class="">하지만 최근 AI Agent는:</p></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-807d-8a10-ebd78dd093a1" class="bulleted-list"><li style="list-style-type:disc">이상 패턴 감지</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-8061-9225-c9f658844fd7" class="bulleted-list"><li style="list-style-type:disc">자동 알림</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-809f-9899-e39b2c95321e" class="bulleted-list"><li style="list-style-type:disc">1차 대응</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-808b-a688-c24c32d6a215" class="bulleted-list"><li style="list-style-type:disc">긴급 분류</li></ul></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8023-8435-db64337a5e03" class="">까지 수행하기 시작했습니다.</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8021-a1cd-cac932f95b5b" class="">즉,</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8001-aa77-d37f4387774e" class="">사람이 계속 화면을 보고 있는 구조 자체가 줄어들고 있습니다.</p></div><div style="display:contents" dir="auto"><hr id="35ac60fd-e0e4-8001-8d9a-d2432e48c90e"/></div><div style="display:contents" dir="auto"><h2 id="35ac60fd-e0e4-807f-a4cd-eae0bce50fc5" class="">그런데 운영팀이 완전히 없어질까?</h2></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8077-9d25-e97072b0ceb4" class="">그건 아닙니다.</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8091-a467-c61b6890db4f" class="">오히려 역할이 바뀌고 있습니다.</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-804a-8243-c770d89e5961" class="">예전 운영팀:</p></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-809a-89ab-f6d307ff92ef" class="bulleted-list"><li style="list-style-type:disc">직접 처리 중심</li></ul></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8034-92fe-da8a46947cfe" class="">앞으로 운영팀:</p></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-80dd-929c-f34135742494" class="bulleted-list"><li style="list-style-type:disc">AI 정책 설계</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-809c-a1a8-c8e4031ffed1" class="bulleted-list"><li style="list-style-type:disc">예외 상황 판단</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-800c-b2a8-c3667e2684d1" class="bulleted-list"><li style="list-style-type:disc">자동화 흐름 관리</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-809a-b124-f5f717bcf6da" class="bulleted-list"><li style="list-style-type:disc">리스크 대응</li></ul></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80d2-9fd2-c8eadb086f1a" class="">즉,</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8004-b03b-ff8f1ff2c977" class="">“작업 수행자”</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8002-b3a8-c47e79dad66e" class="">에서</p></div><div style="display:contents" dir="auto"><blockquote id="35ac60fd-e0e4-8097-a623-f5153894b65b" class="">“AI 운영 관리자”</blockquote></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8043-ac36-e34bfc5e7357" class="">에 가까워지고 있는 겁니다.</p></div><div style="display:contents" dir="auto"><hr id="35ac60fd-e0e4-8027-b5cd-d3e31e95b88f"/></div><div style="display:contents" dir="auto"><h2 id="35ac60fd-e0e4-8002-bac8-e5960b7930e0" class="">그래서 더 중요해지는 사람 역량</h2></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80ce-8ab6-eae603a3fcd9" class="">AI Agent 시대에 운영팀에게 중요한 건:</p></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-80b1-91a4-f3b2a30cfdee" class="bulleted-list"><li style="list-style-type:disc">반복 처리 능력<br/>이 아니라,</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-80df-ae72-c6cd4b8f49eb" class="bulleted-list"><li style="list-style-type:disc">문제 판단</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-8073-a7ae-cc7c417c0203" class="bulleted-list"><li style="list-style-type:disc">예외 대응</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-80ec-83ed-f1a90bf0244d" class="bulleted-list"><li style="list-style-type:disc">자동화 설계</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-803b-8e27-fa2911736786" class="bulleted-list"><li style="list-style-type:disc">정책 관리</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-807a-8721-d40344c2a536" class="bulleted-list"><li style="list-style-type:disc">데이터 해석</li></ul></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80de-982c-c930fd102f90" class="">같은 영역입니다.</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8005-b2d4-f5af6f7e1dc7" class="">특히:</p></div><div style="display:contents" dir="auto"><blockquote id="35ac60fd-e0e4-8092-b4d1-d005c1ec6bc3" class="">“AI가 처리하지 못하는 상황을 다룰 수 있는 사람”</blockquote></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80b7-91af-ce7fb24471bd" class="">의 가치가 더 커질 가능성이 높습니다.</p></div><div style="display:contents" dir="auto"><hr id="35ac60fd-e0e4-80ae-bac5-ce59c8172cd7"/></div><div style="display:contents" dir="auto"><h2 id="35ac60fd-e0e4-80ec-ad1f-f6cbf713ce49" class="">실제 현업에서는 벌써 이런 변화가 나온다</h2></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80fc-9fa0-fed68ac42f2a" class="">최근 일부 기업에서는:</p></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-80a2-bb69-dc695d416971" class="bulleted-list"><li style="list-style-type:disc">고객 문의량은 늘었는데</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-8004-a652-dedbcc9dcdbd" class="bulleted-list"><li style="list-style-type:disc">운영 인력은 그대로이거나</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-8037-bb65-cda6ba440c7d" class="bulleted-list"><li style="list-style-type:disc">오히려 줄어드는</li></ul></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8058-a62f-e128f14d6fdc" class="">경우도 나타나고 있습니다.</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8075-a2fa-cf569d6f3975" class="">이유는 단순합니다.</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8094-9ac2-e91e8778a7fe" class="">AI가:</p></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-8006-b001-e38d740c8003" class="bulleted-list"><li style="list-style-type:disc">1차 응답</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-80bc-b338-e23ae8fa1b48" class="bulleted-list"><li style="list-style-type:disc">분류</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-80c4-96c3-cfa921a998ed" class="bulleted-list"><li style="list-style-type:disc">정리</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-80e5-a49d-de7b25a9fd8a" class="bulleted-list"><li style="list-style-type:disc">자동 처리</li></ul></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-802e-9c31-c7da41271542" class="">를 먼저 수행하기 때문입니다.</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80a3-97bb-deb522574ede" class="">즉,</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80f8-b79f-cd09e9947338" class="">사람은:</p></div><div style="display:contents" dir="auto"><blockquote id="35ac60fd-e0e4-800b-bf44-cb43420c4d6c" class="">“진짜 어려운 문제”</blockquote></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-807b-88da-c13a7a8c9e68" class="">만 처리하는 구조로 이동 중입니다.</p></div><div style="display:contents" dir="auto"><hr id="35ac60fd-e0e4-804b-9934-cf2ce58dcca8"/></div><div style="display:contents" dir="auto"><h2 id="35ac60fd-e0e4-80c6-a1c4-f3ac9784a7db" class="">하지만 부작용도 있다</h2></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-806d-bdba-de9e261ea392" class="">물론 모든 게 긍정적인 건 아닙니다.</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8004-ad70-fc1139fb3db0" class="">AI 운영이 늘어나면서:</p></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-80ef-be03-ee721aecbcad" class="bulleted-list"><li style="list-style-type:disc">잘못된 자동 응답</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-800d-8f03-f966cca4860f" class="bulleted-list"><li style="list-style-type:disc">과도한 자동화</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-8028-827f-f2d1bbdcc704" class="bulleted-list"><li style="list-style-type:disc">책임 불분명</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-808d-996c-d951466e2a98" class="bulleted-list"><li style="list-style-type:disc">운영 품질 저하</li></ul></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-809d-88a5-cefe0c87e47b" class="">같은 문제도 함께 발생합니다.</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8027-bc71-f394273f8bc4" class="">특히:</p></div><div style="display:contents" dir="auto"><blockquote id="35ac60fd-e0e4-80ed-9d79-d670062340c6" class="">“AI가 처리했는데 왜 문제 생겼는지 모르는 상황”</blockquote></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80c7-b726-d46a9c50e0e9" class="">이 실제로 큰 리스크가 되기도 합니다.</p></div><div style="display:contents" dir="auto"><hr id="35ac60fd-e0e4-80b2-b6c5-fa15d4be0f4b"/></div><div style="display:contents" dir="auto"><h2 id="35ac60fd-e0e4-8031-be04-c0a13f1e36e8" class="">결국 핵심은 “사람 없는 운영”이 아니다</h2></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8052-8896-c2c4154b8af3" class="">많은 기업들이 착각하는 부분이 있습니다.</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-804a-ac0f-c06fbb93c894" class="">AI Agent의 목적은:</p></div><div style="display:contents" dir="auto"><blockquote id="35ac60fd-e0e4-807b-a19f-f130055628ab" class="">“사람 제거”</blockquote></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80a9-97b2-f5dd9eccb868" class="">가 아니라,</p></div><div style="display:contents" dir="auto"><blockquote id="35ac60fd-e0e4-803a-81e6-f8eaeef4eeff" class="">“사람이 더 중요한 업무에 집중하게 만드는 것”</blockquote></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-807d-af16-f54250aba00b" class="">에 가깝습니다.</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8090-b898-d9a3d9d75e45" class="">반복 업무를 줄이고</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8058-9e3a-e2213de27cee" class="">운영 효율을 높이는 방향에 더 가깝다는 겁니다.</p></div><div style="display:contents" dir="auto"><hr id="35ac60fd-e0e4-80b1-a35e-f6c8e2cb0e6f"/></div><div style="display:contents" dir="auto"><h2 id="35ac60fd-e0e4-80f5-998d-cca09ff91b50" class="">앞으로 운영팀은 더 작아질 가능성이 크다</h2></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80b0-9815-edab9b14ee66" class="">대신:</p></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-80ae-8542-e49176489c89" class="bulleted-list"><li style="list-style-type:disc">더 빠르게 움직이고</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-8000-8588-d155ea37f7f2" class="bulleted-list"><li style="list-style-type:disc">더 높은 판단력을 요구받고</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-8057-8f73-f950c3990d74" class="bulleted-list"><li style="list-style-type:disc">AI 활용 역량이 필수가 되는</li></ul></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8043-a23d-c852016148a2" class="">방향으로 바뀔 가능성이 큽니다.</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80f0-a446-e67c2e8372d7" class="">예전에는:</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-801e-96c8-ebdebe8e906d" class="">“사람 수가 많은 운영팀”</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80f3-92e1-f4e9490b9fd4" class="">이 강했다면,</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80a3-bb52-ca01ece0276e" class="">이제는:</p></div><div style="display:contents" dir="auto"><blockquote id="35ac60fd-e0e4-80e7-8be0-d981131cdd32" class="">“AI와 함께 움직이는 운영팀”</blockquote></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80bb-90e4-c3ecb7eb4e4a" class="">이 훨씬 경쟁력 있는 조직이 될 가능성이 높습니다.</p></div></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>

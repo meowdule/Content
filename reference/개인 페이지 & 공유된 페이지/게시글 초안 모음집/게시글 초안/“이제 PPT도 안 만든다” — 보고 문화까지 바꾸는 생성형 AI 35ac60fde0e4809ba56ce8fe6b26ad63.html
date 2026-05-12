@@ -1,0 +1,745 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>“이제 PPT도 안 만든다” — 보고 문화까지 바꾸는 생성형 AI</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+/* Override strong tags inside headings to maintain consistent weight */
+h1 strong,
+h2 strong,
+h3 strong {
+	font-weight: 600;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 10px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+
+	table.collection-content {
+		width: 100%;
+		table-layout: fixed;
+	}
+
+	table.collection-content th,
+	table.collection-content td {
+		overflow-wrap: anywhere;
+	}
+
+	table.collection-content td > .user,
+	table.collection-content td > time {
+		white-space: pre-wrap;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content-wrapper {
+	overflow-x: auto;
+}
+
+@media only print {
+	.collection-content-wrapper {
+		overflow-x: visible;
+	}
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.collection-content td {
+	white-space: pre-wrap;
+	word-break: break-word;
+}
+
+.column-list {
+	display: flex;
+	gap: 46px;
+}
+
+.column {
+	min-width: 0;
+	overflow: hidden;
+}
+
+.column > *:first-child {
+	margin-top: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+table {
+	border-collapse: collapse;
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol.numbered-list.numbered-list-digits-2 {
+	padding-inline-start: 2em;
+}
+
+ol.numbered-list.numbered-list-digits-3plus {
+	padding-inline-start: 2.4em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+	margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.callout img.notion-static-icon {
+	width: 1em;
+	height: 1em;
+}
+
+.callout p {
+	margin: 0;
+}
+
+.callout h1,
+.callout h2,
+.callout h3 {
+	margin: 0 0 0.6rem;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+blockquote.quote-large {
+	font-size: 1.25em;
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.highlight-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.highlight-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.highlight-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.highlight-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.highlight-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.highlight-default_background {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray_background {
+	background: rgba(42, 28, 0, 0.07);
+}
+.highlight-brown_background {
+	background: rgba(139, 46, 0, 0.086);
+}
+.highlight-orange_background {
+	background: rgba(224, 101, 1, 0.129);
+}
+.highlight-yellow_background {
+	background: rgba(211, 168, 0, 0.137);
+}
+.highlight-teal_background {
+	background: rgba(0, 100, 45, 0.09);
+}
+.highlight-blue_background {
+	background: rgba(0, 124, 215, 0.094);
+}
+.highlight-purple_background {
+	background: rgba(102, 0, 178, 0.078);
+}
+.highlight-pink_background {
+	background: rgba(197, 0, 93, 0.086);
+}
+.highlight-red_background {
+	background: rgba(223, 22, 0, 0.094);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.block-color-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.block-color-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.block-color-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.block-color-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.block-color-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.block-color-default_background {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray_background {
+	background: rgba(240, 239, 237, 1);
+}
+.block-color-brown_background {
+	background: rgba(245, 237, 233, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 235, 222, 1);
+}
+.block-color-yellow_background {
+	background: rgba(249, 243, 220, 1);
+}
+.block-color-teal_background {
+	background: rgba(232, 241, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(229, 242, 252, 1);
+}
+.block-color-purple_background {
+	background: rgba(243, 235, 249, 1);
+}
+.block-color-pink_background {
+	background: rgba(250, 233, 241, 1);
+}
+.block-color-red_background {
+	background: rgba(252, 233, 231, 1);
+}
+.select-value-color-default { background-color: rgba(42, 28, 0, 0.07); }
+.select-value-color-gray { background-color: rgba(28, 19, 1, 0.11); }
+.select-value-color-brown { background-color: rgba(127, 51, 0, 0.156); }
+.select-value-color-orange { background-color: rgba(196, 88, 0, 0.203); }
+.select-value-color-yellow { background-color: rgba(209, 156, 0, 0.282); }
+.select-value-color-green { background-color: rgba(0, 96, 38, 0.156); }
+.select-value-color-blue { background-color: rgba(0, 118, 217, 0.203); }
+.select-value-color-purple { background-color: rgba(92, 0, 163, 0.141); }
+.select-value-color-pink { background-color: rgba(183, 0, 78, 0.152); }
+.select-value-color-red { background-color: rgba(206, 24, 0, 0.164); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="35ac60fd-e0e4-809b-a56c-e8fe6b26ad63" class="page sans"><header><div class="page-header-icon undefined"><span class="icon">🖊️</span></div><h1 class="page-title" dir="auto"><strong>“이제 PPT도 안 만든다” — 보고 문화까지 바꾸는 생성형 AI</strong></h1><p class="page-description" dir="auto"></p><table class="properties"><tbody><tr class="property-row property-row-relation"><th><span class="icon property-icon"><img src="https://www.notion.so/icons/arrow-northeast_gray.svg" style="width:14px;height:14px;display:block"/></span>상위 항목</th><td><a href="AI%20%EC%9E%90%EB%8F%99%ED%99%94%20%EB%B0%8F%20%EA%B8%B0%ED%9A%8D%EC%9E%90%20%EC%9E%85%EC%9E%A5%20%EA%B2%8C%EC%8B%9C%EA%B8%80%2035ec60fde0e48085ba48face25cf8900.html"><span class="icon">📚</span>AI 자동화 및 기획자 입장 게시글</a></td></tr><tr class="property-row property-row-text"><th><span class="icon property-icon"><img src="https://www.notion.so/icons/description_gray.svg" style="width:14px;height:14px;display:block"/></span>요약</th><td>• 문서·보고 자동화 흐름<br/>• 실시간 요약/리포트 문화<br/>• 해외 기업들의 업무 변화</td></tr></tbody></table></header><div class="page-body"><div style="display:contents" dir="auto"><p id="35dc60fd-e0e4-8018-bc28-dd5c61d43de2" class="">요즘 회사에서는<br/>“PPT 잘 만드는 사람”보다</p></div><div style="display:contents" dir="auto"><blockquote id="35dc60fd-e0e4-80f3-a2c0-f47eaef529c6" class="">“핵심만 빠르게 정리하는 사람”</blockquote></div><div style="display:contents" dir="auto"><p id="35dc60fd-e0e4-8013-b6a8-d37df8c79f7b" class="">이 더 중요해지고 있다는 이야기가 나옵니다.</p></div><div style="display:contents" dir="auto"><p id="35dc60fd-e0e4-802e-a53d-f4b4075399b1" class="">최근 생성형 AI가:</p></div><div style="display:contents" dir="auto"><ul id="35dc60fd-e0e4-8042-8a6b-f1ce6f281ff2" class="bulleted-list"><li style="list-style-type:disc">회의 요약</li></ul></div><div style="display:contents" dir="auto"><ul id="35dc60fd-e0e4-80d7-9402-d45a3aae360f" class="bulleted-list"><li style="list-style-type:disc">보고서 초안</li></ul></div><div style="display:contents" dir="auto"><ul id="35dc60fd-e0e4-8056-86c7-cd56af5854da" class="bulleted-list"><li style="list-style-type:disc">슬라이드 구성</li></ul></div><div style="display:contents" dir="auto"><p id="35dc60fd-e0e4-80e8-b208-f90cfe5ed2c7" class="">까지 대신 만들기 시작하면서<br/>보고 문화 자체가 빠르게 바뀌고 있습니다.</p></div><div style="display:contents" dir="auto"><p id="35dc60fd-e0e4-80bd-acce-d11498b8002c" class="">흥미로운 건,<br/>AI를 가장 적극적으로 쓰는 조직일수록<br/>오히려 PPT 자체를 줄이기 시작했다는 점입니다.</p></div><div style="display:contents" dir="auto"><p id="35dc60fd-e0e4-80ca-b942-e9a289325d70" class="">과연 지금 회사들은<br/>왜 “보고 방식” 자체를 바꾸고 있을까요?</p></div><div style="display:contents" dir="auto"><p id="35dc60fd-e0e4-80d9-8e44-c67fdcc9b00c" class="">
+</p></div><div style="display:contents" dir="ltr"><nav id="35ac60fd-e0e4-80a3-87ef-d24dec070630" class="block-color-gray table_of_contents"><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#35ac60fd-e0e4-80ce-9a44-d76aacfb2e50">요즘 회사에서는 “슬라이드”보다 “요약”이 중요해진다</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#35ac60fd-e0e4-80a2-babb-f8923ff0deb9">실제로 PPT 만드는 시간이 크게 줄어들고 있다</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#35ac60fd-e0e4-806a-bad5-e4e0dc48b6f7">“보고용 문장” 자체가 AI 스타일로 바뀌는 중</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#35ac60fd-e0e4-800f-a957-fec120c49391">실제 현업에서는 이미 이렇게 사용 중이다</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#35ac60fd-e0e4-8052-b8a8-c93b96d11bf2">그래서 “보고 잘하는 사람”의 기준도 바뀌고 있다</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#35ac60fd-e0e4-8054-be6c-d86f3f215e12">심지어 “발표 문화”도 바뀌고 있다</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#35ac60fd-e0e4-806e-806d-ffa97e22916f">하지만 AI 보고서의 문제도 있다</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#35ac60fd-e0e4-80e3-8287-ec988e63549d">앞으로 회사들이 진짜 줄이고 싶은 건 PPT가 아닐 수도 있다</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#35ac60fd-e0e4-80f6-8bd7-f85dbfd01393">결국 중요한 건 슬라이드가 아니라 실행 속도</a></div></nav></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-809f-8a8a-c42d123759ae" class="">
+</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80a5-9234-dd1a01414997" class="">직장인들이 가장 싫어하는 업무 중 하나.</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8077-90aa-cd3b203b19f9" class="">바로 PPT입니다.</p></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-8025-93df-cc7f84f52269" class="bulleted-list"><li style="list-style-type:disc">보고용 슬라이드 정리</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-80c0-99d4-f22164fe5360" class="bulleted-list"><li style="list-style-type:disc">디자인 수정</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-805b-b948-cc80868b89b7" class="bulleted-list"><li style="list-style-type:disc">문구 다듬기</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-801b-aa40-c0041d6562f6" class="bulleted-list"><li style="list-style-type:disc">레이아웃 맞추기</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-80ee-b0ab-fb69ca9f2bc8" class="bulleted-list"><li style="list-style-type:disc">숫자 업데이트</li></ul></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8046-9aec-e142b9776e9a" class="">내용보다</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8025-9a0e-f993cef4512c" class="">“예쁘게 만드는 시간”이 더 오래 걸리는 경우도 많았습니다.</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8014-b04d-ef8c05ea0946" class="">그런데 최근 생성형 AI가 등장하면서</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-805e-a0a6-d7e5eff69c75" class="">이 보고 문화 자체가 흔들리기 시작했습니다.</p></div><div style="display:contents" dir="auto"><hr id="35ac60fd-e0e4-80ae-b458-cfc8284381d3"/></div><div style="display:contents" dir="auto"><h2 id="35ac60fd-e0e4-80ce-9a44-d76aacfb2e50" class="">요즘 회사에서는 “슬라이드”보다 “요약”이 중요해진다</h2></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-809b-91d8-d4d2ea7b0705" class="">예전 보고 방식은:</p></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-806a-9ee9-f276d4c60a52" class="bulleted-list"><li style="list-style-type:disc">자료 모으고</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-8093-8a20-ee98ac702280" class="bulleted-list"><li style="list-style-type:disc">PPT 만들고</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-8040-bbde-efa7ee9a9002" class="bulleted-list"><li style="list-style-type:disc">디자인 맞추고</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-8054-8f6c-f0974a2c2ed2" class="bulleted-list"><li style="list-style-type:disc">회의실에서 발표</li></ul></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8053-a8a8-c6f895b6c286" class="">형태였습니다.</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8066-a0ce-e25101757c2f" class="">하지만 최근에는:</p></div><div style="display:contents" dir="auto"><blockquote id="35ac60fd-e0e4-80d5-8899-cc5552d79364" class="">“핵심만 빠르게 공유하자”</blockquote></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80a6-99ba-e651d1c29876" class="">는 흐름이 강해지고 있습니다.</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8072-8661-fbbf4d0a8046" class="">왜냐하면 AI가:</p></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-80ff-aec5-c068db73a6fc" class="bulleted-list"><li style="list-style-type:disc">회의 내용 정리</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-80aa-be55-ed94c6437007" class="bulleted-list"><li style="list-style-type:disc">보고서 초안 생성</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-80b3-b7c9-f0d92c5813b3" class="bulleted-list"><li style="list-style-type:disc">데이터 요약</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-80cd-b648-f15a6663ba06" class="bulleted-list"><li style="list-style-type:disc">발표 흐름 구성</li></ul></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-801e-bed7-efd0c2dfbd37" class="">까지 자동으로 해주기 시작했기 때문입니다.</p></div><div style="display:contents" dir="auto"><hr id="35ac60fd-e0e4-8039-9e52-ed215150a28e"/></div><div style="display:contents" dir="auto"><h2 id="35ac60fd-e0e4-80a2-babb-f8923ff0deb9" class="">실제로 PPT 만드는 시간이 크게 줄어들고 있다</h2></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80d0-af15-c51d36cf9a9d" class="">요즘 많이 쓰는 방식은 단순합니다.</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80ad-829d-f8db26ddaabc" class="">예:</p></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-804c-bc57-c8c46bdbb408" class="bulleted-list"><li style="list-style-type:disc">회의록 넣기</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-80b7-b080-e38eafdcc87c" class="bulleted-list"><li style="list-style-type:disc">데이터 붙여넣기</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-80e8-a1c9-e5266723a0c0" class="bulleted-list"><li style="list-style-type:disc">핵심 내용 입력</li></ul></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80bb-bd37-e02dc8533800" class="">만 하면 AI가:</p></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-8010-aa65-c1a9218ff782" class="bulleted-list"><li style="list-style-type:disc">슬라이드 구조 생성</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-80e4-ad38-c2d727ef2059" class="bulleted-list"><li style="list-style-type:disc">제목 정리</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-8029-9fcb-ec847d188a70" class="bulleted-list"><li style="list-style-type:disc">요약 문구 작성</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-805a-ad11-f131f954083d" class="bulleted-list"><li style="list-style-type:disc">발표 흐름 구성</li></ul></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8044-8752-c22e2356e68c" class="">을 자동으로 만듭니다.</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8013-b944-cd105ea2677b" class="">예전처럼:</p></div><div style="display:contents" dir="auto"><blockquote id="35ac60fd-e0e4-8009-8e08-e0a09a34f237" class="">“슬라이드 한 장 만드는 데 1시간”</blockquote></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80f9-bdb0-d879252451f6" class="">쓰던 방식이 빠르게 줄어들고 있습니다.</p></div><div style="display:contents" dir="auto"><hr id="35ac60fd-e0e4-80c8-b857-decf34949160"/></div><div style="display:contents" dir="auto"><h2 id="35ac60fd-e0e4-806a-bad5-e4e0dc48b6f7" class="">“보고용 문장” 자체가 AI 스타일로 바뀌는 중</h2></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8012-9eea-f09fb88f53d9" class="">흥미로운 건</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80d2-a5bf-c75192573374" class="">단순 제작 속도만 바뀌는 게 아니라는 점입니다.</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8006-9f53-faf1429f28aa" class="">보고 방식 자체가 달라지고 있습니다.</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8081-801b-d2e9f15bae69" class="">예전:</p></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-80a3-a8bb-fe8971c26d9b" class="bulleted-list"><li style="list-style-type:disc">긴 설명</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-8039-85cc-e0bac1615cfd" class="bulleted-list"><li style="list-style-type:disc">배경 중심 보고</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-8069-9f15-f6683391de70" class="bulleted-list"><li style="list-style-type:disc">형식적인 문구</li></ul></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80a2-a1a5-d65e4e038812" class="">지금:</p></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-8046-a24a-f8ef233ffd59" class="bulleted-list"><li style="list-style-type:disc">핵심 요약</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-8009-bd99-c187cd710a07" class="bulleted-list"><li style="list-style-type:disc">액션 중심</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-80f5-aef0-e6690798fba5" class="bulleted-list"><li style="list-style-type:disc">한눈에 이해되는 구조</li></ul></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8043-aa89-eaec237b1668" class="">AI가 요약에 강하다 보니</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80d4-8717-f00f822bdd44" class="">회사들도 점점:</p></div><div style="display:contents" dir="auto"><blockquote id="35ac60fd-e0e4-809c-aa62-ca66ecab30da" class="">“짧고 명확한 보고”</blockquote></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8012-831d-efba49aeca0b" class="">를 선호하기 시작한 겁니다.</p></div><div style="display:contents" dir="auto"><hr id="35ac60fd-e0e4-80cb-9a38-f5933180d564"/></div><div style="display:contents" dir="auto"><h2 id="35ac60fd-e0e4-800f-a957-fec120c49391" class="">실제 현업에서는 이미 이렇게 사용 중이다</h2></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80ef-a329-fb4000dfd8c6" class="">최근 실무에서 많이 쓰는 흐름:</p></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-805e-bf11-cbc8ac09ec8c" class="bulleted-list"><li style="list-style-type:disc">회의 끝나면 AI가 회의록 생성</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-80e1-a825-d018dcc98689" class="bulleted-list"><li style="list-style-type:disc">Slack/Notion에 자동 공유</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-80e6-a69f-d26ef9a9e898" class="bulleted-list"><li style="list-style-type:disc">핵심 액션 아이템 정리</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-8003-b6f7-ea4a60268776" class="bulleted-list"><li style="list-style-type:disc">보고 초안 자동 작성</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-80d5-8a5f-edf95e9dfdf3" class="bulleted-list"><li style="list-style-type:disc">필요한 경우 PPT까지 생성</li></ul></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80b6-9a36-eb1e898996df" class="">즉,</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8016-b16c-edd4e7fe758c" class="">예전에는 사람이 하던:</p></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-8036-be71-eb1bdb3dfb2e" class="bulleted-list"><li style="list-style-type:disc">정리</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-80dd-996b-e713f1369580" class="bulleted-list"><li style="list-style-type:disc">요약</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-807f-a164-f989f57df644" class="bulleted-list"><li style="list-style-type:disc">문장화</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-80e6-af55-c8f3e2e01ae6" class="bulleted-list"><li style="list-style-type:disc">포맷 작업</li></ul></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80cd-92f3-ef3db7623123" class="">을 AI가 상당 부분 가져오고 있습니다.</p></div><div style="display:contents" dir="auto"><hr id="35ac60fd-e0e4-80cb-9041-f165f0bca90f"/></div><div style="display:contents" dir="auto"><h2 id="35ac60fd-e0e4-8052-b8a8-c93b96d11bf2" class="">그래서 “보고 잘하는 사람”의 기준도 바뀌고 있다</h2></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8031-96fe-f6d897e1c269" class="">예전에는:</p></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-80a9-a17a-e88400b5103a" class="bulleted-list"><li style="list-style-type:disc">PPT 디자인 잘하는 사람</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-8085-ac40-d5f780d1f5d4" class="bulleted-list"><li style="list-style-type:disc">문장 길게 잘 쓰는 사람</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-80fe-95f8-f6e7158cd977" class="bulleted-list"><li style="list-style-type:disc">자료 많이 넣는 사람</li></ul></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8018-a8df-d8df31d3b5e7" class="">이 인정받았다면,</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-806f-852d-fb0a1dd314ba" class="">지금은:</p></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-8089-b048-da77e884f500" class="bulleted-list"><li style="list-style-type:disc">핵심만 빠르게 정리하는 사람</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-8028-8bd5-e93dc4c12808" class="bulleted-list"><li style="list-style-type:disc">AI 활용해 속도 높이는 사람</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-801b-8f23-e0d3a95fe98d" class="bulleted-list"><li style="list-style-type:disc">의사결정에 필요한 정보만 남기는 사람</li></ul></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80d8-822f-ebb52f993010" class="">이 훨씬 중요해지고 있습니다.</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80b6-89b4-dd2ba046dba7" class="">즉,</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8031-8bce-eb93bd0749a1" class="">“예쁘게 만드는 능력”</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-806b-bd3e-cb08500e9813" class="">보다</p></div><div style="display:contents" dir="auto"><blockquote id="35ac60fd-e0e4-804e-99ee-fb65f7f6837f" class="">“빠르게 판단 가능하게 만드는 능력”</blockquote></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-809e-813f-f68742d4ee94" class="">이 중요해지는 겁니다.</p></div><div style="display:contents" dir="auto"><hr id="35ac60fd-e0e4-80a9-afc6-d102b54ca694"/></div><div style="display:contents" dir="auto"><h2 id="35ac60fd-e0e4-8054-be6c-d86f3f215e12" class="">심지어 “발표 문화”도 바뀌고 있다</h2></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8073-a18d-cf3e8a5e8ba4" class="">최근 해외 스타트업에서는:</p></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-8043-83eb-c4869d4438a1" class="bulleted-list"><li style="list-style-type:disc">긴 발표</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-803c-9550-cea57ea6b855" class="bulleted-list"><li style="list-style-type:disc">장표 중심 회의</li></ul></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8095-ae1f-c26b1a607dc1" class="">를 줄이는 분위기도 강해지고 있습니다.</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8027-bfd5-d1adc99cb6fb" class="">대신:</p></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-8071-89e8-f4c3240cdf7e" class="bulleted-list"><li style="list-style-type:disc">AI 요약 공유</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-8027-b593-e21b90a320a6" class="bulleted-list"><li style="list-style-type:disc">실시간 협업 문서</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-80d7-b6bf-ca5e05ed4cd6" class="bulleted-list"><li style="list-style-type:disc">대시보드 기반 보고</li></ul></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8058-bd6d-df488d08e76b" class="">를 더 선호합니다.</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80a3-a489-c87c7809dc68" class="">왜냐하면:</p></div><div style="display:contents" dir="auto"><blockquote id="35ac60fd-e0e4-8063-a6e2-cb3e98af44dc" class="">“정보는 이미 AI가 정리해주기 때문”</blockquote></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-800d-9978-d2646f03ff12" class="">입니다.</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8006-ad0a-c1b5f6a62098" class="">즉,</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80bd-b05f-c380dad0d4b8" class="">회의 목적도:</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80eb-898c-ea9f0a9bf66d" class="">“정보 전달”</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-800a-842a-f9c2a69abe86" class="">에서</p></div><div style="display:contents" dir="auto"><blockquote id="35ac60fd-e0e4-802e-8e50-d75eae5b6648" class="">“의사결정”</blockquote></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8091-9d7f-f39a4e13127e" class="">중심으로 이동하고 있습니다.</p></div><div style="display:contents" dir="auto"><hr id="35ac60fd-e0e4-80f4-ae57-e30fad54b452"/></div><div style="display:contents" dir="auto"><h2 id="35ac60fd-e0e4-806e-806d-ffa97e22916f" class="">하지만 AI 보고서의 문제도 있다</h2></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-802d-85bf-db77d513f566" class="">물론 부작용도 있습니다.</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8021-94b8-fe036eaa0c19" class="">AI가 만든 보고서는:</p></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-80de-ba2a-e913aeb6bd5f" class="bulleted-list"><li style="list-style-type:disc">너무 일반적이거나</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-809a-978e-ecc6660aa433" class="bulleted-list"><li style="list-style-type:disc">핵심 없는 표현이 많거나</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-8069-b6a0-dc8dd6618448" class="bulleted-list"><li style="list-style-type:disc">실제 맥락을 놓치는 경우</li></ul></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8089-8a3f-d02112966033" class="">도 많습니다.</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-805d-9f53-f8b99bb58871" class="">특히:</p></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-80c9-8849-c88d32c5fc24" class="bulleted-list"><li style="list-style-type:disc">숫자 해석</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-805e-bf19-d1d44f6e2a96" class="bulleted-list"><li style="list-style-type:disc">전략 판단</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-80ca-b9ef-ff9e4572b2d0" class="bulleted-list"><li style="list-style-type:disc">우선순위 결정</li></ul></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8074-8c11-f1bddbfe0d5e" class="">같은 부분은 여전히 사람 역할이 중요합니다.</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80be-a404-db9860255a18" class="">즉,</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8086-9be4-f41c601b9e49" class="">AI는 보고서를 “만드는 것”에는 강하지만,</p></div><div style="display:contents" dir="auto"><blockquote id="35ac60fd-e0e4-80f1-9b49-e024d4153403" class="">“무엇이 중요한지 판단하는 것”</blockquote></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80b0-b0cd-ce8e0a10e15b" class="">까지 완벽하게 대신하진 못합니다.</p></div><div style="display:contents" dir="auto"><hr id="35ac60fd-e0e4-8041-8b6c-cc2e51866a88"/></div><div style="display:contents" dir="auto"><h2 id="35ac60fd-e0e4-80e3-8287-ec988e63549d" class="">앞으로 회사들이 진짜 줄이고 싶은 건 PPT가 아닐 수도 있다</h2></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80bf-b111-cba57b8de708" class="">사실 기업들이 원하는 건 단순합니다.</p></div><div style="display:contents" dir="auto"><blockquote id="35ac60fd-e0e4-801f-9f62-e16a98fc969c" class="">“보고 때문에 쓰는 시간을 줄이고 싶다”</blockquote></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8064-9058-febb27d62fa8" class="">입니다.</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80ae-ad5a-d571da39b2d2" class="">생성형 AI는 바로 이 부분을 크게 바꾸고 있습니다.</p></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-80c8-8e92-d8ec021d24ea" class="bulleted-list"><li style="list-style-type:disc">반복 보고 감소</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-80fc-88ed-c6901bf09214" class="bulleted-list"><li style="list-style-type:disc">회의 준비 시간 감소</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-805f-855d-ea4764e59275" class="bulleted-list"><li style="list-style-type:disc">문서 정리 시간 감소</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-80b5-97f7-d14a10e66871" class="bulleted-list"><li style="list-style-type:disc">실시간 공유 증가</li></ul></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8067-bb69-c946f8dbf8bb" class="">즉,</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-801f-927e-c16a0da96ff0" class="">“보고를 위한 업무”</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8050-9be8-e9403eeaca2a" class="">자체를 줄이기 시작한 겁니다.</p></div><div style="display:contents" dir="auto"><hr id="35ac60fd-e0e4-80cd-9226-d2f904c9ec58"/></div><div style="display:contents" dir="auto"><h2 id="35ac60fd-e0e4-80f6-8bd7-f85dbfd01393" class="">결국 중요한 건 슬라이드가 아니라 실행 속도</h2></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8006-b9a6-dd28c9e06028" class="">예전 회사 문화는:</p></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-8040-8bfd-d1a96b2bced5" class="bulleted-list"><li style="list-style-type:disc">얼마나 정리 잘했는가</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-80ac-867c-ed2f317ee2c9" class="bulleted-list"><li style="list-style-type:disc">얼마나 보기 좋게 만들었는가</li></ul></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80fe-a042-d72599d9d42e" class="">를 중요하게 봤다면,</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80a9-8cca-d8d0219085ac" class="">이제는:</p></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-801a-bea3-cc9b8b52207c" class="bulleted-list"><li style="list-style-type:disc">얼마나 빠르게 공유했는가</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-8043-9bc9-e180792c372c" class="bulleted-list"><li style="list-style-type:disc">얼마나 빠르게 결정했는가</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-8009-a7a1-e0bc634c25da" class="bulleted-list"><li style="list-style-type:disc">얼마나 실행으로 연결됐는가</li></ul></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80d2-9a8d-e1bca2dae5d5" class="">가 더 중요해지고 있습니다.</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80fa-9aee-da7306bc5902" class="">그리고 생성형 AI는</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80c2-b46c-fead59d41b27" class="">그 변화 속도를 훨씬 빠르게 만들고 있습니다.</p></div></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>

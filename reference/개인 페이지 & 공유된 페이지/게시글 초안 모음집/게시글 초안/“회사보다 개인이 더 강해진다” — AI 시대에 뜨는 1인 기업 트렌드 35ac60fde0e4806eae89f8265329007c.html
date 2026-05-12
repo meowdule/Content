@@ -1,0 +1,745 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>“회사보다 개인이 더 강해진다” — AI 시대에 뜨는 1인 기업 트렌드</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+/* Override strong tags inside headings to maintain consistent weight */
+h1 strong,
+h2 strong,
+h3 strong {
+	font-weight: 600;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 10px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+
+	table.collection-content {
+		width: 100%;
+		table-layout: fixed;
+	}
+
+	table.collection-content th,
+	table.collection-content td {
+		overflow-wrap: anywhere;
+	}
+
+	table.collection-content td > .user,
+	table.collection-content td > time {
+		white-space: pre-wrap;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content-wrapper {
+	overflow-x: auto;
+}
+
+@media only print {
+	.collection-content-wrapper {
+		overflow-x: visible;
+	}
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.collection-content td {
+	white-space: pre-wrap;
+	word-break: break-word;
+}
+
+.column-list {
+	display: flex;
+	gap: 46px;
+}
+
+.column {
+	min-width: 0;
+	overflow: hidden;
+}
+
+.column > *:first-child {
+	margin-top: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+table {
+	border-collapse: collapse;
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol.numbered-list.numbered-list-digits-2 {
+	padding-inline-start: 2em;
+}
+
+ol.numbered-list.numbered-list-digits-3plus {
+	padding-inline-start: 2.4em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+	margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.callout img.notion-static-icon {
+	width: 1em;
+	height: 1em;
+}
+
+.callout p {
+	margin: 0;
+}
+
+.callout h1,
+.callout h2,
+.callout h3 {
+	margin: 0 0 0.6rem;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+blockquote.quote-large {
+	font-size: 1.25em;
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.highlight-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.highlight-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.highlight-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.highlight-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.highlight-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.highlight-default_background {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray_background {
+	background: rgba(42, 28, 0, 0.07);
+}
+.highlight-brown_background {
+	background: rgba(139, 46, 0, 0.086);
+}
+.highlight-orange_background {
+	background: rgba(224, 101, 1, 0.129);
+}
+.highlight-yellow_background {
+	background: rgba(211, 168, 0, 0.137);
+}
+.highlight-teal_background {
+	background: rgba(0, 100, 45, 0.09);
+}
+.highlight-blue_background {
+	background: rgba(0, 124, 215, 0.094);
+}
+.highlight-purple_background {
+	background: rgba(102, 0, 178, 0.078);
+}
+.highlight-pink_background {
+	background: rgba(197, 0, 93, 0.086);
+}
+.highlight-red_background {
+	background: rgba(223, 22, 0, 0.094);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.block-color-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.block-color-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.block-color-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.block-color-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.block-color-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.block-color-default_background {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray_background {
+	background: rgba(240, 239, 237, 1);
+}
+.block-color-brown_background {
+	background: rgba(245, 237, 233, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 235, 222, 1);
+}
+.block-color-yellow_background {
+	background: rgba(249, 243, 220, 1);
+}
+.block-color-teal_background {
+	background: rgba(232, 241, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(229, 242, 252, 1);
+}
+.block-color-purple_background {
+	background: rgba(243, 235, 249, 1);
+}
+.block-color-pink_background {
+	background: rgba(250, 233, 241, 1);
+}
+.block-color-red_background {
+	background: rgba(252, 233, 231, 1);
+}
+.select-value-color-default { background-color: rgba(42, 28, 0, 0.07); }
+.select-value-color-gray { background-color: rgba(28, 19, 1, 0.11); }
+.select-value-color-brown { background-color: rgba(127, 51, 0, 0.156); }
+.select-value-color-orange { background-color: rgba(196, 88, 0, 0.203); }
+.select-value-color-yellow { background-color: rgba(209, 156, 0, 0.282); }
+.select-value-color-green { background-color: rgba(0, 96, 38, 0.156); }
+.select-value-color-blue { background-color: rgba(0, 118, 217, 0.203); }
+.select-value-color-purple { background-color: rgba(92, 0, 163, 0.141); }
+.select-value-color-pink { background-color: rgba(183, 0, 78, 0.152); }
+.select-value-color-red { background-color: rgba(206, 24, 0, 0.164); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="35ac60fd-e0e4-806e-ae89-f8265329007c" class="page sans"><header><div class="page-header-icon undefined"><span class="icon">🖊️</span></div><h1 class="page-title" dir="auto"><strong>“회사보다 개인이 더 강해진다” — AI 시대에 뜨는 1인 기업 트렌드</strong></h1><p class="page-description" dir="auto"></p><table class="properties"><tbody><tr class="property-row property-row-relation"><th><span class="icon property-icon"><img src="https://www.notion.so/icons/arrow-northeast_gray.svg" style="width:14px;height:14px;display:block"/></span>상위 항목</th><td><a href="AI%20%EC%9E%90%EB%8F%99%ED%99%94%20%EB%B0%8F%20%EA%B8%B0%ED%9A%8D%EC%9E%90%20%EC%9E%85%EC%9E%A5%20%EA%B2%8C%EC%8B%9C%EA%B8%80%2035ec60fde0e48085ba48face25cf8900.html"><span class="icon">📚</span>AI 자동화 및 기획자 입장 게시글</a></td></tr><tr class="property-row property-row-text"><th><span class="icon property-icon"><img src="https://www.notion.so/icons/description_gray.svg" style="width:14px;height:14px;display:block"/></span>요약</th><td>• 솔로프리너 증가<br/>• AI 기반 자동 수익 구조<br/>• 해외 Creator Economy 변화</td></tr></tbody></table></header><div class="page-body"><div style="display:contents" dir="auto"><p id="35dc60fd-e0e4-8062-a7df-f6a6706d7c73" class="">요즘 해외에서는<br/>직원 없이 돌아가는 “1인 회사”가 빠르게 늘어나고 있습니다.</p></div><div style="display:contents" dir="auto"><p id="35dc60fd-e0e4-804a-a6ee-d13239025c75" class="">최근 AI는:</p></div><div style="display:contents" dir="auto"><ul id="35dc60fd-e0e4-8074-8826-e9b5238a07e0" class="bulleted-list"><li style="list-style-type:disc">콘텐츠 작성</li></ul></div><div style="display:contents" dir="auto"><ul id="35dc60fd-e0e4-8032-bca7-e10ec0f38090" class="bulleted-list"><li style="list-style-type:disc">서비스 개발</li></ul></div><div style="display:contents" dir="auto"><ul id="35dc60fd-e0e4-8073-ad09-c98eedcef9bd" class="bulleted-list"><li style="list-style-type:disc">디자인 생성</li></ul></div><div style="display:contents" dir="auto"><ul id="35dc60fd-e0e4-8044-86de-d8a462e9ec28" class="bulleted-list"><li style="list-style-type:disc">운영 자동화</li></ul></div><div style="display:contents" dir="auto"><p id="35dc60fd-e0e4-8024-81cf-d97b91734b87" class="">까지 대신 처리하기 시작했습니다.</p></div><div style="display:contents" dir="auto"><p id="35dc60fd-e0e4-80cb-9a39-da6948d9859a" class="">흥미로운 건,<br/>이 변화 때문에 예전에는 팀이 필요했던 일들을<br/>혼자서 해내는 사람들이 급격히 늘어나고 있다는 점입니다.</p></div><div style="display:contents" dir="auto"><p id="35dc60fd-e0e4-80cb-8504-de748d273ff1" class="">심지어 일부 창업자들은<br/>직원 없이도 실제 수익을 만드는 구조를 만들고 있다고 합니다.</p></div><div style="display:contents" dir="auto"><p id="35dc60fd-e0e4-801c-b320-f77cb1fdb970" class="">과연 AI 시대에는<br/>“회사”의 의미 자체가 어떻게 바뀌게 될까요?</p></div><div style="display:contents" dir="auto"><p id="35dc60fd-e0e4-80b8-b9b5-e696c8d37ef2" class="">
+</p></div><div style="display:contents" dir="ltr"><nav id="35ac60fd-e0e4-80da-993f-d96fed88b46b" class="block-color-gray table_of_contents"><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#35ac60fd-e0e4-8064-b8da-e9a9d705be7f">왜 갑자기 “1인 기업”이 다시 뜨는 걸까?</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#35ac60fd-e0e4-80d1-bdcc-e6709e7e4997">실제 해외에서는 “솔로프리너”가 급증하는 중</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#35ac60fd-e0e4-80a4-b497-f59b12ca2286">특히 AI가 강한 영역은 “혼자 하기 어려웠던 일”</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#35ac60fd-e0e4-809c-bf80-c0b81d8d9a8b">그래서 요즘 뜨는 건 “초소형 비즈니스”</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#35ac60fd-e0e4-80d5-803f-d0e6a3ac201e">실제로 개인 생산성이 회사 수준으로 올라가고 있다</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#35ac60fd-e0e4-80be-969c-d51b1222db47">그래서 회사의 의미 자체가 바뀌는 중이다</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#35ac60fd-e0e4-8065-b8b2-dc82bca0b867">물론 혼자서 모든 걸 해결할 수 있는 건 아니다</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#35ac60fd-e0e4-805c-8c68-fea880a35219">앞으로 더 중요해지는 사람은 이런 사람들일 가능성이 크다</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#35ac60fd-e0e4-8005-80c3-c36ddd4a6709">어쩌면 지금은 “개인의 시대”가 다시 시작되는 중일지도 모른다</a></div></nav></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80db-b2ac-d1e628baf7eb" class="">
+</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8032-8e35-e452d29a4d87" class="">예전에는 사업을 시작하려면 기본적으로 필요했습니다.</p></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-8028-bbfc-e85a9ccc5db6" class="bulleted-list"><li style="list-style-type:disc">사무실</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-8027-96f7-eddc6eb51ba1" class="bulleted-list"><li style="list-style-type:disc">팀원</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-8048-a74c-d3e6acabe0f8" class="bulleted-list"><li style="list-style-type:disc">개발자</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-8070-8e36-ea5c1a755026" class="bulleted-list"><li style="list-style-type:disc">디자이너</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-80f3-955c-fe06d715025f" class="bulleted-list"><li style="list-style-type:disc">마케팅 인력</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-80af-b102-f33d301be06b" class="bulleted-list"><li style="list-style-type:disc">운영 인력</li></ul></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-808f-8dd2-e478b3b56cff" class="">즉,</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8079-8f14-ea98f326ce5e" class="">“회사를 만들어야 사업이 가능하다”</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8062-9525-e3bf984b0a5a" class="">는 구조였습니다.</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8047-86f4-e7d1af1f258d" class="">그런데 지금은 분위기가 완전히 달라지고 있습니다.</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-801c-a53e-d134ca440860" class="">AI 덕분에:</p></div><div style="display:contents" dir="auto"><blockquote id="35ac60fd-e0e4-80aa-9c5c-f051b8e03df1" class="">“혼자서도 회사처럼 움직이는 사람”</blockquote></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8010-b195-c0956edcbc6e" class="">들이 빠르게 늘어나고 있기 때문입니다.</p></div><div style="display:contents" dir="auto"><hr id="35ac60fd-e0e4-8059-ab4e-fee2975db872"/></div><div style="display:contents" dir="auto"><h2 id="35ac60fd-e0e4-8064-b8da-e9a9d705be7f" class="">왜 갑자기 “1인 기업”이 다시 뜨는 걸까?</h2></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-800b-bbb4-ee88b861deff" class="">핵심 이유는 단순합니다.</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80c1-b4aa-fb4e46e4850c" class="">AI가 예전에는 팀이 하던 일을</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8047-a08d-cd888e02d581" class="">혼자서도 가능하게 만들고 있기 때문입니다.</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8015-b01f-dad182449d00" class="">예를 들어:</p></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-80c1-a68c-d1e5d369b4f1" class="bulleted-list"><li style="list-style-type:disc">GPT가 콘텐츠 작성</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-80ff-8059-c941fc0a9f42" class="bulleted-list"><li style="list-style-type:disc">AI 디자인 툴이 브랜딩 제작</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-808a-b638-e59c1476a17f" class="bulleted-list"><li style="list-style-type:disc">AI 코딩 툴이 서비스 개발</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-8058-8337-cd3a37fa6389" class="bulleted-list"><li style="list-style-type:disc">자동화 Agent가 운영 처리</li></ul></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8009-8408-cccc39a5d92f" class="">를 담당합니다.</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8084-b405-d7df41410d5d" class="">즉,</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8077-abbf-f7685176b9ac" class="">예전에는 5~10명이 필요했던 작업을</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80a8-8955-dc03b8abf465" class="">1명이 AI와 함께 처리할 수 있는 환경이 만들어진 겁니다.</p></div><div style="display:contents" dir="auto"><hr id="35ac60fd-e0e4-8015-935d-d19ad274bd1a"/></div><div style="display:contents" dir="auto"><h2 id="35ac60fd-e0e4-80d1-bdcc-e6709e7e4997" class="">실제 해외에서는 “솔로프리너”가 급증하는 중</h2></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-802d-ba3a-daf8e7acc0c1" class="">최근 해외에서 가장 빠르게 늘어나는 형태 중 하나가:</p></div><div style="display:contents" dir="auto"><blockquote id="35ac60fd-e0e4-80ee-ab31-d79cb83d64f7" class="">Solopreneur(1인 창업가)</blockquote></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8089-8b59-eae33fab7dbf" class="">입니다.</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80c2-8855-c9e4d6954223" class="">특징은 명확합니다.</p></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-801d-b09a-f5fbb1926b5c" class="bulleted-list"><li style="list-style-type:disc">작은 팀</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-8032-a446-c3711aaa60e7" class="bulleted-list"><li style="list-style-type:disc">빠른 실행</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-80bf-a27d-d3c2f329d4ba" class="bulleted-list"><li style="list-style-type:disc">AI 자동화 기반</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-8084-9f3f-f8e6c7b270d5" class="bulleted-list"><li style="list-style-type:disc">낮은 운영 비용</li></ul></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80ea-9291-f25a2ac9004d" class="">예전 스타트업처럼:</p></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-8074-8943-e1503bc5a395" class="bulleted-list"><li style="list-style-type:disc">투자 유치</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-80ba-ba8a-e1d79c1afdfd" class="bulleted-list"><li style="list-style-type:disc">대규모 채용</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-80c1-87ec-e53933f66f09" class="bulleted-list"><li style="list-style-type:disc">조직 확장</li></ul></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80fb-a200-e75159518724" class="">보다,</p></div><div style="display:contents" dir="auto"><blockquote id="35ac60fd-e0e4-80ef-b279-da0d5cf19cc0" class="">“작게 시작해서 빠르게 수익화”</blockquote></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-808f-b025-d03f552e074e" class="">하는 방향이 훨씬 많아지고 있습니다.</p></div><div style="display:contents" dir="auto"><hr id="35ac60fd-e0e4-801e-9403-ef885334436a"/></div><div style="display:contents" dir="auto"><h2 id="35ac60fd-e0e4-80a4-b497-f59b12ca2286" class="">특히 AI가 강한 영역은 “혼자 하기 어려웠던 일”</h2></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8093-9b7b-e90a859435cc" class="">과거 개인 창업의 가장 큰 문제는:</p></div><div style="display:contents" dir="auto"><blockquote id="35ac60fd-e0e4-801b-b137-fb390351eb08" class="">“모든 걸 혼자 할 수 없었다”</blockquote></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80a4-8aa9-c70c232fbfae" class="">는 점입니다.</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-808a-af4a-f01aae329140" class="">예:</p></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-80ec-8742-f45eb865151d" class="bulleted-list"><li style="list-style-type:disc">개발 몰라서 외주 맡기고</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-800d-8af4-ee985950eb3e" class="bulleted-list"><li style="list-style-type:disc">디자인 못 해서 수정 반복하고</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-8029-af72-f4073f0d213c" class="bulleted-list"><li style="list-style-type:disc">마케팅 콘텐츠 직접 못 만들고</li></ul></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80dc-88d6-ed77a78f7bb1" class="">결국 비용이 커졌습니다.</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8082-a082-cca9067b19b9" class="">하지만 지금은:</p></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-8096-b38c-ce098ee069fd" class="bulleted-list"><li style="list-style-type:disc">AI가 코드 생성하고</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-80bf-99d6-e874576bebce" class="bulleted-list"><li style="list-style-type:disc">이미지 만들고</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-800a-859f-e7ad9f7d2f2e" class="bulleted-list"><li style="list-style-type:disc">영상 편집하고</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-80b0-90a7-dc09cb43e648" class="bulleted-list"><li style="list-style-type:disc">광고 문구까지 추천합니다.</li></ul></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80c0-9a3b-c5b5376a9b27" class="">즉,</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-801b-b778-e2176f813a0c" class="">개인이 가진 실행 한계가 크게 낮아지고 있습니다.</p></div><div style="display:contents" dir="auto"><hr id="35ac60fd-e0e4-805e-adb1-d7d2b81937fb"/></div><div style="display:contents" dir="auto"><h2 id="35ac60fd-e0e4-809c-bf80-c0b81d8d9a8b" class="">그래서 요즘 뜨는 건 “초소형 비즈니스”</h2></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8041-8033-dd093b007105" class="">최근 AI 시대에 많이 등장하는 형태:</p></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-804c-8ecf-e534ba768d29" class="bulleted-list"><li style="list-style-type:disc">1인 SaaS</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-800a-add3-d1f1e2f0cee9" class="bulleted-list"><li style="list-style-type:disc">AI 자동화 대행</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-8086-af30-d79da3a27aeb" class="bulleted-list"><li style="list-style-type:disc">뉴스레터 비즈니스</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-8071-9cda-d2d20b667960" class="bulleted-list"><li style="list-style-type:disc">디지털 템플릿 판매</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-80f6-9b63-c1f3235deed0" class="bulleted-list"><li style="list-style-type:disc">마이크로 구독 서비스</li></ul></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-809c-ae8c-d5f61b0b3255" class="">입니다.</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8077-99c7-f5493c49ef5f" class="">규모는 작지만:</p></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-8062-b87b-ed8b4095a98f" class="bulleted-list"><li style="list-style-type:disc">운영비 낮고</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-80c4-8941-da39a067fa65" class="bulleted-list"><li style="list-style-type:disc">자동화 비율 높고</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-8083-b41a-fc5560fb62f8" class="bulleted-list"><li style="list-style-type:disc">빠르게 실행 가능</li></ul></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80ed-adf1-ea547850c1aa" class="">한 구조입니다.</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8099-996a-cc2f7ce88d22" class="">즉,</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-807a-ae34-e39645342ede" class="">“큰 회사”</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8053-93be-d68aaef9f190" class="">보다</p></div><div style="display:contents" dir="auto"><blockquote id="35ac60fd-e0e4-807a-9b50-eb578756f9f6" class="">“빠르게 움직이는 개인”</blockquote></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80ca-bd6d-efb38ca20d4c" class="">이 강해지는 환경이 만들어지고 있는 겁니다.</p></div><div style="display:contents" dir="auto"><hr id="35ac60fd-e0e4-8048-883d-cf6689be3695"/></div><div style="display:contents" dir="auto"><h2 id="35ac60fd-e0e4-80d5-803f-d0e6a3ac201e" class="">실제로 개인 생산성이 회사 수준으로 올라가고 있다</h2></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8052-8db2-dfca4862d688" class="">예전에는:</p></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-8058-8a59-fab1a39b35a4" class="bulleted-list"><li style="list-style-type:disc">혼자서 서비스 운영 = 거의 불가능</li></ul></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8027-bcf5-d70f8e3204ba" class="">에 가까웠습니다.</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80ee-8cf1-e270c5d9fc18" class="">하지만 지금은:</p></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-80f8-ac0e-fd864b49ea61" class="bulleted-list"><li style="list-style-type:disc">AI 고객 응대</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-8077-8db3-e506475908f3" class="bulleted-list"><li style="list-style-type:disc">자동 이메일 발송</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-8050-ab59-f2477bb96726" class="bulleted-list"><li style="list-style-type:disc">콘텐츠 자동 생성</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-8098-8dc6-c9fe37081b35" class="bulleted-list"><li style="list-style-type:disc">운영 자동화</li></ul></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-808c-8f09-e321fbfbb5c3" class="">까지 가능해지면서</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8076-a828-cfec64ec5f3f" class="">혼자서도 상당한 규모의 서비스를 운영할 수 있게 되고 있습니다.</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-805b-ba67-d4bb0fdb7aca" class="">최근에는:</p></div><div style="display:contents" dir="auto"><blockquote id="35ac60fd-e0e4-8032-81e8-c866df7308ff" class="">“직원 없는 회사”</blockquote></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-800a-957f-f1e4ebf21b3b" class="">도 점점 늘어나고 있습니다.</p></div><div style="display:contents" dir="auto"><hr id="35ac60fd-e0e4-8009-8d2e-d60ac8927629"/></div><div style="display:contents" dir="auto"><h2 id="35ac60fd-e0e4-80be-969c-d51b1222db47" class="">그래서 회사의 의미 자체가 바뀌는 중이다</h2></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80cc-804a-e3ccbe586fbf" class="">과거 기업의 강점은:</p></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-8088-857a-efeac27d2e6f" class="bulleted-list"><li style="list-style-type:disc">사람 많이 모으는 것</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-8001-b1f7-ed36e6618876" class="bulleted-list"><li style="list-style-type:disc">자본</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-80d7-980f-c3ffbcf6b360" class="bulleted-list"><li style="list-style-type:disc">조직 규모</li></ul></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80d0-ac94-c819a10ffac6" class="">였습니다.</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8049-ad8a-c3f28e4c5f7b" class="">하지만 AI 시대에는:</p></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-8039-8423-d0567ff1ff0f" class="bulleted-list"><li style="list-style-type:disc">실행 속도</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-8071-a874-d5d4dd4b7580" class="bulleted-list"><li style="list-style-type:disc">자동화 구조</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-8008-8a5a-e2c07a632676" class="bulleted-list"><li style="list-style-type:disc">아이디어 검증 능력</li></ul></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-805b-ab3e-e05968bed4b5" class="">이 훨씬 중요해지고 있습니다.</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80ca-832f-cb7e7c17e6dc" class="">즉,</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8067-910b-d81dd12ca837" class="">큰 조직이 항상 유리한 시대가 아닐 수도 있다는 겁니다.</p></div><div style="display:contents" dir="auto"><hr id="35ac60fd-e0e4-8006-af31-c3a9ef615ed1"/></div><div style="display:contents" dir="auto"><h2 id="35ac60fd-e0e4-8065-b8b2-dc82bca0b867" class="">물론 혼자서 모든 걸 해결할 수 있는 건 아니다</h2></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8051-84da-e56c38b2d3b2" class="">많은 사람들이 오해하는 부분도 있습니다.</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-802d-acba-cb93ec9c1a86" class="">AI가 강력해졌다고 해서</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8047-beee-d7f0a1e58aa7" class="">아무나 바로 성공하는 건 아닙니다.</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8006-8fd1-d04f2a3251ff" class="">여전히 중요한 건:</p></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-80a4-8611-e4039fe9757f" class="bulleted-list"><li style="list-style-type:disc">어떤 문제를 해결하는지</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-80c3-b2fb-e9eccc52dc1e" class="bulleted-list"><li style="list-style-type:disc">사람들이 실제로 원하는지</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-808d-9227-d307d3f503db" class="bulleted-list"><li style="list-style-type:disc">어떻게 차별화할지</li></ul></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8097-9e7c-f38ae8045140" class="">입니다.</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80eb-b6d9-c8298e3f1d84" class="">AI는 실행 장벽을 낮춰주지만,</p></div><div style="display:contents" dir="auto"><blockquote id="35ac60fd-e0e4-804c-8191-f04f7c602a2b" class="">“무엇을 해야 하는가”</blockquote></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8038-9760-e0a149709e5f" class="">까지 자동으로 정해주진 않습니다.</p></div><div style="display:contents" dir="auto"><hr id="35ac60fd-e0e4-80fc-83b8-e7a2f4b7b826"/></div><div style="display:contents" dir="auto"><h2 id="35ac60fd-e0e4-805c-8c68-fea880a35219" class="">앞으로 더 중요해지는 사람은 이런 사람들일 가능성이 크다</h2></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-80bd-a004-c0a8c12df878" class="bulleted-list"><li style="list-style-type:disc">빠르게 시도하는 사람</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-8024-99e6-fafd00124b79" class="bulleted-list"><li style="list-style-type:disc">AI를 적극 활용하는 사람</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-80e0-a43e-e26c597938e2" class="bulleted-list"><li style="list-style-type:disc">혼자서 실행 가능한 사람</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-8033-83b3-f24fad5e2ad1" class="bulleted-list"><li style="list-style-type:disc">작은 시장을 빠르게 공략하는 사람</li></ul></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80ee-b62d-d3ca40f0a931" class="">즉,</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8001-b5a5-c4f7d7c6d949" class="">“작지만 빠르게 움직이는 개인”</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8090-bb92-ef365e6d5585" class="">이 점점 강해질 가능성이 큽니다.</p></div><div style="display:contents" dir="auto"><hr id="35ac60fd-e0e4-809e-84c0-e5fffeab2fd0"/></div><div style="display:contents" dir="auto"><h2 id="35ac60fd-e0e4-8005-80c3-c36ddd4a6709" class="">어쩌면 지금은 “개인의 시대”가 다시 시작되는 중일지도 모른다</h2></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80eb-97f7-fe72ef064960" class="">예전 인터넷 시대가:</p></div><div style="display:contents" dir="auto"><blockquote id="35ac60fd-e0e4-80f9-94ae-e54768c25637" class="">“누구나 콘텐츠를 만들 수 있는 시대”</blockquote></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80b0-ab7b-c60549b29521" class="">를 열었다면,</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8092-99eb-ea92a7051391" class="">AI 시대는:</p></div><div style="display:contents" dir="auto"><blockquote id="35ac60fd-e0e4-80f1-8ba1-c610a7746962" class="">“누구나 작은 회사를 운영할 수 있는 시대”</blockquote></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8076-9299-ee5df7b9624f" class="">를 만들고 있는지도 모릅니다.</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8077-b975-d6c873d9bb23" class="">그리고 그 변화는</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80eb-a670-d07e40f85899" class="">생각보다 훨씬 빠르게 현실이 되고 있습니다.</p></div></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>

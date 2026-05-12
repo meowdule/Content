@@ -1,0 +1,746 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>“이제 앱보다 Agent 만든다” — 실리콘밸리 최신 트렌드 정리</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+/* Override strong tags inside headings to maintain consistent weight */
+h1 strong,
+h2 strong,
+h3 strong {
+	font-weight: 600;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 10px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+
+	table.collection-content {
+		width: 100%;
+		table-layout: fixed;
+	}
+
+	table.collection-content th,
+	table.collection-content td {
+		overflow-wrap: anywhere;
+	}
+
+	table.collection-content td > .user,
+	table.collection-content td > time {
+		white-space: pre-wrap;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content-wrapper {
+	overflow-x: auto;
+}
+
+@media only print {
+	.collection-content-wrapper {
+		overflow-x: visible;
+	}
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.collection-content td {
+	white-space: pre-wrap;
+	word-break: break-word;
+}
+
+.column-list {
+	display: flex;
+	gap: 46px;
+}
+
+.column {
+	min-width: 0;
+	overflow: hidden;
+}
+
+.column > *:first-child {
+	margin-top: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+table {
+	border-collapse: collapse;
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol.numbered-list.numbered-list-digits-2 {
+	padding-inline-start: 2em;
+}
+
+ol.numbered-list.numbered-list-digits-3plus {
+	padding-inline-start: 2.4em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+	margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.callout img.notion-static-icon {
+	width: 1em;
+	height: 1em;
+}
+
+.callout p {
+	margin: 0;
+}
+
+.callout h1,
+.callout h2,
+.callout h3 {
+	margin: 0 0 0.6rem;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+blockquote.quote-large {
+	font-size: 1.25em;
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.highlight-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.highlight-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.highlight-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.highlight-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.highlight-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.highlight-default_background {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray_background {
+	background: rgba(42, 28, 0, 0.07);
+}
+.highlight-brown_background {
+	background: rgba(139, 46, 0, 0.086);
+}
+.highlight-orange_background {
+	background: rgba(224, 101, 1, 0.129);
+}
+.highlight-yellow_background {
+	background: rgba(211, 168, 0, 0.137);
+}
+.highlight-teal_background {
+	background: rgba(0, 100, 45, 0.09);
+}
+.highlight-blue_background {
+	background: rgba(0, 124, 215, 0.094);
+}
+.highlight-purple_background {
+	background: rgba(102, 0, 178, 0.078);
+}
+.highlight-pink_background {
+	background: rgba(197, 0, 93, 0.086);
+}
+.highlight-red_background {
+	background: rgba(223, 22, 0, 0.094);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.block-color-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.block-color-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.block-color-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.block-color-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.block-color-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.block-color-default_background {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray_background {
+	background: rgba(240, 239, 237, 1);
+}
+.block-color-brown_background {
+	background: rgba(245, 237, 233, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 235, 222, 1);
+}
+.block-color-yellow_background {
+	background: rgba(249, 243, 220, 1);
+}
+.block-color-teal_background {
+	background: rgba(232, 241, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(229, 242, 252, 1);
+}
+.block-color-purple_background {
+	background: rgba(243, 235, 249, 1);
+}
+.block-color-pink_background {
+	background: rgba(250, 233, 241, 1);
+}
+.block-color-red_background {
+	background: rgba(252, 233, 231, 1);
+}
+.select-value-color-default { background-color: rgba(42, 28, 0, 0.07); }
+.select-value-color-gray { background-color: rgba(28, 19, 1, 0.11); }
+.select-value-color-brown { background-color: rgba(127, 51, 0, 0.156); }
+.select-value-color-orange { background-color: rgba(196, 88, 0, 0.203); }
+.select-value-color-yellow { background-color: rgba(209, 156, 0, 0.282); }
+.select-value-color-green { background-color: rgba(0, 96, 38, 0.156); }
+.select-value-color-blue { background-color: rgba(0, 118, 217, 0.203); }
+.select-value-color-purple { background-color: rgba(92, 0, 163, 0.141); }
+.select-value-color-pink { background-color: rgba(183, 0, 78, 0.152); }
+.select-value-color-red { background-color: rgba(206, 24, 0, 0.164); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="35ac60fd-e0e4-80b6-aef4-f2fd539a1b38" class="page sans"><header><div class="page-header-icon undefined"><span class="icon">🖊️</span></div><h1 class="page-title" dir="auto"><strong>“이제 앱보다 Agent 만든다” — 실리콘밸리 최신 트렌드 정리</strong></h1><p class="page-description" dir="auto"></p><table class="properties"><tbody><tr class="property-row property-row-relation"><th><span class="icon property-icon"><img src="https://www.notion.so/icons/arrow-northeast_gray.svg" style="width:14px;height:14px;display:block"/></span>상위 항목</th><td><a href="AI%20%EC%9E%90%EB%8F%99%ED%99%94%20%EB%B0%8F%20%EA%B8%B0%ED%9A%8D%EC%9E%90%20%EC%9E%85%EC%9E%A5%20%EA%B2%8C%EC%8B%9C%EA%B8%80%2035ec60fde0e48085ba48face25cf8900.html"><span class="icon">📚</span>AI 자동화 및 기획자 입장 게시글</a></td></tr><tr class="property-row property-row-text"><th><span class="icon property-icon"><img src="https://www.notion.so/icons/description_gray.svg" style="width:14px;height:14px;display:block"/></span>요약</th><td>• 단순 서비스 → AI 에이전트 전환<br/>• MCP·멀티 Agent 흐름<br/>• AI 자동 실행 구조 설명</td></tr></tbody></table></header><div class="page-body"><div style="display:contents" dir="auto"><p id="35dc60fd-e0e4-8056-9b5b-c487278d817f" class="">요즘 실리콘밸리에서는 더 이상</p></div><div style="display:contents" dir="auto"><blockquote id="35dc60fd-e0e4-803d-b247-db724334a7ed" class="">“어떤 앱을 만들까?”</blockquote></div><div style="display:contents" dir="auto"><p id="35dc60fd-e0e4-8056-9db9-eae4e6139ddb" class="">보다</p></div><div style="display:contents" dir="auto"><blockquote id="35dc60fd-e0e4-802d-a671-c9d3a8979f29" class="">“어떤 AI Agent가 일을 대신할 수 있을까?”</blockquote></div><div style="display:contents" dir="auto"><p id="35dc60fd-e0e4-8006-b495-dbf623ac25ab" class="">를 더 많이 고민하기 시작했습니다.</p></div><div style="display:contents" dir="auto"><p id="35dc60fd-e0e4-809a-84d4-ed178fbdd73e" class="">단순 챗봇 수준이 아니라,<br/>메일 보내고·자료 찾고·보고서 만들고·툴까지 연결하는<br/>“실행형 AI”가 빠르게 늘어나고 있기 때문입니다.</p></div><div style="display:contents" dir="auto"><p id="35dc60fd-e0e4-80c5-94eb-c1a0f690c633" class="">실제로 최근 스타트업들은</p></div><div style="display:contents" dir="auto"><p id="35dc60fd-e0e4-80d8-ae1c-d30100804dca" class="">앱 하나 만드는 것보다:</p></div><div style="display:contents" dir="auto"><ul id="35dc60fd-e0e4-8004-9917-c52b3febd2dc" class="bulleted-list"><li style="list-style-type:disc">영업 자동화 Agent</li></ul></div><div style="display:contents" dir="auto"><ul id="35dc60fd-e0e4-8037-ad06-c233de4157e3" class="bulleted-list"><li style="list-style-type:disc">QA 테스트 Agent</li></ul></div><div style="display:contents" dir="auto"><ul id="35dc60fd-e0e4-801f-a36d-c499446c1dfc" class="bulleted-list"><li style="list-style-type:disc">리서치 Agent</li></ul></div><div style="display:contents" dir="auto"><ul id="35dc60fd-e0e4-80b0-ba2f-ccc25bedb4e4" class="bulleted-list"><li style="list-style-type:disc">운영 자동화 Agent</li></ul></div><div style="display:contents" dir="auto"><p id="35dc60fd-e0e4-8068-b0c0-d0d8ca37d8d0" class="">같은 흐름에 더 집중하고 있습니다.</p></div><div style="display:contents" dir="auto"><p id="35dc60fd-e0e4-808f-b30c-f728fd9c0d6f" class="">왜 갑자기 업계가 “앱”보다 “Agent”에 몰리는 걸까요?</p></div><div style="display:contents" dir="auto"><p id="35dc60fd-e0e4-80f3-b852-d45330260856" class="">그리고 많은 사람들이 말하는:</p></div><div style="display:contents" dir="auto"><blockquote id="35dc60fd-e0e4-805e-827a-c709a3cbe877" class="">“앞으로는 사람이 앱을 쓰는 게 아니라,<div style="display:contents" dir="auto"><p id="35dc60fd-e0e4-8059-9327-f0df3bb27d10" class="">AI가 대신 앱을 쓰게 된다”</p></div></blockquote></div><div style="display:contents" dir="auto"><p id="35dc60fd-e0e4-80f3-96b5-f31dc5ed76e8" class="">는 이야기는 정말 현실이 되고 있는 걸까요?</p></div><div style="display:contents" dir="auto"><p id="35dc60fd-e0e4-80ea-b05f-c2113c51d752" class="">
+</p></div><div style="display:contents" dir="auto"><p id="35dc60fd-e0e4-8024-9339-f2388dfcb717" class="">
+</p></div><div style="display:contents" dir="ltr"><nav id="35ac60fd-e0e4-808e-8bf3-f5e23eb67d25" class="block-color-gray table_of_contents"><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#35ac60fd-e0e4-80b5-be7d-fc9b679116fa">Agent는 기존 AI와 뭐가 다른 걸까?</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#35ac60fd-e0e4-8010-b87c-cffbe0103d38">왜 갑자기 Agent가 중요해졌을까?</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#35ac60fd-e0e4-8041-9337-c6293c9d6e81">실제 실리콘밸리에서는 이런 흐름이 나온다</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#35ac60fd-e0e4-80e3-ab6f-f1ea6495dc2e">그래서 “앱 구조” 자체가 바뀌고 있다</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#35ac60fd-e0e4-808e-9060-c3a7eb69b442">최근 많이 나오는 키워드: MCP, Multi-Agent</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#35ac60fd-e0e4-80a0-aded-d7267199808e">MCP(Model Context Protocol)</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#35ac60fd-e0e4-808e-8254-c058b46b2373">Multi-Agent</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#35ac60fd-e0e4-80c3-8f1f-c79c144458d5">그래서 기업들이 기대하는 건 “AI 직원”</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#35ac60fd-e0e4-80e4-8b77-fad057fbd7fa">하지만 아직 한계도 분명하다</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#35ac60fd-e0e4-80e1-bfc4-f1083e0e60e9">그런데도 왜 다들 Agent에 몰리는 걸까?</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#35ac60fd-e0e4-806e-9262-cb353c8fec48">어쩌면 앞으로 앱은 “보조 역할”이 될 수도 있다</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#35ac60fd-e0e4-80f9-80c9-f6210d807098">결국 지금은 “앱의 시대”에서 “Agent의 시대”로 넘어가는 중이다</a></div></nav></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8087-9cb6-d7ab39a239d1" class="">
+</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80f3-9207-faf7d960dc13" class="">몇 년 전까지만 해도</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-801e-8bea-f13bd75d8ee1" class="">IT 업계의 목표는 단순했습니다.</p></div><div style="display:contents" dir="auto"><blockquote id="35ac60fd-e0e4-8033-bc83-e75b77dc989a" class="">“앱을 많이 만드는 것”</blockquote></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80dd-902d-d8f19ef8fc9f" class="">모바일 앱,</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80a5-9fab-eb6200d94ede" class="">웹 서비스,</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8089-8f5a-cddffa5f80e9" class="">플랫폼 경쟁이 중심이었습니다.</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8017-bbd4-d20947e414cf" class="">그런데 최근 실리콘밸리 분위기는 완전히 달라졌습니다.</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8062-ba8e-e648bd7b7c3d" class="">요즘 가장 많이 나오는 키워드는:</p></div><div style="display:contents" dir="auto"><blockquote id="35ac60fd-e0e4-807a-aac4-e7db379c5bc0" class="">“AI Agent”</blockquote></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8006-8715-f01fe61c0185" class="">입니다.</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8007-ae72-d22b197770b9" class="">단순히 질문에 답하는 AI가 아니라,</p></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-8075-9912-c2e891b38eb3" class="bulleted-list"><li style="list-style-type:disc">직접 작업하고</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-80c6-9d29-c64e75d99769" class="bulleted-list"><li style="list-style-type:disc">여러 툴을 연결하고</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-80c0-8875-d638e0216be0" class="bulleted-list"><li style="list-style-type:disc">목표를 수행하는</li></ul></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-801d-96a2-fc590fdd71b7" class="">“실행형 AI”가 새로운 흐름이 되고 있는 겁니다.</p></div><div style="display:contents" dir="auto"><hr id="35ac60fd-e0e4-8007-aaf4-ee96396751d5"/></div><div style="display:contents" dir="auto"><h2 id="35ac60fd-e0e4-80b5-be7d-fc9b679116fa" class="">Agent는 기존 AI와 뭐가 다른 걸까?</h2></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80fb-9dcf-c7c68bd932d3" class="">예전 AI:</p></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-80e9-ba82-f0e71e956c1c" class="bulleted-list"><li style="list-style-type:disc">질문 답변</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-807c-9821-d071a35902ad" class="bulleted-list"><li style="list-style-type:disc">문서 요약</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-807d-baa7-ccbf8a206ef0" class="bulleted-list"><li style="list-style-type:disc">코드 생성</li></ul></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-802e-a2df-dab4660f4625" class="">처럼 “도와주는 역할”에 가까웠습니다.</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80b9-9d1c-f56f1554ce0f" class="">하지만 Agent는 다릅니다.</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-808d-8ccb-f04d5fc72643" class="">예:</p></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-802e-93a9-d183da70b0f5" class="bulleted-list"><li style="list-style-type:disc">메일 확인</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-80e5-8f0f-f852f13a456a" class="bulleted-list"><li style="list-style-type:disc">일정 등록</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-8099-9ff3-cc443765efa5" class="bulleted-list"><li style="list-style-type:disc">자료 검색</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-80a7-963d-c82f0c8ee433" class="bulleted-list"><li style="list-style-type:disc">데이터 정리</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-8098-90cb-f24cb639c686" class="bulleted-list"><li style="list-style-type:disc">보고서 생성</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-8036-b714-c35efa1224ff" class="bulleted-list"><li style="list-style-type:disc">실행 결과 전달</li></ul></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8061-ab86-e041d2596d70" class="">까지 스스로 수행합니다.</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80de-9108-d28cce84b95d" class="">즉,</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-809c-b485-d556076d8f3b" class="">단순 챗봇이 아니라:</p></div><div style="display:contents" dir="auto"><blockquote id="35ac60fd-e0e4-8060-9a61-fd4456ed10ce" class="">“일을 처리하는 AI”</blockquote></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80c9-9ea2-ddda0c4a8e35" class="">에 가까워지고 있는 겁니다.</p></div><div style="display:contents" dir="auto"><hr id="35ac60fd-e0e4-80d9-afe5-e6e3b4a27539"/></div><div style="display:contents" dir="auto"><h2 id="35ac60fd-e0e4-8010-b87c-cffbe0103d38" class="">왜 갑자기 Agent가 중요해졌을까?</h2></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80f5-a0b1-cbde23c4c6ec" class="">핵심 이유는 단순합니다.</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-804b-9d64-da0f003ae4e2" class="">기업들이 원하는 건:</p></div><div style="display:contents" dir="auto"><blockquote id="35ac60fd-e0e4-80cf-97c2-dcc686b5a42c" class="">“대화 잘하는 AI”<div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8079-ab29-df409f5edcc7" class="">보다</p></div></blockquote></div><div style="display:contents" dir="auto"><blockquote id="35ac60fd-e0e4-80c4-868f-f88dc1bb4f5c" class="">“실제로 일하는 AI”</blockquote></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8056-9e10-c8f3c15cd980" class="">이기 때문입니다.</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-804d-b379-e3bb0149c416" class="">예전 생성형 AI는:</p></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-8006-a209-cb4b3024849a" class="bulleted-list"><li style="list-style-type:disc">답변은 잘하지만</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-80e2-950f-ef0c504dec25" class="bulleted-list"><li style="list-style-type:disc">실제 실행은 사람이 해야 했습니다.</li></ul></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8041-b019-ff20f3042751" class="">하지만 Agent는:</p></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-8024-81a6-d4479ab5450e" class="bulleted-list"><li style="list-style-type:disc">여러 시스템 연결</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-80e0-94ef-ea2912844841" class="bulleted-list"><li style="list-style-type:disc">자동 실행</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-80b6-b011-c050708b56e3" class="bulleted-list"><li style="list-style-type:disc">반복 작업 처리</li></ul></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80dc-b31f-fd15ccb984e2" class="">까지 가능해지면서</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-804f-95b4-e0db6037863b" class="">업무 자동화 범위가 훨씬 커지고 있습니다.</p></div><div style="display:contents" dir="auto"><hr id="35ac60fd-e0e4-80f1-b107-df6cb4201264"/></div><div style="display:contents" dir="auto"><h2 id="35ac60fd-e0e4-8041-9337-c6293c9d6e81" class="">실제 실리콘밸리에서는 이런 흐름이 나온다</h2></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80e6-a5da-d8285e12dedf" class="">최근 해외 스타트업들은:</p></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-8068-8e2d-d427f19cf511" class="bulleted-list"><li style="list-style-type:disc">단순 SaaS<br/>보다</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-800a-8606-ea73a1ef4075" class="bulleted-list"><li style="list-style-type:disc">AI Agent 기반 서비스</li></ul></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-807a-90b8-c83a8d19f0b6" class="">를 훨씬 많이 만들고 있습니다.</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80ff-84ea-df18fee4042d" class="">예:</p></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-803a-afeb-c3ea553ddd45" class="bulleted-list"><li style="list-style-type:disc">자동 고객 응대 Agent</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-80ee-8557-d9571d653b39" class="bulleted-list"><li style="list-style-type:disc">영업 메일 보내는 Agent</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-80b6-8367-ddc6d8d54b01" class="bulleted-list"><li style="list-style-type:disc">QA 테스트 수행 Agent</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-8008-b0f4-c42a6748e298" class="bulleted-list"><li style="list-style-type:disc">데이터 분석 Agent</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-8071-9116-d6972297de2b" class="bulleted-list"><li style="list-style-type:disc">회의 정리 Agent</li></ul></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-809a-8d53-ebf1c4f822b1" class="">즉,</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80ea-8b1b-c3a2ccf68dd1" class="">“기능 제공”</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-803b-aa7c-c809221a54fc" class="">에서</p></div><div style="display:contents" dir="auto"><blockquote id="35ac60fd-e0e4-80b3-95c1-edc252cbb0d8" class="">“업무 자체를 대신 수행”</blockquote></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80b0-8d90-f87fa04f0115" class="">하는 방향으로 이동 중입니다.</p></div><div style="display:contents" dir="auto"><hr id="35ac60fd-e0e4-80da-968e-dc594182388b"/></div><div style="display:contents" dir="auto"><h2 id="35ac60fd-e0e4-80e3-ab6f-f1ea6495dc2e" class="">그래서 “앱 구조” 자체가 바뀌고 있다</h2></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80aa-8247-c58f0c9756c0" class="">예전 앱:</p></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-80c7-8ae8-e7188e252536" class="bulleted-list"><li style="list-style-type:disc">사람이 직접 클릭</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-8070-af48-de967a3b237e" class="bulleted-list"><li style="list-style-type:disc">메뉴 이동</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-8073-ae6a-e200d27982ca" class="bulleted-list"><li style="list-style-type:disc">기능 실행</li></ul></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80d0-b900-d39e55ef1593" class="">구조였습니다.</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8065-8081-e265695754b2" class="">하지만 Agent 시대에는:</p></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-80f2-ab88-da775dec60a3" class="bulleted-list"><li style="list-style-type:disc">목표 입력</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-80d1-a659-daa48afd64d8" class="bulleted-list"><li style="list-style-type:disc">AI가 알아서 처리</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-8053-9d43-d7982ccd1677" class="bulleted-list"><li style="list-style-type:disc">결과만 전달</li></ul></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80f9-9f20-d7d12dc3ba14" class="">형태가 점점 많아지고 있습니다.</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80b4-8fd8-ed0eb7ebb3b2" class="">예:</p></div><div style="display:contents" dir="auto"><blockquote id="35ac60fd-e0e4-8007-86cc-f99edcd29845" class="">“이번 주 경쟁사 동향 정리해줘”</blockquote></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8044-b8f7-cd1b32ed0c83" class="">라고 하면</p></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-8054-9fc7-c6d2372c3003" class="bulleted-list"><li style="list-style-type:disc">웹 검색</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-8092-b614-e4652ba934a0" class="bulleted-list"><li style="list-style-type:disc">데이터 수집</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-8085-aef0-c543f7e5b5bb" class="bulleted-list"><li style="list-style-type:disc">요약</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-8052-8e59-ce8efd35417c" class="bulleted-list"><li style="list-style-type:disc">리포트 작성</li></ul></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-806a-a7f2-d7880a0ae4f6" class="">까지 자동 수행하는 방식입니다.</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80db-81ae-f376fcd32684" class="">즉,</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80c3-adc7-e11f20c4c586" class="">UI 중심 시대에서:</p></div><div style="display:contents" dir="auto"><blockquote id="35ac60fd-e0e4-8020-bedc-d09afd4aa74f" class="">“행동 중심 AI”</blockquote></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8065-bc8b-d13676c045b7" class="">시대로 넘어가는 겁니다.</p></div><div style="display:contents" dir="auto"><hr id="35ac60fd-e0e4-8028-8594-ffc32da66d94"/></div><div style="display:contents" dir="auto"><h2 id="35ac60fd-e0e4-808e-9060-c3a7eb69b442" class="">최근 많이 나오는 키워드: MCP, Multi-Agent</h2></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8001-9ea9-d6bd3c4fb5e9" class="">최근 AI 업계에서 자주 등장하는 개념도 있습니다.</p></div><div style="display:contents" dir="auto"><h3 id="35ac60fd-e0e4-80a0-aded-d7267199808e" class="">MCP(Model Context Protocol)</h3></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8028-beac-fc5c8c7f4ab5" class="">AI가 외부 도구·데이터와 연결되는 구조</p></div><div style="display:contents" dir="auto"><h3 id="35ac60fd-e0e4-808e-8254-c058b46b2373" class="">Multi-Agent</h3></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80e8-9537-ebeba41aa42d" class="">여러 AI Agent가 역할을 나눠 협업하는 구조</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-808a-81ac-f35ea664d0dc" class="">예:</p></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-802d-99a0-e34ff8c94f1d" class="bulleted-list"><li style="list-style-type:disc">한 Agent는 자료 조사</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-800e-838c-f597926a2023" class="bulleted-list"><li style="list-style-type:disc">한 Agent는 요약</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-80b9-931a-da2ab2d0aceb" class="bulleted-list"><li style="list-style-type:disc">한 Agent는 실행</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-80bf-95e8-da0024eafa11" class="bulleted-list"><li style="list-style-type:disc">한 Agent는 검증</li></ul></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80d2-b109-d6077017f715" class="">을 담당하는 식입니다.</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8044-8198-f060eb80ffd7" class="">즉,</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-807a-bf51-c3751e1de322" class="">AI끼리 역할을 나누는 흐름까지 나오고 있습니다.</p></div><div style="display:contents" dir="auto"><hr id="35ac60fd-e0e4-80c4-9f16-f7d33854db62"/></div><div style="display:contents" dir="auto"><h2 id="35ac60fd-e0e4-80c3-8f1f-c79c144458d5" class="">그래서 기업들이 기대하는 건 “AI 직원”</h2></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80d6-8964-d7cc7fa4eebd" class="">실제로 최근 기업들이 원하는 방향은 꽤 명확합니다.</p></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-8066-8c42-dbdb9a707700" class="bulleted-list"><li style="list-style-type:disc">단순 챗봇 X</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-8002-aab5-e436d69ee748" class="bulleted-list"><li style="list-style-type:disc">단순 검색 AI X</li></ul></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80c2-ba7e-f1d1fcb78edc" class="">대신:</p></div><div style="display:contents" dir="auto"><blockquote id="35ac60fd-e0e4-80bc-8bee-e3b9aebc7024" class="">“실제로 업무를 처리하는 AI”</blockquote></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80bf-90f4-fb657c594694" class="">를 원합니다.</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8074-8752-c20e07cec04c" class="">특히:</p></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-805e-9b1e-cef1ffb32624" class="bulleted-list"><li style="list-style-type:disc">운영</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-8015-b887-d63cc7ce5e1b" class="bulleted-list"><li style="list-style-type:disc">CS</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-80a0-bec8-d2e8881262b6" class="bulleted-list"><li style="list-style-type:disc">QA</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-801a-83ca-eadb5b188e5c" class="bulleted-list"><li style="list-style-type:disc">리서치</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-80e4-9732-e9938da4abd1" class="bulleted-list"><li style="list-style-type:disc">보고 자동화</li></ul></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-800c-b87d-e1f6b48e879a" class="">영역에서 Agent 도입 속도가 매우 빠릅니다.</p></div><div style="display:contents" dir="auto"><hr id="35ac60fd-e0e4-80e4-af9d-f89617472bd4"/></div><div style="display:contents" dir="auto"><h2 id="35ac60fd-e0e4-80e4-8b77-fad057fbd7fa" class="">하지만 아직 한계도 분명하다</h2></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-802b-8a76-ddb050d88bb1" class="">물론 현재 Agent가 완벽한 건 아닙니다.</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8089-977f-ee2325d3f41c" class="">문제도 많습니다.</p></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-809d-b41a-eb09d295e2ff" class="bulleted-list"><li style="list-style-type:disc">잘못된 실행</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-8066-afbd-e9da65ace80c" class="bulleted-list"><li style="list-style-type:disc">맥락 이해 부족</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-804b-9884-ed418e5bf661" class="bulleted-list"><li style="list-style-type:disc">권한 문제</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-8058-ac85-d638ab74c461" class="bulleted-list"><li style="list-style-type:disc">비용 증가</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-80ad-9b5f-e9abbe2633d3" class="bulleted-list"><li style="list-style-type:disc">예외 상황 대응 부족</li></ul></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8005-8c36-d021fd3262bf" class="">특히:</p></div><div style="display:contents" dir="auto"><blockquote id="35ac60fd-e0e4-80eb-9cfa-c4b0040f2bf5" class="">“AI가 스스로 판단해서 행동하는 구조”</blockquote></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80f2-8491-c5771702a48b" class="">이다 보니</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8021-a190-d7082fd9718b" class="">통제 문제도 매우 중요해지고 있습니다.</p></div><div style="display:contents" dir="auto"><hr id="35ac60fd-e0e4-80a3-960d-ecf0b942b308"/></div><div style="display:contents" dir="auto"><h2 id="35ac60fd-e0e4-80e1-bfc4-f1083e0e60e9" class="">그런데도 왜 다들 Agent에 몰리는 걸까?</h2></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80ee-a424-d0b21b1243f6" class="">이유는 단순합니다.</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8089-95e1-d7966ea420ee" class="">생산성 차이가 너무 크기 때문입니다.</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-807c-8f35-f2f0bf5db0a8" class="">예전에는:</p></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-8038-ba96-dc028648065b" class="bulleted-list"><li style="list-style-type:disc">사람이 직접 반복 작업</li></ul></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-802f-b56a-d6af34469181" class="">해야 했다면,</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80fb-a771-e73b4de51a29" class="">이제는:</p></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-8085-b0f4-fcb6ba4a9767" class="bulleted-list"><li style="list-style-type:disc">Agent가 대신 처리하고</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-800f-8e42-de20fb96a352" class="bulleted-list"><li style="list-style-type:disc">사람은 검토와 판단만 합니다.</li></ul></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8050-aa11-dc65af95f497" class="">즉,</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8098-ad0d-f70363b20f5f" class="">업무 구조 자체가 달라질 가능성이 생긴 겁니다.</p></div><div style="display:contents" dir="auto"><hr id="35ac60fd-e0e4-806c-b6fa-e57cd7a3c446"/></div><div style="display:contents" dir="auto"><h2 id="35ac60fd-e0e4-806e-9262-cb353c8fec48" class="">어쩌면 앞으로 앱은 “보조 역할”이 될 수도 있다</h2></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80e1-ac2a-e336d5412f80" class="">예전에는:</p></div><div style="display:contents" dir="auto"><blockquote id="35ac60fd-e0e4-800b-8754-f3ed6898f318" class="">“앱 안에 사람이 들어가서 기능을 사용”</blockquote></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80dc-8991-d2ad03ce9452" class="">했다면,</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8095-aa00-d6cbc52c10e2" class="">앞으로는:</p></div><div style="display:contents" dir="auto"><blockquote id="35ac60fd-e0e4-802d-a2a0-f9760b8e5f7b" class="">“Agent가 앱을 대신 사용하는 구조”</blockquote></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-802d-860c-d796a91b5a64" class="">가 늘어날 가능성이 큽니다.</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-800a-9653-f365097118c3" class="">즉,</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80c4-94d3-e549b64c1100" class="">사람이 직접 여러 앱을 다루는 시대보다,</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80a3-81d9-d4447b2637c9" class="">AI가 대신 실행하는 시대에 가까워지고 있는 겁니다.</p></div><div style="display:contents" dir="auto"><hr id="35ac60fd-e0e4-8033-a129-d97331d6b691"/></div><div style="display:contents" dir="auto"><h2 id="35ac60fd-e0e4-80f9-80c9-f6210d807098" class="">결국 지금은 “앱의 시대”에서 “Agent의 시대”로 넘어가는 중이다</h2></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-806f-bb22-f58d68806a51" class="">과거 인터넷이:</p></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-80c1-9908-ed4fd2d865ae" class="bulleted-list"><li style="list-style-type:disc">웹사이트 시대</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-8060-a115-f8f9c2e90cf3" class="bulleted-list"><li style="list-style-type:disc">앱 시대</li></ul></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80cd-8758-cc8a65e1a98e" class="">를 거쳐 왔다면,</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8025-99ab-f413b1ca3d8f" class="">최근 AI 업계는:</p></div><div style="display:contents" dir="auto"><blockquote id="35ac60fd-e0e4-80e2-99b7-d106a6074960" class="">“실행형 AI 시대”</blockquote></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8003-9bdd-fea913162bf2" class="">로 넘어가고 있습니다.</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-809d-9a38-d0d54da10d37" class="">그리고 실리콘밸리는 이미:</p></div><div style="display:contents" dir="auto"><blockquote id="35ac60fd-e0e4-80de-adc5-d3f3eb8b8301" class="">“어떤 앱을 만들까?”<div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8051-bd62-e5c5a883c734" class="">보다</p></div></blockquote></div><div style="display:contents" dir="auto"><blockquote id="35ac60fd-e0e4-806b-bba5-eb13343fd0d0" class="">“어떤 Agent를 만들까?”</blockquote></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8092-889e-d74e6ce60ba0" class="">를 더 많이 고민하기 시작했습니다.</p></div></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>

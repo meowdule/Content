@@ -1,0 +1,745 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>“기획서 100장 읽은 AI가 더 잘 기획한다?” — AX 시대 기획자의 생존 전략</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+/* Override strong tags inside headings to maintain consistent weight */
+h1 strong,
+h2 strong,
+h3 strong {
+	font-weight: 600;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 10px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+
+	table.collection-content {
+		width: 100%;
+		table-layout: fixed;
+	}
+
+	table.collection-content th,
+	table.collection-content td {
+		overflow-wrap: anywhere;
+	}
+
+	table.collection-content td > .user,
+	table.collection-content td > time {
+		white-space: pre-wrap;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content-wrapper {
+	overflow-x: auto;
+}
+
+@media only print {
+	.collection-content-wrapper {
+		overflow-x: visible;
+	}
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.collection-content td {
+	white-space: pre-wrap;
+	word-break: break-word;
+}
+
+.column-list {
+	display: flex;
+	gap: 46px;
+}
+
+.column {
+	min-width: 0;
+	overflow: hidden;
+}
+
+.column > *:first-child {
+	margin-top: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+table {
+	border-collapse: collapse;
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol.numbered-list.numbered-list-digits-2 {
+	padding-inline-start: 2em;
+}
+
+ol.numbered-list.numbered-list-digits-3plus {
+	padding-inline-start: 2.4em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+	margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.callout img.notion-static-icon {
+	width: 1em;
+	height: 1em;
+}
+
+.callout p {
+	margin: 0;
+}
+
+.callout h1,
+.callout h2,
+.callout h3 {
+	margin: 0 0 0.6rem;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+blockquote.quote-large {
+	font-size: 1.25em;
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.highlight-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.highlight-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.highlight-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.highlight-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.highlight-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.highlight-default_background {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray_background {
+	background: rgba(42, 28, 0, 0.07);
+}
+.highlight-brown_background {
+	background: rgba(139, 46, 0, 0.086);
+}
+.highlight-orange_background {
+	background: rgba(224, 101, 1, 0.129);
+}
+.highlight-yellow_background {
+	background: rgba(211, 168, 0, 0.137);
+}
+.highlight-teal_background {
+	background: rgba(0, 100, 45, 0.09);
+}
+.highlight-blue_background {
+	background: rgba(0, 124, 215, 0.094);
+}
+.highlight-purple_background {
+	background: rgba(102, 0, 178, 0.078);
+}
+.highlight-pink_background {
+	background: rgba(197, 0, 93, 0.086);
+}
+.highlight-red_background {
+	background: rgba(223, 22, 0, 0.094);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.block-color-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.block-color-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.block-color-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.block-color-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.block-color-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.block-color-default_background {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray_background {
+	background: rgba(240, 239, 237, 1);
+}
+.block-color-brown_background {
+	background: rgba(245, 237, 233, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 235, 222, 1);
+}
+.block-color-yellow_background {
+	background: rgba(249, 243, 220, 1);
+}
+.block-color-teal_background {
+	background: rgba(232, 241, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(229, 242, 252, 1);
+}
+.block-color-purple_background {
+	background: rgba(243, 235, 249, 1);
+}
+.block-color-pink_background {
+	background: rgba(250, 233, 241, 1);
+}
+.block-color-red_background {
+	background: rgba(252, 233, 231, 1);
+}
+.select-value-color-default { background-color: rgba(42, 28, 0, 0.07); }
+.select-value-color-gray { background-color: rgba(28, 19, 1, 0.11); }
+.select-value-color-brown { background-color: rgba(127, 51, 0, 0.156); }
+.select-value-color-orange { background-color: rgba(196, 88, 0, 0.203); }
+.select-value-color-yellow { background-color: rgba(209, 156, 0, 0.282); }
+.select-value-color-green { background-color: rgba(0, 96, 38, 0.156); }
+.select-value-color-blue { background-color: rgba(0, 118, 217, 0.203); }
+.select-value-color-purple { background-color: rgba(92, 0, 163, 0.141); }
+.select-value-color-pink { background-color: rgba(183, 0, 78, 0.152); }
+.select-value-color-red { background-color: rgba(206, 24, 0, 0.164); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="35ac60fd-e0e4-809a-a466-edd4054c3258" class="page sans"><header><div class="page-header-icon undefined"><span class="icon">🖊️</span></div><h1 class="page-title" dir="auto"><strong>“기획서 100장 읽은 AI가 더 잘 기획한다?” — AX 시대 기획자의 생존 전략</strong></h1><p class="page-description" dir="auto"></p><table class="properties"><tbody><tr class="property-row property-row-relation"><th><span class="icon property-icon"><img src="https://www.notion.so/icons/arrow-northeast_gray.svg" style="width:14px;height:14px;display:block"/></span>상위 항목</th><td><a href="AI%20%EC%9E%90%EB%8F%99%ED%99%94%20%EB%B0%8F%20%EA%B8%B0%ED%9A%8D%EC%9E%90%20%EC%9E%85%EC%9E%A5%20%EA%B2%8C%EC%8B%9C%EA%B8%80%2035ec60fde0e48085ba48face25cf8900.html"><span class="icon">📚</span>AI 자동화 및 기획자 입장 게시글</a></td></tr><tr class="property-row property-row-text"><th><span class="icon property-icon"><img src="https://www.notion.so/icons/description_gray.svg" style="width:14px;height:14px;display:block"/></span>요약</th><td>• 해외 Product Team의 AI 활용 방식<br/>• AI 시대에 살아남는 기획자의 핵심 역량<br/>• 단순 문서 작성보다 중요한 역할 변화</td></tr></tbody></table></header><div class="page-body"><div style="display:contents" dir="auto"><p id="35dc60fd-e0e4-8039-b248-df8bf37a0a7c" class="">요즘 기획자들 사이에서는<br/>“기획도 결국 AI가 하는 거 아니냐”<br/>는 이야기가 점점 많아지고 있습니다.</p></div><div style="display:contents" dir="auto"><p id="35dc60fd-e0e4-80ec-a6a2-c275d38ecf79" class="">실제로 최근 AI는:</p></div><div style="display:contents" dir="auto"><ul id="35dc60fd-e0e4-804c-a002-dc6517ad1cac" class="bulleted-list"><li style="list-style-type:disc">요구사항 정리</li></ul></div><div style="display:contents" dir="auto"><ul id="35dc60fd-e0e4-8065-a18f-fdaf970be643" class="bulleted-list"><li style="list-style-type:disc">화면 구조 제안</li></ul></div><div style="display:contents" dir="auto"><ul id="35dc60fd-e0e4-8026-9f89-e3a5a8318100" class="bulleted-list"><li style="list-style-type:disc">정책 초안 작성</li></ul></div><div style="display:contents" dir="auto"><p id="35dc60fd-e0e4-8096-ac26-f9ec8c168467" class="">같은 작업을 꽤 높은 수준으로 만들어내고 있습니다.</p></div><div style="display:contents" dir="auto"><p id="35dc60fd-e0e4-803c-94b1-f48dd94f67c8" class="">흥미로운 건,<br/>AI를 가장 적극적으로 쓰는 팀일수록<br/>오히려 “기획자의 역할” 자체가 완전히 달라지고 있다는 점입니다.</p></div><div style="display:contents" dir="auto"><p id="35dc60fd-e0e4-800d-ab3c-d6b8088e1a37" class="">특히 지금 해외 Product Team에서는<br/>기획자를 단순 문서 작성자가 아니라<br/>전혀 다른 역할로 보기 시작했다고 합니다.</p></div><div style="display:contents" dir="auto"><p id="35dc60fd-e0e4-80bc-ab92-f9a8bee2fd43" class="">과연 AX 시대에<br/>기획자는 어떻게 살아남게 될까요?</p></div><div style="display:contents" dir="auto"><p id="35dc60fd-e0e4-80bb-ab05-d965a4c99a1a" class="">
+</p></div><div style="display:contents" dir="ltr"><nav id="35ac60fd-e0e4-805d-808b-d1d2620d7f77" class="block-color-gray table_of_contents"><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#35ac60fd-e0e4-8060-918c-ebdef62d247c">예전 기획자의 강점이 무너지고 있다</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#35ac60fd-e0e4-80bf-8805-f144c0316d2d">그런데도 AI가 완전히 못하는 게 있다</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#35ac60fd-e0e4-80f4-9046-f34265c0fea9">결국 기획자의 역할이 바뀌는 중이다</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#35ac60fd-e0e4-803b-84cb-e4f7ea325c7a">실제로 해외 Product Team은 이렇게 일한다</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#35ac60fd-e0e4-80ae-8788-c056b8a9e598">그래서 요즘 더 중요해지는 능력</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#35ac60fd-e0e4-80d8-8316-d685f7f22670">“AI가 기획자를 대체한다”는 말의 진짜 의미</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#35ac60fd-e0e4-80e0-96fc-de9138f397b4">오히려 “평범한 기획”이 가장 위험해지고 있다</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#35ac60fd-e0e4-80a3-b41f-c03ec0a044ed">앞으로 기획자의 경쟁력은 달라질 가능성이 크다</a></div></nav></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8027-a81b-c8bdfcf35d31" class="">
+</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80fa-a95e-e1b9d27e1bd8" class="">요즘 기획자들 사이에서 가장 많이 나오는 말 중 하나가 있습니다.</p></div><div style="display:contents" dir="auto"><blockquote id="35ac60fd-e0e4-8060-9f73-e84670928ae5" class="">“이제 기획도 AI가 하는 거 아니야?”</blockquote></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-805f-8fe4-f1de5de9a231" class="">실제로:</p></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-809d-b7f9-c44698f5ecd2" class="bulleted-list"><li style="list-style-type:disc">요구사항 정리</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-8097-be24-f61870203456" class="bulleted-list"><li style="list-style-type:disc">화면 구조 제안</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-802c-9511-d9567c1d519a" class="bulleted-list"><li style="list-style-type:disc">기능 정의</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-80d3-8863-ff6d2cfdf73e" class="bulleted-list"><li style="list-style-type:disc">정책 초안</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-8086-aaa9-c6ab65a95d6a" class="bulleted-list"><li style="list-style-type:disc">사용자 시나리오</li></ul></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8060-9bd7-cba291cc535d" class="">같은 작업은 이미 AI가 꽤 높은 수준으로 만들어냅니다.</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-800f-adcb-f01740e26052" class="">심지어 AI는</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8047-8514-fc25080aeef6" class="">수천 개의 서비스 구조와 기획 패턴을 학습한 상태입니다.</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8019-be50-c682bc7d5376" class="">어떤 면에서는</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8050-bb5e-e1d35fac660d" class="">평범한 초급 기획자보다 더 빠르게 결과물을 만들기도 합니다.</p></div><div style="display:contents" dir="auto"><hr id="35ac60fd-e0e4-80c1-a5fa-fd3aba4a4437"/></div><div style="display:contents" dir="auto"><h2 id="35ac60fd-e0e4-8060-918c-ebdef62d247c" class="">예전 기획자의 강점이 무너지고 있다</h2></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80c1-9fde-d97a882a94a1" class="">과거에는:</p></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-80f5-9fd2-ece7f1d79f8d" class="bulleted-list"><li style="list-style-type:disc">문서 잘 쓰는 사람</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-809a-b592-d8e340aae59f" class="bulleted-list"><li style="list-style-type:disc">화면 정의 꼼꼼한 사람</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-80ff-be79-cb55bec0175d" class="bulleted-list"><li style="list-style-type:disc">PPT 정리 잘하는 사람</li></ul></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8098-9a85-dd785e4487c4" class="">이 좋은 기획자로 평가받았습니다.</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80b6-973a-d627d52e0a45" class="">하지만 지금은 상황이 달라졌습니다.</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8099-ba4b-de7a0bfe2332" class="">AI는:</p></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-80c1-8176-d69992fbb782" class="bulleted-list"><li style="list-style-type:disc">문서 초안 작성</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-8040-a186-f40b564aea00" class="bulleted-list"><li style="list-style-type:disc">플로우 정리</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-8020-b4d7-f3a071cf8239" class="bulleted-list"><li style="list-style-type:disc">정책 예외 케이스</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-80c6-95ff-ecf2f7d0fde0" class="bulleted-list"><li style="list-style-type:disc">테스트 시나리오</li></ul></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-805b-9d30-c3cf213f7d86" class="">까지 빠르게 생성합니다.</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8022-8e1e-e44e2c581c6c" class="">즉,</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-803e-9dcb-d047f67c26ee" class="">“정리 능력” 자체는 AI가 상당 부분 따라오기 시작한 겁니다.</p></div><div style="display:contents" dir="auto"><hr id="35ac60fd-e0e4-8060-93d7-cf2992939443"/></div><div style="display:contents" dir="auto"><h2 id="35ac60fd-e0e4-80bf-8805-f144c0316d2d" class="">그런데도 AI가 완전히 못하는 게 있다</h2></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8091-bad6-ecffe6c3c7ee" class="">흥미로운 건</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80d2-88f8-f94000204c16" class="">실무에서 진짜 어려운 부분은 문서 작성이 아니라는 점입니다.</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80cb-ad93-fd4867a4fa1f" class="">진짜 어려운 건:</p></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-80c6-9cac-ecfb4c0b5688" class="bulleted-list"><li style="list-style-type:disc">어떤 문제를 해결해야 하는지</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-8082-aa87-f68a84015c91" class="bulleted-list"><li style="list-style-type:disc">왜 이 기능이 필요한지</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-801b-ba8a-c2a0386a3f90" class="bulleted-list"><li style="list-style-type:disc">사용자가 왜 불편한지</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-807d-96fa-df88d259de40" class="bulleted-list"><li style="list-style-type:disc">우선순위를 어떻게 정할지</li></ul></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80c1-8f86-dfe0744ea9c3" class="">같은 판단 영역입니다.</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8072-abdb-cd0b7a41a97f" class="">AI는 문서를 잘 만들 수 있지만,</p></div><div style="display:contents" dir="auto"><blockquote id="35ac60fd-e0e4-8067-b441-f455db642640" class="">“무엇을 만들어야 하는가”</blockquote></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80a9-994d-fcfd2279cd74" class="">를 완벽하게 결정하진 못합니다.</p></div><div style="display:contents" dir="auto"><hr id="35ac60fd-e0e4-80c9-9c88-f1fb3a0c7db5"/></div><div style="display:contents" dir="auto"><h2 id="35ac60fd-e0e4-80f4-9046-f34265c0fea9" class="">결국 기획자의 역할이 바뀌는 중이다</h2></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80d6-b47b-c8f1c83ac9b7" class="">예전 기획자:</p></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-8054-8532-f21fc792fb8a" class="bulleted-list"><li style="list-style-type:disc">화면 정의</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-809c-88a0-ec3c1b3091e4" class="bulleted-list"><li style="list-style-type:disc">정책 문서 작성</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-8094-941f-c31874aadfa8" class="bulleted-list"><li style="list-style-type:disc">기능 정리</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-8032-867c-cb6a2c319054" class="bulleted-list"><li style="list-style-type:disc">전달 중심 역할</li></ul></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8048-9e71-f28263867736" class="">지금 변화하는 기획자:</p></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-80c5-ac65-f9ba770a37de" class="bulleted-list"><li style="list-style-type:disc">문제 정의</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-8089-b9cb-c50824759bb6" class="bulleted-list"><li style="list-style-type:disc">AI 결과 검증</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-8003-af18-e85e9794ccbb" class="bulleted-list"><li style="list-style-type:disc">방향성 설계</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-806d-ad4e-eb1337fbdb32" class="bulleted-list"><li style="list-style-type:disc">의사결정 조율</li></ul></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8010-bae7-fb032579f1d2" class="">즉,</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8018-896e-f1daacfddbb7" class="">“작성자”에서 “설계자”로 역할이 이동하고 있습니다.</p></div><div style="display:contents" dir="auto"><hr id="35ac60fd-e0e4-80bc-9858-d7ba87cfc665"/></div><div style="display:contents" dir="auto"><h2 id="35ac60fd-e0e4-803b-84cb-e4f7ea325c7a" class="">실제로 해외 Product Team은 이렇게 일한다</h2></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8031-8272-cd394db4169b" class="">최근 해외 스타트업에서는</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80e2-a939-c87c87e0d1bf" class="">기획자가 AI를 업무 파트너처럼 활용하는 경우가 많습니다.</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80c3-8b9e-f8d34bab96d0" class="">예를 들어:</p></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-801a-9d5f-e6b3eb2043cf" class="bulleted-list"><li style="list-style-type:disc">회의 내용을 AI가 정리하고</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-80da-b37a-d2cb263078f3" class="bulleted-list"><li style="list-style-type:disc">요구사항 초안을 생성하고</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-803f-93c2-ef8ee69af838" class="bulleted-list"><li style="list-style-type:disc">사용자 플로우를 추천하고</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-806a-a46c-e179ce970266" class="bulleted-list"><li style="list-style-type:disc">경쟁 서비스 분석까지 수행합니다.</li></ul></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-808f-868c-dc5cd34eb332" class="">기획자는 그 결과를 보며:</p></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-8049-ac11-e3b410be9dcf" class="bulleted-list"><li style="list-style-type:disc">방향 수정</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-80d8-919d-e31ea4e694ce" class="bulleted-list"><li style="list-style-type:disc">우선순위 판단</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-8013-ade6-eda4a2d5d079" class="bulleted-list"><li style="list-style-type:disc">실제 고객 관점 검토</li></ul></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-809c-9c50-fae0e220b8c1" class="">를 담당합니다.</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-802a-baf7-dca3ae9c13d7" class="">즉,</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8022-a2c4-c0a7c9915cb8" class="">기획 자체가:</p></div><div style="display:contents" dir="auto"><blockquote id="35ac60fd-e0e4-8057-a26f-e84977049f94" class="">“직접 만드는 일”<div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8098-8663-ff78cbeacd10" class="">에서</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-801d-aeec-de4557f80896" class="">“AI와 함께 조율하는 일”</p></div></blockquote></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80b1-abcb-e3b0eec5483c" class="">로 바뀌고 있는 겁니다.</p></div><div style="display:contents" dir="auto"><hr id="35ac60fd-e0e4-80de-8a17-fb779729285b"/></div><div style="display:contents" dir="auto"><h2 id="35ac60fd-e0e4-80ae-8788-c056b8a9e598" class="">그래서 요즘 더 중요해지는 능력</h2></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80c2-93ab-c5bca0860d93" class="">AI 시대에 강한 기획자는</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-805d-98f2-eca27220ed29" class="">문서를 많이 만드는 사람이 아닙니다.</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8026-8b71-e7927925cd05" class="">오히려:</p></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-8082-be82-e4de177af6a7" class="bulleted-list"><li style="list-style-type:disc">문제를 구조적으로 보는 사람</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-804e-900a-d027f21cb0e4" class="bulleted-list"><li style="list-style-type:disc">질문을 잘 던지는 사람</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-8083-905d-caaf999d34f2" class="bulleted-list"><li style="list-style-type:disc">고객 의도를 읽는 사람</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-802e-90d8-c9617308e804" class="bulleted-list"><li style="list-style-type:disc">빠르게 검증하는 사람</li></ul></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8091-a16d-d94f6dcf7c91" class="">이 훨씬 중요해지고 있습니다.</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8091-9635-c3e8a93588d9" class="">특히 최근에는:</p></div><div style="display:contents" dir="auto"><blockquote id="35ac60fd-e0e4-80a4-aab1-c9fe12f6d173" class="">“프롬프트를 잘 쓰는 기획자”</blockquote></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8093-871f-ecbb5f422b10" class="">가 경쟁력이 되기 시작했습니다.</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8027-8f40-d6454b90ce70" class="">왜냐하면 AI 결과물 품질은</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80d7-8241-db16970d2a17" class="">결국 질문 수준에 따라 크게 달라지기 때문입니다.</p></div><div style="display:contents" dir="auto"><hr id="35ac60fd-e0e4-806c-a36e-fabdd070cbd6"/></div><div style="display:contents" dir="auto"><h2 id="35ac60fd-e0e4-80d8-8316-d685f7f22670" class="">“AI가 기획자를 대체한다”는 말의 진짜 의미</h2></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80b1-a95f-e38c7ce411b0" class="">많은 사람들이:</p></div><div style="display:contents" dir="auto"><blockquote id="35ac60fd-e0e4-80b3-ae5b-f92f45984176" class="">“AI 때문에 기획자 없어지는 거 아냐?”</blockquote></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-803e-b4ad-d3dc578909ed" class="">라고 말합니다.</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-807f-876b-dce1ace76bd4" class="">하지만 실제로는 조금 다릅니다.</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80e0-a9fa-d86e1aa8154d" class="">단순 문서 작성 중심 기획은 줄어들 수 있지만,</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80e7-8af0-e6c2b7134a13" class="">오히려 전략·판단·커뮤니케이션 역할은 더 중요해질 가능성이 큽니다.</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-805a-b277-f15208e3fac3" class="">특히:</p></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-80c1-ace7-ce146ee24e99" class="bulleted-list"><li style="list-style-type:disc">여러 부서 이해관계 조율</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-801b-8a38-e3137bc9e704" class="bulleted-list"><li style="list-style-type:disc">고객 경험 판단</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-800c-820c-fc177cada2ce" class="bulleted-list"><li style="list-style-type:disc">사업 방향 연결</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-8083-97d1-e8c2fa6cfcdb" class="bulleted-list"><li style="list-style-type:disc">우선순위 결정</li></ul></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8025-ab6b-cc22267c9c95" class="">같은 영역은 아직 사람 역할 비중이 매우 큽니다.</p></div><div style="display:contents" dir="auto"><hr id="35ac60fd-e0e4-800b-b070-d52eea63302c"/></div><div style="display:contents" dir="auto"><h2 id="35ac60fd-e0e4-80e0-96fc-de9138f397b4" class="">오히려 “평범한 기획”이 가장 위험해지고 있다</h2></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-806f-be48-d9f6cb8c03d7" class="">예전에는 평균적인 수준의 기획 역량만 있어도 충분했습니다.</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8008-b093-fbd93dfab082" class="">하지만 AI가 기본 작업을 처리하기 시작하면</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8093-999b-f5e88b21a229" class="">애매한 수준의 문서 작업은 빠르게 대체될 가능성이 큽니다.</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-805e-8c74-d75d166ef137" class="">결국 남는 사람은:</p></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-80f8-93ae-de1ba8f19edc" class="bulleted-list"><li style="list-style-type:disc">깊이 있는 문제 해결이 가능한 사람</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-80fa-a213-d00b717ddbf3" class="bulleted-list"><li style="list-style-type:disc">사용자 맥락을 이해하는 사람</li></ul></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-80d2-8b89-d2bbb1adc803" class="bulleted-list"><li style="list-style-type:disc">AI 결과를 활용해 더 큰 방향을 설계하는 사람</li></ul></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80c5-8b84-e15cf2a20a2f" class="">이 될 가능성이 높습니다.</p></div><div style="display:contents" dir="auto"><hr id="35ac60fd-e0e4-80af-b341-f1dabfa20561"/></div><div style="display:contents" dir="auto"><h2 id="35ac60fd-e0e4-80a3-b41f-c03ec0a044ed" class="">앞으로 기획자의 경쟁력은 달라질 가능성이 크다</h2></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8002-911d-d16814c5ada5" class="">이제 중요한 건:</p></div><div style="display:contents" dir="auto"><ul id="35ac60fd-e0e4-80de-b41b-e139f47a77a0" class="bulleted-list"><li style="list-style-type:disc">문서를 얼마나 많이 만드는가<br/>가 아니라,</li></ul></div><div style="display:contents" dir="auto"><blockquote id="35ac60fd-e0e4-8039-8b3b-f479840f6537" class="">“AI를 활용해서 얼마나 좋은 의사결정을 만드는가”</blockquote></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-807a-a677-cbbddbea6b7c" class="">에 가까워지고 있습니다.</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80de-8695-de42f87a51e4" class="">그리고 AX 시대의 기획자는</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-8056-a247-e6653d079d12" class="">단순 작성자가 아니라,</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80b3-b03c-d094dde9f9ec" class="">AI와 사람 사이를 연결하는</p></div><div style="display:contents" dir="auto"><p id="35ac60fd-e0e4-80ac-8611-decbc9e48466" class="">“문제 설계자” 역할로 바뀌고 있습니다.</p></div></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>
