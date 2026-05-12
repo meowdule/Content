@@ -4,11 +4,12 @@ import type { Category } from '../../types'
 import { selectChildren, selectRootCategories } from '../../store/categoryStore'
 import { Button } from '../common/Button'
 
-const iconBtn =
-  'inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-gray-600 transition hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800'
+/** 파일 트리에서 아이콘 버튼이 배경에 묻지 않도록 */
+const treeIconBtn =
+  'inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-gray-200 bg-white text-gray-600 shadow-sm transition hover:border-gray-300 hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:hover:border-gray-500 dark:hover:bg-gray-800'
 
-const dangerIconBtn =
-  'inline-flex h-8 w-7 shrink-0 items-center justify-center rounded-lg text-red-600 transition hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-950/40'
+const treeDangerBtn =
+  'inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-red-200 bg-white text-red-600 shadow-sm transition hover:bg-red-50 dark:border-red-900/60 dark:bg-gray-900 dark:text-red-400 dark:hover:bg-red-950/50'
 
 function Row({
   category,
@@ -56,29 +57,19 @@ function Row({
   }
 
   const displayEmoji = category.icon_emoji?.trim() || '📋'
-  const isRoot = depth === 0
-
-  const rowVisual = isRoot
-    ? 'border border-orange-100/90 bg-gradient-to-r from-orange-50/95 via-white to-white shadow-sm dark:border-orange-900/35 dark:from-orange-950/35 dark:via-gray-900 dark:to-gray-900'
-    : 'border border-gray-100 bg-white/95 pl-2 shadow-sm dark:border-gray-800 dark:bg-gray-950/90'
-
-  const leftAccent = !isRoot ? 'border-l-[3px] border-l-[#FF8A50]/55' : ''
 
   return (
-    <div className="space-y-2">
-      <div
-        className={`flex flex-wrap items-center gap-2 rounded-xl px-3 py-2 ${rowVisual} ${leftAccent}`}
-        style={{ marginLeft: depth * 14 }}
-      >
-        {isRoot ? (
-          <span className="shrink-0 rounded-md bg-orange-200/80 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-orange-900 dark:bg-orange-900/50 dark:text-orange-100">
-            상위
+    <div>
+      <div className="group flex flex-wrap items-center gap-1.5 rounded-md py-1.5 pr-1 hover:bg-gray-50/90 dark:hover:bg-gray-800/40">
+        {depth > 0 ? (
+          <span
+            className="mr-0.5 shrink-0 select-none font-mono text-[11px] leading-none text-gray-400 dark:text-gray-500"
+            aria-hidden
+          >
+            └
           </span>
-        ) : (
-          <span className="shrink-0 rounded-md bg-gray-200/90 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-gray-700 dark:bg-gray-700 dark:text-gray-200">
-            하위
-          </span>
-        )}
+        ) : null}
+
         {editing ? (
           <>
             <input
@@ -87,13 +78,13 @@ function Row({
               maxLength={16}
               placeholder="📋"
               title="목록에 쓰일 이모지"
-              className="w-12 shrink-0 rounded-lg border border-gray-200 px-1 py-1 text-center text-base leading-tight dark:border-gray-700 dark:bg-gray-950 dark:text-white"
+              className="w-11 shrink-0 rounded-md border border-gray-200 px-1 py-1 text-center text-sm leading-tight dark:border-gray-600 dark:bg-gray-950 dark:text-white"
               value={iconEmoji}
               onChange={(e) => setIconEmoji(e.target.value)}
               aria-label="표시 이모지"
             />
             <input
-              className="min-w-[8rem] flex-1 rounded-lg border border-gray-200 px-2 py-1 text-sm dark:border-gray-700 dark:bg-gray-950 dark:text-white"
+              className="min-w-[6rem] flex-1 rounded-md border border-gray-200 px-2 py-1 text-sm dark:border-gray-600 dark:bg-gray-950 dark:text-white"
               value={name}
               onChange={(e) => setName(e.target.value)}
               aria-label="카테고리 이름"
@@ -117,17 +108,19 @@ function Row({
         ) : (
           <>
             <span
-              className="inline-flex min-w-[1.75rem] shrink-0 select-none items-center justify-center text-lg leading-none"
+              className="inline-flex min-w-[1.5rem] shrink-0 select-none items-center justify-center text-base leading-none"
               title="목록 표시 아이콘"
               aria-hidden
             >
               {displayEmoji}
             </span>
-            <span className="min-w-0 flex-1 text-sm font-medium text-gray-900 dark:text-white">{category.name}</span>
-            <Button
+            <span className="min-w-0 flex-1 truncate font-sans text-sm font-medium text-gray-900 dark:text-gray-100">
+              {category.name}
+            </span>
+            <button
               type="button"
-              variant="ghost"
-              className="h-8 w-8 min-w-0 shrink-0 p-0"
+              className={treeIconBtn}
+              title="이름·이모지 수정"
               aria-label="이름·이모지 수정"
               onClick={() => {
                 setName(category.name)
@@ -135,20 +128,20 @@ function Row({
                 setEditing(true)
               }}
             >
-              <Pencil className="h-4 w-4" />
-            </Button>
+              <Pencil className="h-3.5 w-3.5" strokeWidth={2.25} />
+            </button>
             <button
               type="button"
-              className={iconBtn}
+              className={treeIconBtn}
               title="하위 카테고리 추가"
               aria-label="하위 카테고리 추가"
               onClick={() => onAddChild(category.id)}
             >
-              <Plus className="h-4 w-4" strokeWidth={2.25} />
+              <Plus className="h-3.5 w-3.5" strokeWidth={2.25} />
             </button>
             <button
               type="button"
-              className={`${iconBtn} disabled:pointer-events-none disabled:opacity-30`}
+              className={`${treeIconBtn} disabled:pointer-events-none disabled:opacity-35`}
               disabled={idx <= 0}
               title="위로 이동"
               aria-label="위로 이동"
@@ -158,7 +151,7 @@ function Row({
             </button>
             <button
               type="button"
-              className={`${iconBtn} disabled:pointer-events-none disabled:opacity-30`}
+              className={`${treeIconBtn} disabled:pointer-events-none disabled:opacity-35`}
               disabled={idx < 0 || idx >= siblings.length - 1}
               title="아래로 이동"
               aria-label="아래로 이동"
@@ -168,7 +161,7 @@ function Row({
             </button>
             <button
               type="button"
-              className={dangerIconBtn}
+              className={treeDangerBtn}
               title="삭제"
               aria-label="삭제"
               onClick={() => onDelete(category.id)}
@@ -178,18 +171,23 @@ function Row({
           </>
         )}
       </div>
-      {children.map((ch) => (
-        <Row
-          key={ch.id}
-          category={ch}
-          all={all}
-          depth={depth + 1}
-          onAddChild={onAddChild}
-          onSaveCategory={onSaveCategory}
-          onDelete={onDelete}
-          onMove={onMove}
-        />
-      ))}
+
+      {children.length > 0 ? (
+        <div className="ml-1.5 mt-0.5 border-l border-gray-200 pl-2.5 dark:border-gray-700 sm:ml-2 sm:pl-3">
+          {children.map((ch) => (
+            <Row
+              key={ch.id}
+              category={ch}
+              all={all}
+              depth={depth + 1}
+              onAddChild={onAddChild}
+              onSaveCategory={onSaveCategory}
+              onDelete={onDelete}
+              onMove={onMove}
+            />
+          ))}
+        </div>
+      ) : null}
     </div>
   )
 }
@@ -212,7 +210,7 @@ export function CategoryTree({
 }) {
   const roots = selectRootCategories(categories)
   return (
-    <div className="space-y-3">
+    <div className="space-y-0.5 text-[13px] leading-normal">
       {roots.map((c) => (
         <Row
           key={c.id}
@@ -226,7 +224,7 @@ export function CategoryTree({
         />
       ))}
       {!roots.length ? (
-        <p className="text-sm text-gray-500 dark:text-gray-400">등록된 상위 카테고리가 없습니다.</p>
+        <p className="font-sans text-sm text-gray-500 dark:text-gray-400">등록된 상위 카테고리가 없습니다.</p>
       ) : null}
     </div>
   )

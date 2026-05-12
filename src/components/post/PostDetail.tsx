@@ -4,6 +4,12 @@ import type { Post, Reference } from '../../types'
 import { MarkdownBody } from './MarkdownBody'
 import { formatDateTime } from '../../utils/formatDate'
 
+const actionBtn =
+  'inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-gray-200 bg-white text-gray-700 shadow-sm transition hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-200 dark:hover:bg-gray-800'
+
+const dangerActionBtn =
+  'inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-red-200 bg-white text-red-600 shadow-sm transition hover:bg-red-50 dark:border-red-900/50 dark:bg-gray-900 dark:text-red-400 dark:hover:bg-red-950/40'
+
 export function PostDetailView({
   post,
   categoryLabel,
@@ -19,48 +25,55 @@ export function PostDetailView({
 }) {
   return (
     <article className="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-gray-900">
-      <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300">
-        <span className="text-lg leading-none" title={categoryLabel} aria-hidden>
-          {categoryIcon}
-        </span>
-        <span className="font-medium text-gray-800 dark:text-gray-100">{categoryLabel}</span>
-      </div>
+      <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:gap-10">
+        <div className="min-w-0 flex-1">
+          <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300">
+            <span className="text-lg leading-none" title={categoryLabel} aria-hidden>
+              {categoryIcon}
+            </span>
+            <span className="font-medium text-gray-800 dark:text-gray-100">{categoryLabel}</span>
+          </div>
 
-      <h1 className="mt-3 text-2xl font-bold leading-snug text-gray-900 dark:text-white">{post.title}</h1>
+          <h1 className="mt-3 text-2xl font-bold leading-snug text-gray-900 dark:text-white">{post.title}</h1>
 
-      {post.summary ? (
-        <p className="mt-3 text-base leading-relaxed text-gray-700 dark:text-gray-200">{post.summary}</p>
-      ) : null}
+          {post.summary ? (
+            <p className="mt-3 text-base leading-relaxed text-gray-700 dark:text-gray-200">{post.summary}</p>
+          ) : null}
+        </div>
 
-      <div className="mt-5 flex flex-col gap-3 border-t border-gray-100 pt-5 dark:border-gray-800 sm:flex-row sm:items-center sm:justify-between">
-        <div className="min-w-0 space-y-1.5 text-sm text-gray-600 dark:text-gray-300">
+        <aside className="flex w-full shrink-0 flex-col gap-3 border-t border-gray-100 pt-4 text-sm text-gray-600 dark:border-gray-800 dark:text-gray-300 lg:w-56 lg:border-t-0 lg:border-l lg:pl-8 lg:pt-0 lg:text-right">
           {post.publish_location ? (
             <p>
-              <span className="font-medium text-gray-800 dark:text-gray-100">게시 위치</span>{' '}
-              {post.publish_location}
+              <span className="block text-xs font-medium text-gray-500 dark:text-gray-400">게시 위치</span>
+              <span className="mt-0.5 block text-gray-800 dark:text-gray-100">{post.publish_location}</span>
             </p>
           ) : null}
-          <p className="text-xs text-gray-500 dark:text-gray-400">등록 {formatDateTime(post.created_at)}</p>
-        </div>
-        <div className="flex shrink-0 gap-1">
-          <Link
-            to={`/posts/${post.id}/edit`}
-            className="inline-flex h-9 w-9 items-center justify-center rounded-xl text-gray-700 transition hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800"
-            title="수정"
-            aria-label="수정"
-          >
-            <Pencil className="h-4 w-4" strokeWidth={2.25} />
-          </Link>
-          <button
-            type="button"
-            className="inline-flex h-9 w-9 items-center justify-center rounded-xl text-red-600 transition hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-950/40"
-            title="삭제"
-            aria-label="삭제"
-            onClick={onDelete}
-          >
-            <Trash2 className="h-4 w-4" strokeWidth={2.25} />
-          </button>
-        </div>
+          <p>
+            <span className="block text-xs font-medium text-gray-500 dark:text-gray-400">등록</span>
+            <span className="mt-0.5 block text-xs text-gray-600 tabular-nums dark:text-gray-300 lg:text-sm">
+              {formatDateTime(post.created_at)}
+            </span>
+          </p>
+          <div className="flex gap-2 lg:justify-end">
+            <Link
+              to={`/posts/${post.id}/edit`}
+              className={actionBtn}
+              title="수정"
+              aria-label="수정"
+            >
+              <Pencil className="h-4 w-4" strokeWidth={2.25} />
+            </Link>
+            <button
+              type="button"
+              className={dangerActionBtn}
+              title="삭제"
+              aria-label="삭제"
+              onClick={onDelete}
+            >
+              <Trash2 className="h-4 w-4" strokeWidth={2.25} />
+            </button>
+          </div>
+        </aside>
       </div>
 
       <div className="mt-8 border-t border-gray-100 pt-8 dark:border-gray-800">
