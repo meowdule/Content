@@ -103,11 +103,11 @@ export function CategoriesPage() {
             setDraftEmoji('')
             setNameModal({ mode: 'root' })
           }}
-          className="h-10 w-10 min-w-0 shrink-0 p-0 shadow-sm"
+          className="h-11 w-11 min-w-0 shrink-0 p-0 shadow-sm"
           title="상위 카테고리 추가"
           aria-label="상위 카테고리 추가"
         >
-          <Plus className="h-5 w-5" strokeWidth={2.25} />
+          <Plus className="h-6 w-6" strokeWidth={2.5} />
         </Button>
       </div>
 

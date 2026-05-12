@@ -41,18 +41,12 @@ export function PostDetailView({
           ) : null}
         </div>
 
-        <aside className="flex w-full shrink-0 flex-col gap-3 border-t border-gray-100 pt-4 text-sm text-gray-600 dark:border-gray-800 dark:text-gray-300 lg:w-56 lg:border-t-0 lg:border-l lg:pl-8 lg:pt-0 lg:text-right">
+        <aside className="flex w-full shrink-0 flex-col gap-3 border-t border-gray-100 pt-4 text-gray-700 dark:border-gray-800 dark:text-gray-200 lg:w-56 lg:border-t-0 lg:border-l lg:pl-8 lg:pt-0 lg:text-right">
           {post.publish_location ? (
-            <p>
-              <span className="block text-xs font-medium text-gray-500 dark:text-gray-400">게시 위치</span>
-              <span className="mt-0.5 block text-gray-800 dark:text-gray-100">{post.publish_location}</span>
-            </p>
+            <p className="text-base leading-relaxed text-gray-800 dark:text-gray-100">{post.publish_location}</p>
           ) : null}
-          <p>
-            <span className="block text-xs font-medium text-gray-500 dark:text-gray-400">등록</span>
-            <span className="mt-0.5 block text-xs text-gray-600 tabular-nums dark:text-gray-300 lg:text-sm">
-              {formatDateTime(post.created_at)}
-            </span>
+          <p className="text-sm tabular-nums leading-relaxed text-gray-600 dark:text-gray-300 lg:text-base">
+            {formatDateTime(post.created_at)}
           </p>
           <div className="flex gap-2 lg:justify-end">
             <Link

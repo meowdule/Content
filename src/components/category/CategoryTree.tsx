@@ -4,7 +4,11 @@ import type { Category } from '../../types'
 import { selectChildren, selectRootCategories } from '../../store/categoryStore'
 import { Button } from '../common/Button'
 
-/** 파일 트리에서 아이콘 버튼이 배경에 묻지 않도록 */
+/** 수정·순서 이동: 테두리 없음 */
+const treeGhostBtn =
+  'inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-md text-gray-600 transition hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800'
+
+/** 하위 추가 등: 살짝 구분 */
 const treeIconBtn =
   'inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-gray-200 bg-white text-gray-600 shadow-sm transition hover:border-gray-300 hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:hover:border-gray-500 dark:hover:bg-gray-800'
 
@@ -119,7 +123,7 @@ function Row({
             </span>
             <button
               type="button"
-              className={treeIconBtn}
+              className={treeGhostBtn}
               title="이름·이모지 수정"
               aria-label="이름·이모지 수정"
               onClick={() => {
@@ -141,7 +145,7 @@ function Row({
             </button>
             <button
               type="button"
-              className={`${treeIconBtn} disabled:pointer-events-none disabled:opacity-35`}
+              className={`${treeGhostBtn} disabled:pointer-events-none disabled:opacity-35`}
               disabled={idx <= 0}
               title="위로 이동"
               aria-label="위로 이동"
@@ -151,7 +155,7 @@ function Row({
             </button>
             <button
               type="button"
-              className={`${treeIconBtn} disabled:pointer-events-none disabled:opacity-35`}
+              className={`${treeGhostBtn} disabled:pointer-events-none disabled:opacity-35`}
               disabled={idx < 0 || idx >= siblings.length - 1}
               title="아래로 이동"
               aria-label="아래로 이동"

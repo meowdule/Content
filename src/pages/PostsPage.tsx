@@ -60,8 +60,8 @@ export function PostsPage() {
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white">게시글</h1>
         </div>
         <Link to="/posts/new" title="등록" aria-label="등록">
-          <Button className="h-10 w-10 min-w-0 p-0 shadow-sm" aria-label="등록">
-            <Plus className="h-5 w-5" strokeWidth={2.25} />
+          <Button className="h-11 w-11 min-w-0 p-0 shadow-sm" aria-label="등록">
+            <Plus className="h-6 w-6" strokeWidth={2.5} />
           </Button>
         </Link>
       </div>
@@ -145,7 +145,7 @@ export function PostsPage() {
         className="fixed bottom-6 right-6 flex h-14 w-14 items-center justify-center rounded-full bg-[#FF8A50] text-white shadow-lg hover:bg-[#ff7a3d] md:hidden"
         aria-label="게시글 등록"
       >
-        <Plus className="h-7 w-7" />
+        <Plus className="h-8 w-8" strokeWidth={2.5} />
       </Link>
     </div>
   )
